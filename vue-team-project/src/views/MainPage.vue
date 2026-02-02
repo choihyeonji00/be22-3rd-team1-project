@@ -10,7 +10,7 @@ const selectDiningOption = (option) => {
 
 const goToAdmin = () => {
   // Admin navigation (business logic will be added later)
-  console.log('Navigate to admin')
+  router.push('/admin/login') // 관리자 로그인 페이지로 이동
 }
 </script>
 
