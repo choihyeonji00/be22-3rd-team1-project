@@ -1,7 +1,8 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { orderStore } from '../stores/orderStore'
+import { api } from '../services/api'
 
 const router = useRouter()
 
@@ -10,16 +11,55 @@ const selectedPaymentMethod = computed(() => orderStore.getSelectedPaymentMethod
 const orderItems = computed(() => orderStore.getOrderList())
 const totalPrice = orderStore.getTotalPrice
 
+const isProcessing = ref(false)
+
 const handleCancel = () => {
   router.push('/order')
 }
 
-const handlePay = () => {
-  // Payment processing would happen here (business logic)
-  // For now, just show alert, clear order and go back to main
-  alert('결제가 완료되었습니다!')
-  orderStore.clearOrder()
-  router.push('/')
+// Generate order number (format: yyyyMMddHHmmss + random 4 digits)
+const generateOrderNumber = () => {
+  const now = new Date()
+  const dateStr = now.getFullYear().toString() +
+    String(now.getMonth() + 1).padStart(2, '0') +
+    String(now.getDate()).padStart(2, '0') +
+    String(now.getHours()).padStart(2, '0') +
+    String(now.getMinutes()).padStart(2, '0') +
+    String(now.getSeconds()).padStart(2, '0')
+  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+  return `ORD-${dateStr}-${random}`
+}
+
+const handlePay = async () => {
+  if (isProcessing.value) return
+  isProcessing.value = true
+
+  try {
+    const orderData = {
+      orderNumber: generateOrderNumber(),
+      paymentMethod: selectedPaymentMethod.value,
+      items: orderItems.value.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      totalPrice: totalPrice.value,
+      createdAt: new Date().toISOString(),
+      status: 'completed'
+    }
+
+    const savedOrder = await api.createOrder(orderData)
+
+    alert(`결제가 완료되었습니다!\n주문번호: ${savedOrder.orderNumber}`)
+    orderStore.clearOrder()
+    router.push('/')
+  } catch (error) {
+    console.error('Failed to save order:', error)
+    alert('결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
+  } finally {
+    isProcessing.value = false
+  }
 }
 </script>
 
@@ -68,8 +108,12 @@ const handlePay = () => {
       <button class="footer-btn cancel" @click="handleCancel">
         취소
       </button>
-      <button class="footer-btn pay" @click="handlePay">
-        결제
+      <button
+        class="footer-btn pay"
+        :disabled="isProcessing"
+        @click="handlePay"
+      >
+        {{ isProcessing ? '처리중...' : '결제' }}
       </button>
     </footer>
   </div>
