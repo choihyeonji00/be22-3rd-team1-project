@@ -44,7 +44,8 @@ const handleAdd = () => {
       <div class="modal-content">
         <!-- Menu Image -->
         <div class="menu-image">
-          <img :src="menu.image" :alt="menu.name" />
+          <img v-if="menu.image" :src="menu.image" :alt="menu.name" />
+          <span v-else class="menu-placeholder-icon">🍕</span>
         </div>
 
         <!-- Menu Info -->
@@ -124,6 +125,10 @@ const handleAdd = () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.menu-placeholder-icon {
+  font-size: 64px;
 }
 
 .menu-info {
