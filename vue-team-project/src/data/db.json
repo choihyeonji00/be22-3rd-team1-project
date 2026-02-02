@@ -30,7 +30,7 @@
       "id": "1",
       "name": "페퍼로니 피자",
       "price": 15000,
-      "image": "",
+      "image": "/src/assets/images/pizza/pepperoni.png",
       "description": "클래식 페퍼로니 피자",
       "category": "pizza"
     },
@@ -38,7 +38,7 @@
       "id": "2",
       "name": "치즈 피자",
       "price": 13000,
-      "image": "",
+      "image": "/src/assets/images/pizza/cheese.png",
       "description": "고소한 치즈 피자",
       "category": "pizza"
     },
@@ -46,7 +46,7 @@
       "id": "3",
       "name": "불고기 피자",
       "price": 17000,
-      "image": "",
+      "image": "/src/assets/images/pizza/boolgogi.png",
       "description": "한국식 불고기 피자",
       "category": "pizza"
     },
@@ -54,7 +54,7 @@
       "id": "4",
       "name": "하와이안 피자",
       "price": 16000,
-      "image": "",
+      "image": "/src/assets/images/pizza/hawaiian.png",
       "description": "파인애플 토핑 피자",
       "category": "pizza"
     },
@@ -62,7 +62,7 @@
       "id": "5",
       "name": "콤비네이션 피자",
       "price": 18000,
-      "image": "",
+      "image": "/src/assets/images/pizza/combination.png",
       "description": "다양한 토핑의 피자",
       "category": "pizza"
     },
@@ -70,7 +70,7 @@
       "id": "6",
       "name": "고르곤졸라 피자",
       "price": 19000,
-      "image": "",
+      "image": "/src/assets/images/pizza/gorgonzola.png",
       "description": "블루치즈 피자",
       "category": "pizza"
     },
@@ -78,7 +78,7 @@
       "id": "7",
       "name": "슈프림 피자",
       "price": 20000,
-      "image": "",
+      "image": "/src/assets/images/pizza/supreme.png",
       "description": "프리미엄 피자",
       "category": "pizza"
     },
@@ -86,7 +86,7 @@
       "id": "8",
       "name": "마르게리타 피자",
       "price": 14000,
-      "image": "",
+      "image": "/src/assets/images/pizza/margherita.png",
       "description": "토마토와 바질",
       "category": "pizza"
     },
