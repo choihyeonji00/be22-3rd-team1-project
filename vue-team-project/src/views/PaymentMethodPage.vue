@@ -2,11 +2,12 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../services/api'
+import { orderStore } from '../stores/orderStore'
 
 const router = useRouter()
 
-// Sample total price (in real app, this would come from state management)
-const totalPrice = ref(35000)
+// Get total price from order store
+const totalPrice = orderStore.getTotalPrice
 
 const selectedPayment = ref(null)
 const isLoading = ref(true)
@@ -39,6 +40,16 @@ const handleBack = () => {
 
 const handleNext = () => {
   if (selectedPayment.value) {
+    // Find the selected payment method name and save to store
+    const allMethods = [
+      ...paymentMethods.value.card,
+      ...paymentMethods.value.easyPay,
+      ...paymentMethods.value.other
+    ]
+    const selected = allMethods.find(m => m.id === selectedPayment.value)
+    if (selected) {
+      orderStore.setPaymentMethod(selected.name)
+    }
     router.push('/payment-confirm')
   }
 }
