@@ -85,9 +85,65 @@ const closeModal = () => {
   selectedMenu.value = null
 }
 
-const addToOrder = (menuWithQuantity) => {
-  orderStore.addItem(menuWithQuantity)
-}
+// const addToOrder = (menuWithQuantity) => {
+//   orderStore.addItem(menuWithQuantity)
+// }
+const addToOrder = (orderData) => {
+  // 1. 옵션 문자열 생성 (예: "Large, Bacon")
+  const optionLabels = [];
+  let optionsPriceSum = 0;
+  
+  if (orderData.selectedOptions) {
+    Object.entries(orderData.selectedOptions).forEach(([groupName, value]) => {
+      const optionGroup = orderData.options.find(opt => opt.name === groupName);
+      if (!optionGroup) return;
+      if (Array.isArray(value)) {
+        // 다중 선택
+        value.forEach(label => {
+          optionLabels.push(label);
+          const choice = optionGroup.choices.find(c => c.label === label);
+          if (choice) optionsPriceSum += choice.price;
+        });
+      } else {
+        // 단일 선택
+        optionLabels.push(value);
+        const choice = optionGroup.choices.find(c => c.label === value);
+        if (choice) optionsPriceSum += choice.price;
+      }
+    });
+  }
+  const optionString = optionLabels.length > 0 ? ` (${optionLabels.join(', ')})` : '';
+  
+  // 2. 가공된 주문 데이터 준비
+  const processedItem = {
+    ...orderData,
+    id: `${orderData.id}_${JSON.stringify(orderData.selectedOptions)}`, // 옵션별 고유 ID
+    name: `${orderData.name}${optionString}`,
+    price: orderData.price + optionsPriceSum, // 단가 (옵션 포함)
+    quantity: orderData.quantity
+  };
+  orderStore.addItem(processedItem);
+};
+
+// 수량 증가
+const increaseItemQuantity = (item) => {
+  orderStore.updateQuantity(item.id, item.quantity + 1);
+};
+// 수량 감소 (1 이하로 내려가지 않게 처리)
+const decreaseItemQuantity = (item) => {
+  if (item.quantity > 1) {
+    orderStore.updateQuantity(item.id, item.quantity - 1);
+  } else {
+    // 수량이 1일 때 마이너스를 누르면 삭제할지 물어보거나 무시
+    // if (confirm('해당 메뉴를 삭제하시겠습니까?')) {
+    //   orderStore.removeItem(item.id);
+    // }
+  }
+};
+// 항목 삭제
+const removeItem = (itemId) => {
+  orderStore.removeItem(itemId);
+};
 
 // Navigation
 const handleCancel = () => {
@@ -189,9 +245,21 @@ const handlePay = () => {
           :key="item.id"
           class="order-item"
         >
-          <span class="item-name">{{ item.name }}</span>
+          <!-- <span class="item-name">{{ item.name }}</span>
           <span class="item-qty">{{ item.quantity }}</span>
-          <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span>
+          <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span> -->
+          <div class="item-info">
+            <span class="item-name">{{ item.name }}</span>
+            <button class="remove-btn" @click="removeItem(item.id)">✕</button>
+          </div>
+          
+          <div class="item-controls">
+            <button class="qty-btn" @click="increaseItemQuantity(item)">+</button>
+            <span class="item-qty">{{ item.quantity }}</span>
+            <button class="qty-btn" @click="decreaseItemQuantity(item)">-</button>
+          </div>
+  
+  <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span>
         </div>
 
         <div v-if="orderList.length === 0" class="empty-order">
@@ -419,12 +487,25 @@ const handlePay = () => {
 
 .order-list-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  /* grid-template-columns: 2fr 1fr 1fr; */
+  grid-template-columns: 2fr 1.2fr 1.2fr;
   padding: 12px 16px;
   background-color: var(--primary-orange);
   color: white;
   font-weight: 600;
   font-size: 14px;
+}
+
+.order-list-header .header-name {
+  text-align: left;
+}
+
+.order-list-header .header-qty {
+  text-align: center;
+}
+
+.order-list-header .header-price {
+  text-align: center;
 }
 
 .order-list-body {
@@ -434,10 +515,17 @@ const handlePay = () => {
 
 .order-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  /* grid-template-columns: 2fr 1fr 1fr; */
+  grid-template-columns: 2fr 1.2fr 1.2fr;
   padding: 12px 16px;
   border-bottom: 1px solid #f0f0f0;
   font-size: 14px;
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .order-item:last-child {
@@ -448,17 +536,45 @@ const handlePay = () => {
   font-weight: 500;
 }
 
+.item-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff5252;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+}
+
 .item-qty {
   text-align: center;
   color: var(--primary-blue);
   font-weight: 600;
 }
 
+.qty-btn {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .item-price {
   text-align: right;
   color: var(--primary-green);
   font-weight: 600;
-}
+} 
 
 .empty-order {
   padding: 24px;
