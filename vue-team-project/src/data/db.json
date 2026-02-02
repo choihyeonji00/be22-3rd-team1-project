@@ -1,4 +1,12 @@
 {
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "password123",
+      "role": "admin"
+    }
+  ],
   "categories": [
     {
       "id": "pizza",
