@@ -9,7 +9,3 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
-
-# Documentation folder
-/docs/
-/.claude/

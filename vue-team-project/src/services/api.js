@@ -1,6 +1,7 @@
 const API_BASE_URL = 'http://localhost:3000'
 
 export const api = {
+
   async getCategories() {
     const response = await fetch(`${API_BASE_URL}/categories`)
     return response.json()
