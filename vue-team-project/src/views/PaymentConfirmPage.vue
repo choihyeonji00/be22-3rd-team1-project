@@ -1,19 +1,14 @@
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { orderStore } from '../stores/orderStore'
 
 const router = useRouter()
 
-// Sample data (in real app, this would come from state management)
-const selectedPaymentMethod = ref('카드결제')
-
-const orderItems = ref([
-  { id: 1, name: '페퍼로니 피자', price: 15000, quantity: 1 },
-  { id: 2, name: '치즈 피자', price: 13000, quantity: 2 },
-  { id: 3, name: '콜라', price: 2000, quantity: 2 }
-])
-
-const totalPrice = ref(45000)
+// Get data from order store
+const selectedPaymentMethod = computed(() => orderStore.getSelectedPaymentMethod() || '카드결제')
+const orderItems = computed(() => orderStore.getOrderList())
+const totalPrice = orderStore.getTotalPrice
 
 const handleCancel = () => {
   router.push('/order')
@@ -21,8 +16,9 @@ const handleCancel = () => {
 
 const handlePay = () => {
   // Payment processing would happen here (business logic)
-  // For now, just show alert and go back to main
+  // For now, just show alert, clear order and go back to main
   alert('결제가 완료되었습니다!')
+  orderStore.clearOrder()
   router.push('/')
 }
 </script>

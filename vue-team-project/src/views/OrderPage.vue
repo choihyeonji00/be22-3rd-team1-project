@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MenuInfoModal from '../components/MenuInfoModal.vue'
 import { api } from '../services/api'
+import { orderStore } from '../stores/orderStore'
 
 const router = useRouter()
 
@@ -66,12 +67,9 @@ const nextPage = () => {
   }
 }
 
-// Order list (UI state only)
-const orderList = ref([])
-
-const totalPrice = computed(() => {
-  return orderList.value.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-})
+// Order list from store (shared state)
+const orderList = computed(() => orderStore.getOrderList())
+const totalPrice = orderStore.getTotalPrice
 
 // Modal state
 const isModalOpen = ref(false)
@@ -88,12 +86,7 @@ const closeModal = () => {
 }
 
 const addToOrder = (menuWithQuantity) => {
-  const existingIndex = orderList.value.findIndex(item => item.id === menuWithQuantity.id)
-  if (existingIndex >= 0) {
-    orderList.value[existingIndex].quantity += menuWithQuantity.quantity
-  } else {
-    orderList.value.push({ ...menuWithQuantity })
-  }
+  orderStore.addItem(menuWithQuantity)
 }
 
 // Navigation
