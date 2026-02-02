@@ -32,7 +32,41 @@
       "price": 15000,
       "image": "/src/assets/images/pizza/pepperoni.png",
       "description": "클래식 페퍼로니 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "2",
@@ -40,7 +74,41 @@
       "price": 13000,
       "image": "/src/assets/images/pizza/cheese.png",
       "description": "고소한 치즈 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "3",
@@ -48,7 +116,41 @@
       "price": 17000,
       "image": "/src/assets/images/pizza/boolgogi.png",
       "description": "한국식 불고기 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "4",
@@ -56,7 +158,41 @@
       "price": 16000,
       "image": "/src/assets/images/pizza/hawaiian.png",
       "description": "파인애플 토핑 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "5",
@@ -64,7 +200,41 @@
       "price": 18000,
       "image": "/src/assets/images/pizza/combination.png",
       "description": "다양한 토핑의 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "6",
@@ -72,7 +242,41 @@
       "price": 19000,
       "image": "/src/assets/images/pizza/gorgonzola.png",
       "description": "블루치즈 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "7",
@@ -80,7 +284,41 @@
       "price": 20000,
       "image": "/src/assets/images/pizza/supreme.png",
       "description": "프리미엄 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "8",
@@ -88,7 +326,41 @@
       "price": 14000,
       "image": "/src/assets/images/pizza/margherita.png",
       "description": "토마토와 바질",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "9",
