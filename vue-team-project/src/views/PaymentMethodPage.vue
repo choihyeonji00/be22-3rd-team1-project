@@ -1,0 +1,306 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { api } from '../services/api'
+
+const router = useRouter()
+
+// Sample total price (in real app, this would come from state management)
+const totalPrice = ref(35000)
+
+const selectedPayment = ref(null)
+const isLoading = ref(true)
+
+const paymentMethods = ref({
+  card: [],
+  easyPay: [],
+  other: []
+})
+
+// Fetch payment methods on component mount
+onMounted(async () => {
+  try {
+    const data = await api.getPaymentMethods()
+    paymentMethods.value = data
+  } catch (error) {
+    console.error('Failed to fetch payment methods:', error)
+  } finally {
+    isLoading.value = false
+  }
+})
+
+const selectPayment = (paymentId) => {
+  selectedPayment.value = paymentId
+}
+
+const handleBack = () => {
+  router.push('/order')
+}
+
+const handleNext = () => {
+  if (selectedPayment.value) {
+    router.push('/payment-confirm')
+  }
+}
+</script>
+
+<template>
+  <div class="payment-method-page">
+    <!-- Header -->
+    <header class="page-header">
+      <h1>결제 수단 선택</h1>
+    </header>
+
+    <!-- Total Amount -->
+    <div class="total-amount">
+      <span class="amount-label">결제수단 선택:</span>
+      <span class="amount-value">{{ totalPrice.toLocaleString() }}원</span>
+    </div>
+
+    <!-- Payment Sections -->
+    <div class="payment-sections">
+      <!-- Card Payment -->
+      <section class="payment-section">
+        <h2 class="section-title">Card</h2>
+        <div class="payment-options">
+          <button
+            v-for="method in paymentMethods.card"
+            :key="method.id"
+            :class="['payment-btn', { selected: selectedPayment === method.id }]"
+            @click="selectPayment(method.id)"
+          >
+            <span class="payment-icon">{{ method.icon }}</span>
+            <span class="payment-name">{{ method.name }}</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Easy Pay -->
+      <section class="payment-section">
+        <h2 class="section-title">Easy pay</h2>
+        <div class="payment-options three-col">
+          <button
+            v-for="method in paymentMethods.easyPay"
+            :key="method.id"
+            :class="['payment-btn', { selected: selectedPayment === method.id }]"
+            @click="selectPayment(method.id)"
+          >
+            <span class="payment-icon">{{ method.icon }}</span>
+            <span class="payment-name">{{ method.name }}</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Other -->
+      <section class="payment-section">
+        <h2 class="section-title">Other</h2>
+        <div class="payment-options">
+          <button
+            v-for="method in paymentMethods.other"
+            :key="method.id"
+            :class="['payment-btn', { selected: selectedPayment === method.id }]"
+            @click="selectPayment(method.id)"
+          >
+            <span class="payment-icon">{{ method.icon }}</span>
+            <span class="payment-name">{{ method.name }}</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Action Buttons -->
+    <footer class="action-footer">
+      <button class="footer-btn back" @click="handleBack">
+        이전
+      </button>
+      <button
+        class="footer-btn next"
+        :disabled="!selectedPayment"
+        @click="handleNext"
+      >
+        다음
+      </button>
+    </footer>
+  </div>
+</template>
+
+<style scoped>
+.payment-method-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* Header */
+.page-header {
+  padding: 20px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* Total Amount */
+.total-amount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: white;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.amount-label {
+  font-size: 16px;
+  color: #666;
+}
+
+.amount-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* Payment Sections */
+.payment-sections {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.payment-section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.payment-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.payment-options.three-col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.payment-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: var(--primary-yellow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-btn:hover {
+  border-color: var(--primary-yellow-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.payment-btn.selected {
+  border-color: var(--primary-blue);
+  background-color: rgba(79, 195, 247, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.2);
+}
+
+.payment-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.payment-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  text-align: center;
+}
+
+/* Action Footer */
+.action-footer {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background-color: white;
+  border-top: 2px solid #e0e0e0;
+}
+
+.footer-btn {
+  flex: 1;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.footer-btn.back {
+  background-color: #e0e0e0;
+  color: var(--text-dark);
+}
+
+.footer-btn.back:hover {
+  background-color: #d0d0d0;
+}
+
+.footer-btn.next {
+  background-color: var(--primary-blue);
+  color: white;
+}
+
+.footer-btn.next:hover:not(:disabled) {
+  background-color: var(--primary-blue-dark);
+}
+
+.footer-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .payment-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .payment-options.three-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .payment-btn {
+    padding: 16px 12px;
+  }
+
+  .payment-icon {
+    font-size: 28px;
+  }
+
+  .payment-name {
+    font-size: 12px;
+  }
+}
+</style>

@@ -1,0 +1,39 @@
+{
+  "categories": [
+    { "id": "pizza", "name": "피자" },
+    { "id": "hamburger", "name": "햄버거" },
+    { "id": "drink", "name": "음료" },
+    { "id": "sandwich", "name": "샌드위치" },
+    { "id": "side", "name": "사이드" },
+    { "id": "dessert", "name": "디저트" }
+  ],
+  "menuItems": [
+    { "id": 1, "name": "페퍼로니 피자", "price": 15000, "image": "", "description": "클래식 페퍼로니 피자", "category": "pizza" },
+    { "id": 2, "name": "치즈 피자", "price": 13000, "image": "", "description": "고소한 치즈 피자", "category": "pizza" },
+    { "id": 3, "name": "불고기 피자", "price": 17000, "image": "", "description": "한국식 불고기 피자", "category": "pizza" },
+    { "id": 4, "name": "하와이안 피자", "price": 16000, "image": "", "description": "파인애플 토핑 피자", "category": "pizza" },
+    { "id": 5, "name": "콤비네이션 피자", "price": 18000, "image": "", "description": "다양한 토핑의 피자", "category": "pizza" },
+    { "id": 6, "name": "고르곤졸라 피자", "price": 19000, "image": "", "description": "블루치즈 피자", "category": "pizza" },
+    { "id": 7, "name": "슈프림 피자", "price": 20000, "image": "", "description": "프리미엄 피자", "category": "pizza" },
+    { "id": 8, "name": "마르게리타 피자", "price": 14000, "image": "", "description": "토마토와 바질", "category": "pizza" },
+    { "id": 9, "name": "클래식 버거", "price": 8000, "image": "", "description": "기본 햄버거", "category": "hamburger" },
+    { "id": 10, "name": "치즈 버거", "price": 9000, "image": "", "description": "치즈 햄버거", "category": "hamburger" },
+    { "id": 11, "name": "콜라", "price": 2000, "image": "", "description": "코카콜라", "category": "drink" },
+    { "id": 12, "name": "사이다", "price": 2000, "image": "", "description": "칠성사이다", "category": "drink" }
+  ],
+  "paymentMethods": {
+    "card": [
+      { "id": "samsung-pay", "name": "삼성페이", "icon": "💳" },
+      { "id": "card-payment", "name": "카드결제", "icon": "💳" }
+    ],
+    "easyPay": [
+      { "id": "kakao-pay", "name": "카카오페이", "icon": "💛" },
+      { "id": "toss-pay", "name": "토스페이", "icon": "💙" },
+      { "id": "other-pay", "name": "기타페이", "icon": "📱" }
+    ],
+    "other": [
+      { "id": "coupon", "name": "쿠폰결제", "icon": "🎟️" }
+    ]
+  },
+  "orders": []
+}
