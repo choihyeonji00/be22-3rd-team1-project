@@ -769,13 +769,61 @@
       "totalPrice": 12817,
       "createdAt": "2026-02-03T08:05:33.512Z",
       "status": "completed"
+    },
+    {
+      "id": "49bb",
+      "orderNumber": "ORD-20260203172553-5310",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 12500,
+      "createdAt": "2026-02-03T08:25:53.032Z",
+      "status": "completed"
+    },
+    {
+      "id": "ce25",
+      "orderNumber": "ORD-20260203172556-9495",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 12500,
+      "createdAt": "2026-02-03T08:25:56.544Z",
+      "status": "completed"
+    },
+    {
+      "id": "1390",
+      "orderNumber": "ORD-20260203172711-2438",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Regular)",
+          "price": 19000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 18360,
+      "createdAt": "2026-02-03T08:27:11.720Z",
+      "status": "completed"
     }
   ],
   "members": [
     {
       "id": "1",
       "phone": "01012345678",
-      "points": 640
+      "points": 918
     }
   ],
   "coupons": [
