@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { orderStore } from '../stores/orderStore'
 import { api } from '../services/api'
+import MessageModal from '@/components/MessageModal.vue'
 
 const router = useRouter()
 
@@ -10,8 +11,22 @@ const router = useRouter()
 const selectedPaymentMethod = computed(() => orderStore.getSelectedPaymentMethod() || '카드결제')
 const orderItems = computed(() => orderStore.getOrderList())
 const totalPrice = orderStore.getTotalPrice
+const totalDiscount = computed(() => orderStore.getTotalDiscount())
+const finalPrice = computed(() => totalPrice.value - totalDiscount.value)
 
 const isProcessing = ref(false)
+
+const modal = ref({
+  isOpen: false,
+  type: 'alert',
+  title: '',
+  message: '',
+  onConfirm: null
+});
+
+const showMessage = (type, title, message, onConfirm) => {
+  modal.value = { isOpen: true, type, title, message, onConfirm };
+};
 
 const handleCancel = () => {
   router.push('/order')
@@ -44,19 +59,40 @@ const handlePay = async () => {
         price: item.price,
         quantity: item.quantity
       })),
-      totalPrice: totalPrice.value,
+      totalPrice: finalPrice.value,
       createdAt: new Date().toISOString(),
       status: 'completed'
     }
 
     const savedOrder = await api.createOrder(orderData)
 
-    alert(`결제가 완료되었습니다!\n주문번호: ${savedOrder.orderNumber}`)
-    orderStore.clearOrder()
-    router.push('/')
+    const member = orderStore.getCurrentMember();
+    const usedPoints = orderStore.getUsedPoints(); // 추가
+
+    if (member) {
+      const earnedPoints = Math.floor(finalPrice.value * 0.05);
+      // 기존 포인트 - 사용 포인트 + 적립 포인트
+      const newPoints = member.points - usedPoints + earnedPoints;
+
+      const updateMember = await api.updateMember({
+        id: member.id,
+        points: newPoints
+      });
+
+      showMessage('alert', '결제 및 적립 완료', `결제 완료 및 ${earnedPoints}P 가 적립되었습니다. \n 현재 총 포인트 : ${updateMember.points}`, () => {
+        orderStore.clearOrder()
+        router.push('/')
+      })
+    }
+    else {
+      showMessage('alert', '결제 완료', `결제가 완료되었습니다!\n주문번호: ${savedOrder.orderNumber}`, () => {
+        orderStore.clearOrder()
+        router.push('/')
+      })
+    }
   } catch (error) {
     console.error('Failed to save order:', error)
-    alert('결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
+    showMessage('alert','결제 처리 실패','결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
   } finally {
     isProcessing.value = false
   }
@@ -95,9 +131,17 @@ const handlePay = async () => {
             </div>
           </div>
 
-          <div class="total-row">
-            <span class="total-label">total price :</span>
+          <div class="total-row raw-total">
+            <span class="total-label">total items :</span>
             <span class="total-value">{{ totalPrice.toLocaleString() }}원</span>
+          </div>
+          <div v-if="totalDiscount > 0" class="total-row discount-row">
+            <span class="total-label">discount :</span>
+            <span class="total-value">- {{ totalDiscount.toLocaleString() }}원</span>
+          </div>
+          <div class="total-row final-total">
+            <span class="total-label">total payment :</span>
+            <span class="total-value">{{ finalPrice.toLocaleString() }}원</span>
           </div>
         </div>
       </div>
@@ -117,6 +161,12 @@ const handlePay = async () => {
       </button>
     </footer>
   </div>
+
+    <MessageModal
+    v-bind="modal"
+    @close="modal.isOpen = false"
+    @confirm="modal.onConfirm ? modal.onConfirm() : modal.isOpen = false"
+  />
 </template>
 
 <style scoped>

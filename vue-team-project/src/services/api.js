@@ -38,6 +38,18 @@ export const api = {
     return response.json()
   },
 
+  async getMemberByPhone(phone) {
+    const response = await fetch(`${API_BASE_URL}/members?phone=${phone}`)
+    return response.json()
+  },
+
+  async getCouponByCode(code) {
+    const response = await fetch(`${API_BASE_URL}/coupons?code=${code}`)
+    return response.json()
+  },
+
+  async createMember(memberData) {
+    const response = await fetch(`${API_BASE_URL}/members`, {
   // --- 관리자 모드 API 추가 ---
 
   async adminLogin(credentials) {
@@ -65,11 +77,21 @@ export const api = {
       headers: {
         'Content-Type': 'application/json'
       },
+      body: JSON.stringify(memberData)
       body: JSON.stringify(menuItemData)
     })
     return response.json()
   },
 
+  async updateMember(memberData) {
+    const response = await fetch(`${API_BASE_URL}/members/${memberData.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(memberData)
+    })
+    return response.json()
   async updateMenuItem(id, menuItemData) {
     const response = await fetch(`${API_BASE_URL}/menuItems/${id}`, {
       method: 'PUT', // 또는 PATCH
