@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MenuInfoModal from '../components/MenuInfoModal.vue'
 import { api } from '../services/api'
@@ -153,6 +153,59 @@ const handleCancel = () => {
 const handlePay = () => {
   router.push('/payment-method')
 }
+
+// --- ⏳ 세션 타임아웃 로직 시작 ---
+const TIMEOUT_LIMIT = 60 * 1000 // 60초
+const lastActionTime = ref(Date.now())
+const isTimeoutModalOpen = ref(false)
+let timerInterval = null
+
+// 사용자 동작 감지 시 타이머 리셋
+const resetTimer = () => {
+  lastActionTime.value = Date.now()
+}
+
+// 매초마다 시간 체크
+const checkTimeout = () => {
+  // 모달이 켜져있을 땐 체크 안 함
+  if (isTimeoutModalOpen.value) return 
+
+  const now = Date.now()
+  if (now - lastActionTime.value > TIMEOUT_LIMIT) {
+    isTimeoutModalOpen.value = true
+  }
+}
+
+// 모달: 계속 주문하기
+const continueOrder = () => {
+  isTimeoutModalOpen.value = false
+  resetTimer()
+}
+
+// 모달: 주문 취소 (처음으로)
+const stopOrder = () => {
+  orderStore.clearOrder()
+  router.push('/')
+}
+
+// 이벤트 리스너 등록/해제
+onMounted(() => {
+  // 화면 어디든 클릭하거나 키를 누르면 타이머 리셋
+  window.addEventListener('click', resetTimer)
+  window.addEventListener('touchstart', resetTimer)
+  window.addEventListener('keypress', resetTimer)
+  
+  // 1초마다 검사 시작
+  timerInterval = setInterval(checkTimeout, 1000)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('click', resetTimer)
+  window.removeEventListener('touchstart', resetTimer)
+  window.removeEventListener('keypress', resetTimer)
+  if (timerInterval) clearInterval(timerInterval)
+})
+// --- ⏳ 세션 타임아웃 로직 끝 ---
 </script>
 
 <template>
@@ -298,6 +351,24 @@ const handlePay = () => {
       @close="closeModal"
       @add="addToOrder"
     />
+
+    <!-- 타임아웃 경고 모달 -->
+    <div v-if="isTimeoutModalOpen" class="timeout-modal-overlay">
+      <div class="timeout-modal-content">
+        <div class="timeout-icon">⏰</div>
+        <h2>아직 주문 중이신가요?</h2>
+        <p>60초 동안 입력이 없어<br>잠시 후 주문이 초기화됩니다.</p>
+        
+        <div class="timeout-actions">
+          <button class="timeout-btn cancel" @click="stopOrder">
+            그만하기
+          </button>
+          <button class="timeout-btn continue" @click="continueOrder">
+            계속 주문하기
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -682,5 +753,56 @@ const handlePay = () => {
   .action-btn {
     flex: 1;
   }
+}
+
+/* --- 타임아웃 모달 스타일 --- */
+.timeout-modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2000;
+}
+
+.timeout-modal-content {
+  background-color: white;
+  width: 90%; max-width: 320px;
+  padding: 30px 20px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.timeout-icon {
+  font-size: 48px; margin-bottom: 16px;
+}
+
+.timeout-modal-content h2 {
+  font-size: 20px; font-weight: 700; color: #333; margin-bottom: 10px;
+}
+.timeout-modal-content p {
+  font-size: 14px; color: #666; margin-bottom: 24px; line-height: 1.5;
+}
+
+.timeout-actions {
+  display: flex; gap: 10px;
+}
+
+.timeout-btn {
+  flex: 1; padding: 14px;
+  border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+}
+
+.timeout-btn.cancel {
+  background-color: #f0f0f0; color: #666;
+}
+.timeout-btn.continue {
+  background-color: var(--primary-orange); color: white;
 }
 </style>
