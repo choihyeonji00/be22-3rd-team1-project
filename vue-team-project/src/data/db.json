@@ -79,7 +79,7 @@
     {
       "id": "601",
       "name": "치즈 피자",
-      "price": 13004,
+      "price": 13000,
       "image": "/src/assets/images/pizza/cheese.png",
       "description": "고소한 치즈 피자",
       "category": "pizza",
@@ -745,6 +745,54 @@
       ],
       "totalPrice": 18000,
       "createdAt": "2026-02-03T11:53:14.601Z",
+      "status": "completed"
+    },
+    {
+      "id": "d69e",
+      "orderNumber": "ORD-20260204012949-9304",
+      "paymentMethod": "토스페이",
+      "items": [
+        {
+          "id": "603_{}",
+          "name": "하와이안 피자",
+          "price": 16000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 16000,
+      "createdAt": "2026-02-03T16:29:49.174Z",
+      "status": "completed"
+    },
+    {
+      "id": "739d",
+      "orderNumber": "ORD-20260204013015-8595",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "601_{}",
+          "name": "치즈 피자",
+          "price": 13004,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 13004,
+      "createdAt": "2026-02-03T16:30:15.183Z",
+      "status": "completed"
+    },
+    {
+      "id": "fa70",
+      "orderNumber": "ORD-20260204013651-4310",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "601_{}",
+          "name": "치즈 피자",
+          "price": 13004,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 13004,
+      "createdAt": "2026-02-03T16:36:51.849Z",
       "status": "completed"
     }
   ]
