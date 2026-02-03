@@ -642,9 +642,6 @@
       "status": "completed"
     },
     {
-      "id": "539e",
-      "orderNumber": "ORD-20260203174232-1249",
-      "paymentMethod": "카카오페이",
       "id": "c6bd",
       "orderNumber": "ORD-20260203083311-2292",
       "paymentMethod": "쿠폰결제",
@@ -854,28 +851,6 @@
       "status": "completed"
     },
     {
-      "id": "7148",
-      "orderNumber": "ORD-20260203160142-8468",
-      "paymentMethod": "카드결제",
-      "items": [
-        {
-          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
-          "name": "콤비네이션 피자 (Regular)",
-          "price": 18000,
-          "quantity": 4
-        }
-      ],
-      "totalPrice": 72000,
-      "createdAt": "2026-02-03T08:42:32.649Z",
-      "status": "completed"
-          "quantity": 1
-        }
-      ],
-      "totalPrice": 18000,
-      "createdAt": "2026-02-03T07:01:42.213Z",
-      "status": "completed"
-    },
-    {
       "id": "6e54",
       "orderNumber": "ORD-20260203160427-5845",
       "paymentMethod": "카드결제",
@@ -985,6 +960,50 @@
       ],
       "totalPrice": 18360,
       "createdAt": "2026-02-03T08:27:11.720Z",
+      "status": "completed"
+    },
+    {
+      "id": "6f0c",
+      "orderNumber": "ORD-20260203210718-8387",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Large)",
+          "price": 20000,
+          "quantity": 2
+        }
+      ],
+      "totalPrice": 40000,
+      "createdAt": "2026-02-03T12:07:18.553Z",
+      "status": "completed"
+    },
+    {
+      "id": "911d",
+      "orderNumber": "ORD-20260203210825-4539",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "1_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "페퍼로니 피자 (Large)",
+          "price": 17000,
+          "quantity": 1
+        },
+        {
+          "id": "2_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Large)",
+          "price": 15000,
+          "quantity": 1
+        },
+        {
+          "id": "3_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "불고기 피자 (Large)",
+          "price": 19000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 51000,
+      "createdAt": "2026-02-03T12:08:25.619Z",
       "status": "completed"
     }
   ],
