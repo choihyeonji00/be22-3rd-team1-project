@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { orderStore } from '../stores/orderStore'
 import { api } from '../services/api'
-import MessageModal from '@/components/MessageModal.vue'
+import OrderCompletionModal from '../components/OrderCompletionModal.vue'
 
 const router = useRouter()
 
@@ -16,24 +16,23 @@ const finalPrice = computed(() => totalPrice.value - totalDiscount.value)
 
 const isProcessing = ref(false)
 
-const modal = ref({
-  isOpen: false,
-  type: 'alert',
-  title: '',
-  message: '',
-  onConfirm: null
-});
-
-const showMessage = (type, title, message, onConfirm) => {
-  modal.value = { isOpen: true, type, title, message, onConfirm };
-};
+// Modal state
+const showModal = ref(false)
+const completedOrderNumber = ref('')
+const completedOrderItems = ref([])
+const completedTotalPrice = ref(0)
 
 const handleCancel = () => {
   router.push('/order')
 }
 
-// Generate order number (format: yyyyMMddHHmmss + random 4 digits)
-const generateOrderNumber = () => {
+// Generate 4-digit order number
+const generate4DigitOrderNumber = () => {
+  return Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+}
+
+// Generate full order number for API (format: yyyyMMddHHmmss + random 4 digits)
+const generateFullOrderNumber = () => {
   const now = new Date()
   const dateStr = now.getFullYear().toString() +
     String(now.getMonth() + 1).padStart(2, '0') +
@@ -41,8 +40,8 @@ const generateOrderNumber = () => {
     String(now.getHours()).padStart(2, '0') +
     String(now.getMinutes()).padStart(2, '0') +
     String(now.getSeconds()).padStart(2, '0')
-  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
-  return `ORD-${dateStr}-${random}`
+  const random = generate4DigitOrderNumber()
+  return { full: `ORD-${dateStr}-${random}`, short: random }
 }
 
 const handlePay = async () => {
@@ -50,8 +49,9 @@ const handlePay = async () => {
   isProcessing.value = true
 
   try {
+    const orderNumbers = generateFullOrderNumber()
     const orderData = {
-      orderNumber: generateOrderNumber(),
+      orderNumber: orderNumbers.full,
       paymentMethod: selectedPaymentMethod.value,
       items: orderItems.value.map(item => ({
         id: item.id,
@@ -64,38 +64,33 @@ const handlePay = async () => {
       status: 'completed'
     }
 
-    const savedOrder = await api.createOrder(orderData)
+    await api.createOrder(orderData)
 
-    const member = orderStore.getCurrentMember();
-    const usedPoints = orderStore.getUsedPoints(); // 추가
+    // Store completed order info for modal
+    completedOrderNumber.value = orderNumbers.short
+    completedOrderItems.value = [...orderItems.value]
+    completedTotalPrice.value = totalPrice.value
 
-    if (member) {
-      const earnedPoints = Math.floor(finalPrice.value * 0.05);
-      // 기존 포인트 - 사용 포인트 + 적립 포인트
-      const newPoints = member.points - usedPoints + earnedPoints;
-
-      const updateMember = await api.updateMember({
-        id: member.id,
-        points: newPoints
-      });
-
-      showMessage('alert', '결제 및 적립 완료', `결제 완료 및 ${earnedPoints}P 가 적립되었습니다. \n 현재 총 포인트 : ${updateMember.points}`, () => {
-        orderStore.clearOrder()
-        router.push('/')
-      })
-    }
-    else {
-      showMessage('alert', '결제 완료', `결제가 완료되었습니다!\n주문번호: ${savedOrder.orderNumber}`, () => {
-        orderStore.clearOrder()
-        router.push('/')
-      })
-    }
+    // Show completion modal
+    showModal.value = true
   } catch (error) {
     console.error('Failed to save order:', error)
     showMessage('alert','결제 처리 실패','결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
   } finally {
     isProcessing.value = false
   }
+}
+
+const handleGoHome = () => {
+  orderStore.clearOrder()
+  showModal.value = false
+  router.push('/')
+}
+
+const handleComplete = () => {
+  orderStore.clearOrder()
+  showModal.value = false
+  router.push('/')
 }
 </script>
 
@@ -160,6 +155,16 @@ const handlePay = async () => {
         {{ isProcessing ? '처리중...' : '결제' }}
       </button>
     </footer>
+
+    <!-- Order Completion Modal -->
+    <OrderCompletionModal
+      :is-open="showModal"
+      :order-number="completedOrderNumber"
+      :order-items="completedOrderItems"
+      :total-price="completedTotalPrice"
+      @go-home="handleGoHome"
+      @complete="handleComplete"
+    />
   </div>
 
     <MessageModal
