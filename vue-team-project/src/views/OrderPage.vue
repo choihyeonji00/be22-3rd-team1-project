@@ -93,7 +93,7 @@ const addToOrder = (orderData) => {
   const optionLabels = [];
   let optionsPriceSum = 0;
   
-  if (orderData.selectedOptions) {
+  if (orderData.selectedOptions && orderData.options) {
     Object.entries(orderData.selectedOptions).forEach(([groupName, value]) => {
       const optionGroup = orderData.options.find(opt => opt.name === groupName);
       if (!optionGroup) return;
@@ -206,6 +206,17 @@ onUnmounted(() => {
   if (timerInterval) clearInterval(timerInterval)
 })
 // --- ⏳ 세션 타임아웃 로직 끝 ---
+const getCategoryIcon = (categoryId) => {
+  const iconMap = {
+    pizza: '🍕',
+    hamburger: '🍔',
+    drink: '🥤',
+    sandwich: '🥪',
+    side: '🍟',
+    dessert: '🍰'
+  }
+  return iconMap[categoryId] || '🍽️'
+}
 </script>
 
 <template>
@@ -240,7 +251,7 @@ onUnmounted(() => {
         >
           <div class="menu-card-image">
             <img v-if="menu.image" :src="menu.image" :alt="menu.name" class="menu-img" />
-            <span v-else class="menu-placeholder-icon">🍕</span>
+            <span v-else class="menu-placeholder-icon">{{ getCategoryIcon(menu.category) }}</span>
           </div>
           <div class="menu-card-info">
             <p class="menu-card-name">{{ menu.name }}</p>

@@ -114,6 +114,18 @@ const isSelected = (option, choice) => {
   }
 };
 
+const getCategoryIcon = (categoryId) => {
+  const iconMap = {
+    pizza: '🍕',
+    hamburger: '🍔',
+    drink: '🥤',
+    sandwich: '🥪',
+    side: '🍟',
+    dessert: '🍰'
+  }
+  return iconMap[categoryId] || '🍽️'
+}
+
 </script>
 
 <template>
@@ -123,7 +135,7 @@ const isSelected = (option, choice) => {
         <!-- Menu Image -->
         <div class="menu-image">
           <img v-if="menu.image" :src="menu.image" :alt="menu.name" />
-          <span v-else class="menu-placeholder-icon">🍕</span>
+          <span v-else class="menu-placeholder-icon">{{ getCategoryIcon(menu.category) }}</span>
         </div>
 
         <!-- Menu Info -->
@@ -149,7 +161,7 @@ const isSelected = (option, choice) => {
               >
                 <div class="option-card-image">
                   <img v-if="choice.image" :src="choice.image" :alt="choice.label">
-                  <span v-else class="placeholder">🍕</span>
+                  <span v-else class="placeholder">{{ getCategoryIcon(menu.category) }}</span>
                 </div>
                 <div class="option-card-info">
                   <div>{{ choice.label }}</div>
