@@ -2,7 +2,10 @@ import { reactive, computed } from 'vue'
 
 const state = reactive({
   orderList: [],
-  selectedPaymentMethod: null
+  selectedPaymentMethod: null,
+  currentMember: null,
+  totalDiscount: 0,
+  usedPoints: 0,
 })
 
 export const orderStore = {
@@ -43,8 +46,22 @@ export const orderStore = {
     state.selectedPaymentMethod = method
   },
 
+  setCurrentMember: (member) => { state.currentMember = member; },
+  getCurrentMember: () => state.currentMember,
+
+  setTotalDiscount: (amount) => { state.totalDiscount = amount; },
+  getTotalDiscount: () => state.totalDiscount,
+
+  setUsedPoints: (amount) => { state.usedPoints = amount; },
+  getUsedPoints: () => state.usedPoints,
+
   clearOrder() {
-    state.orderList = []
-    state.selectedPaymentMethod = null
-  }
+    state.orderList = [];
+    state.selectedPaymentMethod = null;
+    state.currentMember = null;
+    state.totalDiscount = 0;
+    state.usedPoints = 0;
+  },
+
+
 }

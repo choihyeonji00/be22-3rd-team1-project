@@ -1,4 +1,12 @@
 {
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "password123",
+      "role": "admin"
+    }
+  ],
   "categories": [
     {
       "id": "pizza",
@@ -32,7 +40,41 @@
       "price": 15000,
       "image": "/src/assets/images/pizza/pepperoni.png",
       "description": "클래식 페퍼로니 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "2",
@@ -40,7 +82,41 @@
       "price": 13000,
       "image": "/src/assets/images/pizza/cheese.png",
       "description": "고소한 치즈 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "3",
@@ -48,7 +124,41 @@
       "price": 17000,
       "image": "/src/assets/images/pizza/boolgogi.png",
       "description": "한국식 불고기 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "4",
@@ -56,7 +166,41 @@
       "price": 16000,
       "image": "/src/assets/images/pizza/hawaiian.png",
       "description": "파인애플 토핑 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "5",
@@ -64,7 +208,41 @@
       "price": 18000,
       "image": "/src/assets/images/pizza/combination.png",
       "description": "다양한 토핑의 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "6",
@@ -72,7 +250,41 @@
       "price": 19000,
       "image": "/src/assets/images/pizza/gorgonzola.png",
       "description": "블루치즈 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "7",
@@ -80,7 +292,41 @@
       "price": 20000,
       "image": "/src/assets/images/pizza/supreme.png",
       "description": "프리미엄 피자",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "8",
@@ -88,7 +334,41 @@
       "price": 14000,
       "image": "/src/assets/images/pizza/margherita.png",
       "description": "토마토와 바질",
-      "category": "pizza"
+      "category": "pizza",
+      "options": [
+        {
+          "name": "Size",
+          "required": true,
+          "choices": [
+            {
+              "label": "Regular",
+              "price": 0
+            },
+            {
+              "label": "Large",
+              "price": 2000
+            }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "multiple": true,
+          "choices": [
+            {
+              "label": "Extra Cheese",
+              "price": 1000
+            },
+            {
+              "label": "Bacon",
+              "price": 1500
+            },
+            {
+              "label": "Avocado",
+              "price": 2000
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "9",
@@ -156,8 +436,13 @@
     "other": [
       {
         "id": "coupon",
-        "name": "쿠폰결제",
+        "name": "쿠폰 등록",
         "icon": "🎟️"
+      },
+      {
+        "id": "point",
+        "name": "포인트 적립 및 결제",
+        "icon": "🪙"
       }
     ]
   },
@@ -195,6 +480,527 @@
       "totalPrice": 123000,
       "createdAt": "2026-02-02T11:14:53.719Z",
       "status": "completed"
+    },
+    {
+      "id": "9d83",
+      "orderNumber": "ORD-20260203084949-7066",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Large\",\"Add-ons\":[\"Avocado\"]}",
+          "name": "콤비네이션 피자 (Large, Avocado)",
+          "price": 22000,
+          "quantity": 2
+        }
+      ],
+      "totalPrice": 44000,
+      "createdAt": "2026-02-02T23:49:49.887Z",
+      "status": "completed"
+    },
+    {
+      "id": "9e7a",
+      "orderNumber": "ORD-20260203120856-5956",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Large)",
+          "price": 21000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 21000,
+      "createdAt": "2026-02-03T03:08:56.470Z",
+      "status": "completed"
+    },
+    {
+      "id": "6d19",
+      "orderNumber": "ORD-20260203171149-7345",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "8_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "마르게리타 피자 (Regular)",
+          "price": 14000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 42000,
+      "createdAt": "2026-02-03T08:11:49.878Z",
+      "status": "completed"
+    },
+    {
+      "id": "20f9",
+      "orderNumber": "ORD-20260203172341-7106",
+      "paymentMethod": "토스페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:23:41.819Z",
+      "status": "completed"
+    },
+    {
+      "id": "f9c4",
+      "orderNumber": "ORD-20260203172950-5131",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 39000,
+      "createdAt": "2026-02-03T08:29:50.236Z",
+      "status": "completed"
+    },
+    {
+      "id": "42fd",
+      "orderNumber": "ORD-20260203173004-9590",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:30:04.619Z",
+      "status": "completed"
+    },
+    {
+      "id": "6cba",
+      "orderNumber": "ORD-20260203173022-3242",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Large)",
+          "price": 21000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 63000,
+      "createdAt": "2026-02-03T08:30:22.364Z",
+      "status": "completed"
+    },
+    {
+      "id": "f200",
+      "orderNumber": "ORD-20260203173605-8503",
+      "paymentMethod": "토스페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:36:05.755Z",
+      "status": "completed"
+    },
+    {
+      "id": "f815",
+      "orderNumber": "ORD-20260203173837-5753",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:38:37.581Z",
+      "status": "completed"
+    },
+    {
+      "id": "c134",
+      "orderNumber": "ORD-20260203173913-1970",
+      "paymentMethod": "토스페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:39:13.624Z",
+      "status": "completed"
+    },
+    {
+      "id": "539e",
+      "orderNumber": "ORD-20260203174232-1249",
+      "paymentMethod": "카카오페이",
+      "id": "c6bd",
+      "orderNumber": "ORD-20260203083311-2292",
+      "paymentMethod": "쿠폰결제",
+      "items": [
+        {
+          "id": "1_{\"Size\":\"Large\",\"Add-ons\":[\"Avocado\",\"Extra Cheese\"]}",
+          "name": "페퍼로니 피자 (Large, Avocado, Extra Cheese)",
+          "price": 20000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 20000,
+      "createdAt": "2026-02-02T23:33:11.153Z",
+      "status": "completed"
+    },
+    {
+      "id": "0f97",
+      "orderNumber": "ORD-20260203150233-3493",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "1_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "페퍼로니 피자 (Regular)",
+          "price": 15000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 15000,
+      "createdAt": "2026-02-03T06:02:33.907Z",
+      "status": "completed"
+    },
+    {
+      "id": "0320",
+      "orderNumber": "ORD-20260203150300-5678",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\"]}",
+          "name": "불고기 피자 (Regular, Bacon)",
+          "price": 18500,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 18500,
+      "createdAt": "2026-02-03T06:03:00.506Z",
+      "status": "completed"
+    },
+    {
+      "id": "87a4",
+      "orderNumber": "ORD-20260203155158-0556",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "1_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "페퍼로니 피자 (Regular)",
+          "price": 15000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 15000,
+      "createdAt": "2026-02-03T06:51:58.054Z",
+      "status": "completed"
+    },
+    {
+      "id": "7a5f",
+      "orderNumber": "ORD-20260203155642-4536",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\",\"Avocado\"]}",
+          "name": "불고기 피자 (Regular, Bacon, Avocado)",
+          "price": 20500,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 20500,
+      "createdAt": "2026-02-03T06:56:42.654Z",
+      "status": "completed"
+    },
+    {
+      "id": "93c5",
+      "orderNumber": "ORD-20260203155655-2244",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\",\"Avocado\"]}",
+          "name": "불고기 피자 (Regular, Bacon, Avocado)",
+          "price": 20500,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 20500,
+      "createdAt": "2026-02-03T06:56:55.501Z",
+      "status": "completed"
+    },
+    {
+      "id": "7d76",
+      "orderNumber": "ORD-20260203155658-6045",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\",\"Avocado\"]}",
+          "name": "불고기 피자 (Regular, Bacon, Avocado)",
+          "price": 20500,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 20500,
+      "createdAt": "2026-02-03T06:56:58.141Z",
+      "status": "completed"
+    },
+    {
+      "id": "dcd4",
+      "orderNumber": "ORD-20260203155726-4926",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\",\"Avocado\"]}",
+          "name": "불고기 피자 (Regular, Bacon, Avocado)",
+          "price": 20500,
+          "quantity": 1
+        },
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 38500,
+      "createdAt": "2026-02-03T06:57:26.344Z",
+      "status": "completed"
+    },
+    {
+      "id": "bf43",
+      "orderNumber": "ORD-20260203155727-1470",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\",\"Avocado\"]}",
+          "name": "불고기 피자 (Regular, Bacon, Avocado)",
+          "price": 20500,
+          "quantity": 1
+        },
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 38500,
+      "createdAt": "2026-02-03T06:57:27.575Z",
+      "status": "completed"
+    },
+    {
+      "id": "cb7d",
+      "orderNumber": "ORD-20260203155842-8923",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\",\"Avocado\"]}",
+          "name": "불고기 피자 (Regular, Bacon, Avocado)",
+          "price": 20500,
+          "quantity": 1
+        },
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 38500,
+      "createdAt": "2026-02-03T06:58:42.986Z",
+      "status": "completed"
+    },
+    {
+      "id": "153a",
+      "orderNumber": "ORD-20260203155937-4017",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\",\"Avocado\"]}",
+          "name": "불고기 피자 (Regular, Bacon, Avocado)",
+          "price": 20500,
+          "quantity": 1
+        },
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 38500,
+      "createdAt": "2026-02-03T06:59:37.249Z",
+      "status": "completed"
+    },
+    {
+      "id": "8637",
+      "orderNumber": "ORD-20260203160003-4076",
+      "paymentMethod": "카드결제",
+      "items": [],
+      "totalPrice": 0,
+      "createdAt": "2026-02-03T07:00:03.811Z",
+      "status": "completed"
+    },
+    {
+      "id": "7148",
+      "orderNumber": "ORD-20260203160142-8468",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 4
+        }
+      ],
+      "totalPrice": 72000,
+      "createdAt": "2026-02-03T08:42:32.649Z",
+      "status": "completed"
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 18000,
+      "createdAt": "2026-02-03T07:01:42.213Z",
+      "status": "completed"
+    },
+    {
+      "id": "6e54",
+      "orderNumber": "ORD-20260203160427-5845",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\"]}",
+          "name": "불고기 피자 (Regular, Bacon)",
+          "price": 18500,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 18500,
+      "createdAt": "2026-02-03T07:04:27.042Z",
+      "status": "completed"
+    },
+    {
+      "id": "89ef",
+      "orderNumber": "ORD-20260203161217-8932",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[\"Avocado\"]}",
+          "name": "콤비네이션 피자 (Regular, Avocado)",
+          "price": 20000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 20000,
+      "createdAt": "2026-02-03T07:12:17.984Z",
+      "status": "completed"
+    },
+    {
+      "id": "ae47",
+      "orderNumber": "ORD-20260203170428-5083",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "1_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "페퍼로니 피자 (Regular)",
+          "price": 15000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 7175,
+      "createdAt": "2026-02-03T08:04:28.289Z",
+      "status": "completed"
+    },
+    {
+      "id": "02c1",
+      "orderNumber": "ORD-20260203170533-7502",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Regular\",\"Add-ons\":[\"Avocado\"]}",
+          "name": "고르곤졸라 피자 (Regular, Avocado)",
+          "price": 21000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 12817,
+      "createdAt": "2026-02-03T08:05:33.512Z",
+      "status": "completed"
+    },
+    {
+      "id": "49bb",
+      "orderNumber": "ORD-20260203172553-5310",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 12500,
+      "createdAt": "2026-02-03T08:25:53.032Z",
+      "status": "completed"
+    },
+    {
+      "id": "ce25",
+      "orderNumber": "ORD-20260203172556-9495",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 12500,
+      "createdAt": "2026-02-03T08:25:56.544Z",
+      "status": "completed"
+    },
+    {
+      "id": "1390",
+      "orderNumber": "ORD-20260203172711-2438",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Regular)",
+          "price": 19000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 18360,
+      "createdAt": "2026-02-03T08:27:11.720Z",
+      "status": "completed"
+    }
+  ],
+  "members": [
+    {
+      "id": "1",
+      "phone": "01012345678",
+      "points": 918
+    }
+  ],
+  "coupons": [
+    {
+      "code": "2602031000",
+      "amount": 1000,
+      "used": false,
+      "id": "34a5"
     }
   ]
 }

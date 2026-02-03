@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 const props = defineProps({
   menu: {
@@ -16,6 +16,43 @@ const emit = defineEmits(['close', 'add'])
 
 const quantity = ref(1)
 
+const selectedOptions = ref({});
+
+const totalPrice = computed(() => {
+  let base = props.menu.price
+  
+  props.menu.options?.forEach(opt => {
+
+    const selected = selectedOptions.value[opt.name]
+
+    if (!selected) return
+    
+    if (opt.multiple) {
+      selected.forEach(label => {
+        const choice = opt.choices.find(c => c.label === label)
+        if (choice) base += choice.price
+      })
+    } 
+    else {
+      const choice = opt.choices.find(c => c.label === selected)
+      if (choice) base += choice.price
+    }
+  })
+  
+  return base * quantity.value
+})
+
+onMounted(() => {
+   props.menu.options?.forEach(option => {
+    if(option.required){
+      selectedOptions.value[option.name] = option.choices[0].label;
+    }
+  else if(option.multiple){
+    selectedOptions.value[option.name] = [];
+  }
+})
+})
+
 const increaseQuantity = () => {
   quantity.value++
 }
@@ -31,11 +68,52 @@ const handleCancel = () => {
   emit('close')
 }
 
+// const handleAdd = () => {
+//   emit('add', { ...props.menu, quantity: quantity.value })
+//   quantity.value = 1
+//   emit('close')
+
 const handleAdd = () => {
-  emit('add', { ...props.menu, quantity: quantity.value })
-  quantity.value = 1
-  emit('close')
-}
+  emit('add', { 
+    ...props.menu, 
+    quantity: quantity.value,
+    selectedOptions: { ...selectedOptions.value }, 
+    totalPrice: totalPrice.value 
+  });
+  quantity.value = 1;
+  emit('close');
+};
+
+  // 옵션 선택 처리 함수
+const handleOptionSelect = (option, choice) => {
+  if (option.required) {
+    // 필수 옵션: 기존 값을 덮어씀
+    selectedOptions.value[option.name] = choice.label;
+  } else if (option.multiple) {
+    // 다중 선택 옵션: 배열에 추가하거나 제거
+    const current = selectedOptions.value[option.name] || [];
+    const index = current.indexOf(choice.label);
+    
+    if (index > -1) {
+      current.splice(index, 1);
+    } else {
+      current.push(choice.label);
+    }
+    selectedOptions.value[option.name] = current;
+  }
+};
+// 선택 여부 확인 함수 (isSelected)
+const isSelected = (option, choice) => {
+  const selected = selectedOptions.value[option.name];
+  if (!selected) return false;
+  
+  if (option.required) {
+    return selected === choice.label;
+  } else {
+    return selected.includes(choice.label);
+  }
+};
+
 </script>
 
 <template>
@@ -52,7 +130,34 @@ const handleAdd = () => {
         <div class="menu-info">
           <h2 class="menu-name">{{ menu.name }}</h2>
           <p class="menu-description">{{ menu.description }}</p>
-          <p class="menu-price">{{ menu.price?.toLocaleString() }}원</p>
+          <!-- <p class="menu-price">{{ menu.price?.toLocaleString() }}원</p> -->
+           <p class="menu-price">{{ totalPrice?.toLocaleString() }}원</p>
+        </div>
+
+        <!-- Options -->
+        <div class="options-container">
+          <div v-for="option in menu.options" :key="option.name" class="option-group">
+            <h3>{{ option.name }} ({{ option.required ? '필수' : '선택' }})</h3>
+            
+            <div class="option-grid">
+              <div 
+                v-for="choice in option.choices" 
+                :key="choice.label" 
+                class="option-card"
+                :class="{ 'active': isSelected(option, choice) }"
+                @click="handleOptionSelect(option, choice)"
+              >
+                <div class="option-card-image">
+                  <img v-if="choice.image" :src="choice.image" :alt="choice.label">
+                  <span v-else class="placeholder">🍕</span>
+                </div>
+                <div class="option-card-info">
+                  <div>{{ choice.label }}</div>
+                  <div>+{{ choice.price?.toLocaleString() }}원</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Quantity Controls -->
@@ -95,7 +200,10 @@ const handleAdd = () => {
   background-color: #f0c14b;
   border-radius: 16px;
   width: 100%;
-  max-width: 360px;
+  max-width: 400px;
+  max-height: 90vh;  
+  display: flex;
+  flex-direction: column; 
   overflow: hidden;
   animation: modalSlideIn 0.3s ease;
 }
@@ -231,5 +339,54 @@ const handleAdd = () => {
 
 .action-btn:active {
   transform: scale(0.98);
+}
+.option-group{
+  margin-bottom: 10px;
+}
+.option-group h3{
+  margin-bottom: 10px;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.option-card {
+  background: white;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.option-card.active {
+  border-color: #4fc3f7; 
+  background-color: #f0faff;
+}
+.options-container {
+  flex: 1;            
+  overflow-y: auto;   
+  padding: 0 20px 20px; 
+}
+
+.option-card-image {
+  width: 100%;
+  aspect-ratio: 1;    
+  background-color: rgba(255,255,255,0.5);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  overflow: hidden;
+}
+
+.option-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
