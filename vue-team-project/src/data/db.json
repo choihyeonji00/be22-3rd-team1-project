@@ -475,6 +475,182 @@
       "totalPrice": 123000,
       "createdAt": "2026-02-02T11:14:53.719Z",
       "status": "completed"
+    },
+    {
+      "id": "9d83",
+      "orderNumber": "ORD-20260203084949-7066",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Large\",\"Add-ons\":[\"Avocado\"]}",
+          "name": "콤비네이션 피자 (Large, Avocado)",
+          "price": 22000,
+          "quantity": 2
+        }
+      ],
+      "totalPrice": 44000,
+      "createdAt": "2026-02-02T23:49:49.887Z",
+      "status": "completed"
+    },
+    {
+      "id": "9e7a",
+      "orderNumber": "ORD-20260203120856-5956",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Large)",
+          "price": 21000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 21000,
+      "createdAt": "2026-02-03T03:08:56.470Z",
+      "status": "completed"
+    },
+    {
+      "id": "6d19",
+      "orderNumber": "ORD-20260203171149-7345",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "8_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "마르게리타 피자 (Regular)",
+          "price": 14000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 42000,
+      "createdAt": "2026-02-03T08:11:49.878Z",
+      "status": "completed"
+    },
+    {
+      "id": "20f9",
+      "orderNumber": "ORD-20260203172341-7106",
+      "paymentMethod": "토스페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:23:41.819Z",
+      "status": "completed"
+    },
+    {
+      "id": "f9c4",
+      "orderNumber": "ORD-20260203172950-5131",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 39000,
+      "createdAt": "2026-02-03T08:29:50.236Z",
+      "status": "completed"
+    },
+    {
+      "id": "42fd",
+      "orderNumber": "ORD-20260203173004-9590",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:30:04.619Z",
+      "status": "completed"
+    },
+    {
+      "id": "6cba",
+      "orderNumber": "ORD-20260203173022-3242",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Large)",
+          "price": 21000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 63000,
+      "createdAt": "2026-02-03T08:30:22.364Z",
+      "status": "completed"
+    },
+    {
+      "id": "f200",
+      "orderNumber": "ORD-20260203173605-8503",
+      "paymentMethod": "토스페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:36:05.755Z",
+      "status": "completed"
+    },
+    {
+      "id": "f815",
+      "orderNumber": "ORD-20260203173837-5753",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:38:37.581Z",
+      "status": "completed"
+    },
+    {
+      "id": "c134",
+      "orderNumber": "ORD-20260203173913-1970",
+      "paymentMethod": "토스페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 54000,
+      "createdAt": "2026-02-03T08:39:13.624Z",
+      "status": "completed"
+    },
+    {
+      "id": "539e",
+      "orderNumber": "ORD-20260203174232-1249",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 4
+        }
+      ],
+      "totalPrice": 72000,
+      "createdAt": "2026-02-03T08:42:32.649Z",
+      "status": "completed"
     }
   ]
 }
