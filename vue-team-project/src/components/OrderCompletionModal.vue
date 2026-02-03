@@ -15,6 +15,14 @@ defineProps({
   totalPrice: {
     type: Number,
     required: true
+  },
+  earnedPoints: {
+    type: Number,
+    default: 0
+  },
+  currentPoints: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -64,6 +72,18 @@ const handleComplete = () => {
           <div class="order-total-section">
             <span class="order-total-label">주문 금액 :</span>
             <span class="order-total-value">{{ totalPrice.toLocaleString() }}원</span>
+          </div>
+
+          <!-- Points Info -->
+          <div v-if="earnedPoints > 0" class="points-info-section">
+            <div class="points-row">
+              <span class="points-label">이번 주문 적립 :</span>
+              <span class="points-value">+ {{ earnedPoints.toLocaleString() }}P</span>
+            </div>
+            <div class="points-row total-points">
+              <span class="points-label">현재 총 포인트 :</span>
+              <span class="points-value">{{ currentPoints.toLocaleString() }}P</span>
+            </div>
           </div>
         </div>
 
@@ -209,26 +229,44 @@ const handleComplete = () => {
   font-weight: 600;
 }
 
-/* Order Total Section */
-.order-total-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-}
-
-.order-total-label {
-  font-size: 18px;
+.order-total-value {
+  font-size: 20px;
   font-weight: 700;
   color: var(--text-dark);
 }
 
-.order-total-value {
-  font-size: 20px;
+/* Points Info Section */
+.points-info-section {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+}
+
+.points-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.points-row.total-points {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
   font-weight: 700;
+}
+
+.points-label {
+  font-size: 14px;
+  color: #555;
+}
+
+.points-value {
+  font-size: 14px;
+  color: var(--primary-blue-dark);
+}
+
+.total-points .points-value {
   color: var(--text-dark);
 }
 

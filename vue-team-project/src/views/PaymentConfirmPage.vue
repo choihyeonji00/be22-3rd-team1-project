@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { orderStore } from '../stores/orderStore'
 import { api } from '../services/api'
 import OrderCompletionModal from '../components/OrderCompletionModal.vue'
+import MessageModal from '../components/MessageModal.vue'
 
 const router = useRouter()
 
@@ -14,6 +15,9 @@ const totalPrice = orderStore.getTotalPrice
 const totalDiscount = computed(() => orderStore.getTotalDiscount())
 const finalPrice = computed(() => totalPrice.value - totalDiscount.value)
 
+// 포인트 적립 계산 (결제 금액의 5%)
+const earnedPoints = computed(() => Math.floor(finalPrice.value * 0.05))
+
 const isProcessing = ref(false)
 
 // Modal state
@@ -21,6 +25,19 @@ const showModal = ref(false)
 const completedOrderNumber = ref('')
 const completedOrderItems = ref([])
 const completedTotalPrice = ref(0)
+
+// 메세지 모달 구성을 위한 통합 상태 객체
+const modal = ref({
+  isOpen: false,
+  type: 'alert',
+  title: '',
+  message: '',
+  onConfirm: null
+});
+
+const showMessage = (type, title, message, onConfirm) => {
+  modal.value = { isOpen: true, type, title, message, onConfirm };
+};
 
 const handleCancel = () => {
   router.push('/order')
@@ -66,10 +83,28 @@ const handlePay = async () => {
 
     await api.createOrder(orderData)
 
+    // 회원이 결제한 경우 포인트 업데이트
+    const currentMember = orderStore.getCurrentMember()
+    if (currentMember) {
+      const usedPoints = orderStore.getUsedPoints()
+      const newPoints = currentMember.points - usedPoints + earnedPoints.value
+      
+      await api.updateMember({
+        ...currentMember,
+        points: newPoints
+      })
+      
+      // 스토어 정보도 업데이트 (모달 표시용)
+      orderStore.setCurrentMember({
+        ...currentMember,
+        points: newPoints
+      })
+    }
+
     // Store completed order info for modal
     completedOrderNumber.value = orderNumbers.short
     completedOrderItems.value = [...orderItems.value]
-    completedTotalPrice.value = totalPrice.value
+    completedTotalPrice.value = finalPrice.value // 최종 결제 금액으로 수정
 
     // Show completion modal
     showModal.value = true
@@ -138,6 +173,10 @@ const handleComplete = () => {
             <span class="total-label">total payment :</span>
             <span class="total-value">{{ finalPrice.toLocaleString() }}원</span>
           </div>
+          <div v-if="orderStore.getCurrentMember()" class="total-row earned-points-row">
+            <span class="total-label">earned points :</span>
+            <span class="total-value">+ {{ earnedPoints.toLocaleString() }}P</span>
+          </div>
         </div>
       </div>
     </div>
@@ -162,6 +201,8 @@ const handleComplete = () => {
       :order-number="completedOrderNumber"
       :order-items="completedOrderItems"
       :total-price="completedTotalPrice"
+      :earned-points="orderStore.getCurrentMember()?earnedPoints:0"
+      :current-points="orderStore.getCurrentMember()?.points || 0"
       @go-home="handleGoHome"
       @complete="handleComplete"
     />

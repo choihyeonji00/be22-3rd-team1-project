@@ -81,9 +81,14 @@ const handleNext = () => {
     if (selected) {
       orderStore.setPaymentMethod(selected.name)
       orderStore.setTotalDiscount(totalDiscountPrice.value)
-      orderStore.setUsedPoints(pointDiscount.value) // 추가
+      orderStore.setUsedPoints(pointDiscount.value)
+      
+      // 결제 확인 모달 추가
+      showMessage('confirm', '결제 확인', `총 ${confirmPrice.value.toLocaleString()}원 결제를 진행하시겠습니까?`, () => {
+        modal.value.isOpen = false;
+        router.push('/payment-confirm')
+      })
     }
-    router.push('/payment-confirm')
   }
 }
 
@@ -165,12 +170,17 @@ const checkMember = async (phone) => {
 // 2. 입력한 포인트 금액 적용
 const applyPointAmount = (amount) => {
   const points = parseInt(amount);
-  if (points > currentMember.value.points) {
-    showMessage('alert', '포인트 부족', `보유 포인트(${currentMember.value.points.toLocaleString()}P)를 초과할 수 없습니다.`)
+  if (points > (currentMember.value?.points || 0)) {
+    showMessage('alert', '포인트 부족', `보유 포인트(${(currentMember.value?.points || 0).toLocaleString()}P)를 초과할 수 없습니다.`)
     return;
   }
   pointDiscount.value = points;
   isPointAmountModalOpen.value = false;
+
+  // 포인트 적용 확인 모달 추가
+  if (points > 0) {
+    showMessage('alert', '포인트 적용', `${points.toLocaleString()}P가 적용되었습니다.`);
+  }
 };
 
 watch(currentMember, (newMember) => {
