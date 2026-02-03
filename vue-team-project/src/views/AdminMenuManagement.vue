@@ -16,8 +16,10 @@ const editingMenu = ref(null) // null for add, object for edit
 const newMenuItem = ref({
   name: '',
   price: 0,
+  description: '', // 설명 추가
   category: '', // category ID
-  imageUrl: '' // Optional
+  image: '', // image 필드로 수정 (기존 db.json과 일치)
+  options: [] // 옵션 배열 추가
 })
 
 // Fetch data on component mount
@@ -50,21 +52,32 @@ const getCategoryName = (categoryId) => {
 
 const openAddModal = () => {
   editingMenu.value = null
-  newMenuItem.value = { name: '', price: 0, category: categories.value[0]?.id || '', imageUrl: '' }
+  newMenuItem.value = { 
+    name: '', 
+    price: 0, 
+    description: '',
+    category: categories.value[0]?.id || '', 
+    image: '',
+    options: [] 
+  }
   isModalOpen.value = true
 }
 
 const openEditModal = (menu) => {
-  editingMenu.value = { ...menu } // Deep copy to avoid direct mutation
-  newMenuItem.value = { ...menu }
+  editingMenu.value = { ...menu }
+  // deep copy for nested options
+  const copiedMenu = JSON.parse(JSON.stringify(menu))
+  // Ensure options array exists
+  if (!copiedMenu.options) copiedMenu.options = []
+  newMenuItem.value = copiedMenu
   isModalOpen.value = true
 }
 
 const closeModal = () => {
   isModalOpen.value = false
   editingMenu.value = null
-  newMenuItem.value = { name: '', price: 0, category: '', imageUrl: '' }
-  errorMessage.value = '' // Clear modal error
+  newMenuItem.value = { name: '', price: 0, description: '', category: '', image: '', options: [] }
+  errorMessage.value = '' 
 }
 
 const saveMenuItem = async () => {
@@ -96,6 +109,29 @@ const saveMenuItem = async () => {
     errorMessage.value = '메뉴 항목 저장에 실패했습니다.'
   }
 }
+
+// --- Option Management Functions ---
+const addOptionGroup = () => {
+  newMenuItem.value.options.push({
+    name: '',
+    required: false,
+    multiple: false,
+    choices: [{ label: '', price: 0 }]
+  })
+}
+
+const removeOptionGroup = (index) => {
+  newMenuItem.value.options.splice(index, 1)
+}
+
+const addChoice = (optionIndex) => {
+  newMenuItem.value.options[optionIndex].choices.push({ label: '', price: 0 })
+}
+
+const removeChoice = (optionIndex, choiceIndex) => {
+  newMenuItem.value.options[optionIndex].choices.splice(choiceIndex, 1)
+}
+// ------------------------------------
 
 const deleteMenuItem = async (id) => {
   if (confirm('정말로 이 메뉴 항목을 삭제하시겠습니까?')) {
@@ -137,7 +173,7 @@ const goToDashboard = () => {
               <th>이름</th>
               <th>가격</th>
               <th>카테고리</th>
-              <th>이미지 URL</th>
+              <th>옵션 설정</th>
               <th>액션</th>
             </tr>
           </thead>
@@ -147,7 +183,12 @@ const goToDashboard = () => {
               <td>{{ menu.name }}</td>
               <td>{{ menu.price.toLocaleString() }}원</td>
               <td>{{ getCategoryName(menu.category) }}</td>
-              <td>{{ menu.imageUrl || '-' }}</td>
+              <td>
+                <div v-if="menu.options && menu.options.length > 0" class="options-summary">
+                  옵션 {{ menu.options.length }}개 설정됨
+                </div>
+                <span v-else>-</span>
+              </td>
               <td>
                 <button @click="openEditModal(menu)" class="action-btn edit-btn">수정</button>
                 <button @click="deleteMenuItem(menu.id)" class="action-btn delete-btn">삭제</button>
@@ -183,8 +224,40 @@ const goToDashboard = () => {
             </select>
           </div>
           <div class="form-group">
-            <label for="menuImageUrl">이미지 URL (선택 사항):</label>
-            <input type="text" id="menuImageUrl" v-model="newMenuItem.imageUrl" />
+            <label for="menuDescription">설명:</label>
+            <textarea id="menuDescription" v-model="newMenuItem.description" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="menuImageUrl">이미지 URL:</label>
+            <input type="text" id="menuImageUrl" v-model="newMenuItem.image" placeholder="/src/assets/images/..." />
+          </div>
+
+          <!-- Options Section -->
+          <div class="options-management">
+            <div class="options-header">
+              <h4>옵션 설정</h4>
+              <button type="button" @click="addOptionGroup" class="small-add-btn">+ 그룹 추가</button>
+            </div>
+            
+            <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
+              <div class="option-group-header">
+                <input type="text" v-model="opt.name" placeholder="그룹명 (예: 사이즈, 토핑)" class="opt-name-input" />
+                <div class="opt-configs">
+                  <label><input type="checkbox" v-model="opt.required" /> 필수</label>
+                  <label><input type="checkbox" v-model="opt.multiple" /> 다중선택</label>
+                </div>
+                <button type="button" @click="removeOptionGroup(optIdx)" class="small-delete-btn">✕</button>
+              </div>
+
+              <div class="choices-list">
+                <div v-for="(choice, choiceIdx) in opt.choices" :key="choiceIdx" class="choice-row">
+                  <input type="text" v-model="choice.label" placeholder="라벨" />
+                  <input type="number" v-model.number="choice.price" placeholder="추가금" />
+                  <button type="button" @click="removeChoice(optIdx, choiceIdx)" class="choice-delete-btn">✕</button>
+                </div>
+                <button type="button" @click="addChoice(optIdx)" class="choice-add-btn">+ 선택지 추가</button>
+              </div>
+            </div>
           </div>
           <p v-if="errorMessage" class="error-message-modal">{{ errorMessage }}</p>
           <div class="modal-actions">
@@ -353,8 +426,121 @@ tr:hover {
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   width: 90%;
-  max-width: 500px;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
 }
+
+/* Options Management Styles */
+.options-management {
+  margin-top: 20px;
+  border-top: 2px dashed #eee;
+  padding-top: 20px;
+}
+
+.options-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.options-header h4 {
+  margin: 0;
+  color: #444;
+}
+
+.small-add-btn {
+  padding: 5px 10px;
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.option-group-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+}
+
+.option-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.opt-name-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.opt-configs {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.small-delete-btn {
+  background: none;
+  border: none;
+  color: #ff5252;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.choices-list {
+  padding-left: 20px;
+}
+
+.choice-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.choice-row input {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.choice-row input[type="text"] {
+  flex: 2;
+}
+
+.choice-row input[type="number"] {
+  flex: 1;
+}
+
+.choice-delete-btn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+}
+
+.choice-add-btn {
+  background: none;
+  border: 1px dashed #aaa;
+  color: #777;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+/* Modal Actions and Base Styles */
 
 .modal-content h3 {
   margin-top: 0;
@@ -378,12 +564,14 @@ tr:hover {
 
 .form-group input[type="text"],
 .form-group input[type="number"],
+.form-group textarea,
 .form-group select {
   width: calc(100% - 20px);
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 16px;
+  font-family: inherit;
 }
 
 .error-message-modal {
