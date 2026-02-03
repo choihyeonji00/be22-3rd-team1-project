@@ -11,6 +11,8 @@ const router = useRouter()
 const selectedPaymentMethod = computed(() => orderStore.getSelectedPaymentMethod() || '카드결제')
 const orderItems = computed(() => orderStore.getOrderList())
 const totalPrice = orderStore.getTotalPrice
+const totalDiscount = computed(() => orderStore.getTotalDiscount())
+const finalPrice = computed(() => totalPrice.value - totalDiscount.value)
 
 const isProcessing = ref(false)
 
@@ -57,7 +59,7 @@ const handlePay = async () => {
         price: item.price,
         quantity: item.quantity
       })),
-      totalPrice: totalPrice.value,
+      totalPrice: finalPrice.value,
       createdAt: new Date().toISOString(),
       status: 'completed'
     }
@@ -73,7 +75,7 @@ const handlePay = async () => {
     showModal.value = true
   } catch (error) {
     console.error('Failed to save order:', error)
-    alert('결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
+    showMessage('alert','결제 처리 실패','결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
   } finally {
     isProcessing.value = false
   }
@@ -124,9 +126,17 @@ const handleComplete = () => {
             </div>
           </div>
 
-          <div class="total-row">
-            <span class="total-label">total price :</span>
+          <div class="total-row raw-total">
+            <span class="total-label">total items :</span>
             <span class="total-value">{{ totalPrice.toLocaleString() }}원</span>
+          </div>
+          <div v-if="totalDiscount > 0" class="total-row discount-row">
+            <span class="total-label">discount :</span>
+            <span class="total-value">- {{ totalDiscount.toLocaleString() }}원</span>
+          </div>
+          <div class="total-row final-total">
+            <span class="total-label">total payment :</span>
+            <span class="total-value">{{ finalPrice.toLocaleString() }}원</span>
           </div>
         </div>
       </div>
@@ -156,6 +166,12 @@ const handleComplete = () => {
       @complete="handleComplete"
     />
   </div>
+
+    <MessageModal
+    v-bind="modal"
+    @close="modal.isOpen = false"
+    @confirm="modal.onConfirm ? modal.onConfirm() : modal.isOpen = false"
+  />
 </template>
 
 <style scoped>

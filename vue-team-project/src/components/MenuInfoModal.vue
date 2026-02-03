@@ -16,7 +16,6 @@ const emit = defineEmits(['close', 'add'])
 
 const quantity = ref(1)
 
-// 옵션 저장 객체
 const selectedOptions = ref({});
 
 const totalPrice = computed(() => {
@@ -29,14 +28,12 @@ const totalPrice = computed(() => {
     if (!selected) return
     
     if (opt.multiple) {
-      // 다중 선택된 모든 항목의 가격 합산
       selected.forEach(label => {
         const choice = opt.choices.find(c => c.label === label)
         if (choice) base += choice.price
       })
     } 
     else {
-      // 단일 선택된 항목의 가격 합산
       const choice = opt.choices.find(c => c.label === selected)
       if (choice) base += choice.price
     }
@@ -80,8 +77,8 @@ const handleAdd = () => {
   emit('add', { 
     ...props.menu, 
     quantity: quantity.value,
-    selectedOptions: { ...selectedOptions.value }, // 선택된 옵션 포함
-    totalPrice: totalPrice.value // 최종 계산된 금액 포함
+    selectedOptions: { ...selectedOptions.value }, 
+    totalPrice: totalPrice.value 
   });
   quantity.value = 1;
   emit('close');
@@ -151,7 +148,6 @@ const isSelected = (option, choice) => {
                 @click="handleOptionSelect(option, choice)"
               >
                 <div class="option-card-image">
-                  <!-- 이미지가 없을 경우 기본 아이콘 표시 -->
                   <img v-if="choice.image" :src="choice.image" :alt="choice.label">
                   <span v-else class="placeholder">🍕</span>
                 </div>
@@ -351,14 +347,12 @@ const isSelected = (option, choice) => {
   margin-bottom: 10px;
 }
 
-/* 옵션 그리드 배치 */
 .option-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
-/* 개별 카드 스타일 */
 .option-card {
   background: white;
   border: 2px solid transparent;
@@ -368,7 +362,6 @@ const isSelected = (option, choice) => {
   cursor: pointer;
 }
 
-/* 선택되었을 때 강조 */
 .option-card.active {
   border-color: #4fc3f7; 
   background-color: #f0faff;
