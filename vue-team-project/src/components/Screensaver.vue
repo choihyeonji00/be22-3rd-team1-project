@@ -26,7 +26,7 @@ onMounted(() => {
 
   <div v-if="show" class="screensaver-overlay" @click="reset">
     <video
-        src="/media/toss.mp4"
+        src="/vidio/toss.mp4"
         autoplay
         muted
         loop
