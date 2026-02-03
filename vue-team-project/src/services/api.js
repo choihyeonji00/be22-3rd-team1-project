@@ -36,5 +36,37 @@ export const api = {
   async getOrders() {
     const response = await fetch(`${API_BASE_URL}/orders`)
     return response.json()
+  },
+
+  async getMemberByPhone(phone) {
+    const response = await fetch(`${API_BASE_URL}/members?phone=${phone}`)
+    return response.json()
+  },
+
+  async getCouponByCode(code) {
+    const response = await fetch(`${API_BASE_URL}/coupons?code=${code}`)
+    return response.json()
+  },
+
+  async createMember(memberData) {
+    const response = await fetch(`${API_BASE_URL}/members`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(memberData)
+    })
+    return response.json()
+  },
+
+  async updateMember(memberData) {
+    const response = await fetch(`${API_BASE_URL}/members/${memberData.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(memberData)
+    })
+    return response.json()
   }
 }
