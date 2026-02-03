@@ -186,7 +186,8 @@ const handlePay = () => {
           @click="openMenuModal(menu)"
         >
           <div class="menu-card-image">
-            <span class="menu-placeholder-icon">🍕</span>
+            <img v-if="menu.image" :src="menu.image" :alt="menu.name" class="menu-img" />
+            <span v-else class="menu-placeholder-icon">🍕</span>
           </div>
           <div class="menu-card-info">
             <p class="menu-card-name">{{ menu.name }}</p>
@@ -411,6 +412,12 @@ const handlePay = () => {
 
 .menu-placeholder-icon {
   font-size: 36px;
+}
+
+.menu-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .menu-card-info {
