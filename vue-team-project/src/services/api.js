@@ -50,6 +50,15 @@ export const api = {
 
   async createMember(memberData) {
     const response = await fetch(`${API_BASE_URL}/members`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(memberData)
+    })
+    return response.json()
+  },
+
   // --- 관리자 모드 API 추가 ---
 
   async adminLogin(credentials) {
@@ -77,7 +86,6 @@ export const api = {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(memberData)
       body: JSON.stringify(menuItemData)
     })
     return response.json()
@@ -92,6 +100,8 @@ export const api = {
       body: JSON.stringify(memberData)
     })
     return response.json()
+  },
+
   async updateMenuItem(id, menuItemData) {
     const response = await fetch(`${API_BASE_URL}/menuItems/${id}`, {
       method: 'PUT', // 또는 PATCH
