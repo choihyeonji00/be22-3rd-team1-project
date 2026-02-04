@@ -2,14 +2,15 @@
 import { ref, onMounted, computed, watch} from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../services/api'
-import { orderStore } from '../stores/orderStore'
+import { useOrderStore } from '../stores/orderStore'
 import KeypadModal from '../components/KeypadModal.vue'
 import MessageModal from '../components/MessageModal.vue'
 
 const router = useRouter()
+const orderStore = useOrderStore()
 
 // Get total price from order store
-const totalPrice = orderStore.getTotalPrice
+const totalPrice = computed(() => orderStore.calculatedTotalPrice)
 
 const couponDiscount = ref(0);
 const pointDiscount = ref(0);

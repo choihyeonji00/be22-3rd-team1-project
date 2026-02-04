@@ -87,7 +87,7 @@ const handlePay = async () => {
     await api.createOrder(orderData)
 
     // 회원이 결제한 경우 포인트 업데이트
-    const currentMember = orderStore.getCurrentMember()
+    const currentMember = orderStore.currentMember
     if (currentMember) {
       const usedPoints = orderStore.getUsedPoints()
       const newPoints = currentMember.points - usedPoints + earnedPoints.value
@@ -176,7 +176,7 @@ const handleComplete = () => {
             <span class="total-label">total payment :</span>
             <span class="total-value">{{ finalPrice.toLocaleString() }}원</span>
           </div>
-          <div v-if="orderStore.getCurrentMember()" class="total-row earned-points-row">
+          <div v-if="orderStore.currentMember" class="total-row earned-points-row">
             <span class="total-label">earned points :</span>
             <span class="total-value">+ {{ earnedPoints.toLocaleString() }}P</span>
           </div>
@@ -204,8 +204,8 @@ const handleComplete = () => {
       :order-number="completedOrderNumber"
       :order-items="completedOrderItems"
       :total-price="completedTotalPrice"
-      :earned-points="orderStore.getCurrentMember()?earnedPoints:0"
-      :current-points="orderStore.getCurrentMember()?.points || 0"
+      :earned-points="orderStore.currentMember?earnedPoints:0"
+      :current-points="orderStore.currentMember?.points || 0"
       @go-home="handleGoHome"
       @complete="handleComplete"
     />
@@ -424,15 +424,16 @@ const handleComplete = () => {
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { orderStore } from '../stores/orderStore'
+import { useOrderStore } from '../stores/orderStore'
 
 const router = useRouter()
+const orderStore = useOrderStore()
 
 // 스토어에서 데이터 가져오기 (화면 표시용)
-const selectedPaymentMethod = computed(() => orderStore.getSelectedPaymentMethod() || '카드결제')
-const orderItems = computed(() => orderStore.getOrderList())
-const totalPrice = orderStore.getTotalPrice
-const totalDiscount = computed(() => orderStore.getTotalDiscount())
+const selectedPaymentMethod = computed(() => orderStore.selectedPaymentMethod || '카드결제')
+const orderItems = computed(() => orderStore.orderList)
+const totalPrice = computed(() => orderStore.calculatedTotalPrice)
+const totalDiscount = computed(() => orderStore.totalDiscount)
 const finalPrice = computed(() => totalPrice.value - totalDiscount.value)
 
 // 포인트 적립 예정액 (화면 표시용)
@@ -491,7 +492,7 @@ const handlePay = () => {
             <span class="total-label">total payment :</span>
             <span class="total-value">{{ finalPrice.toLocaleString() }}원</span>
           </div>
-          <div v-if="orderStore.getCurrentMember()" class="total-row earned-points-row">
+          <div v-if="orderStore.currentMember" class="total-row earned-points-row">
             <span class="total-label">earned points :</span>
             <span class="total-value">+ {{ earnedPoints.toLocaleString() }}P</span>
           </div>

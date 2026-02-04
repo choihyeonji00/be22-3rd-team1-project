@@ -1478,6 +1478,34 @@
       "totalPrice": 13000,
       "createdAt": "2026-02-04T00:09:32.647Z",
       "status": "completed"
+    },
+    {
+      "id": "ade6",
+      "orderNumber": "ORD-20260204022330-1724",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "1_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "페퍼로니 피자 (Regular)",
+          "price": 15000,
+          "quantity": 3
+        },
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        },
+        {
+          "id": "22_{}",
+          "name": "BLT 샌드위치",
+          "price": 7000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 120000,
+      "createdAt": "2026-02-04T02:23:30.558Z",
+      "status": "completed"
     }
   ],
   "members": [
