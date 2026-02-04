@@ -53,8 +53,8 @@ onUnmounted(() => {
       />
 
       <div class="text-container">
-        <h1 class="animate-pulse">터치하여 주문하기</h1>
-        <p>Touch screen to order</p>
+        <h1 class="animate-pulse">{{ $t('screensaver.touch_to_order') }}</h1>
+        <p>{{ $t('screensaver.touch_screen') }}</p>
       </div>
     </div>
   </Transition>

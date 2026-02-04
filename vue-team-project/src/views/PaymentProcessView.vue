@@ -36,15 +36,15 @@ const guideInfo = computed(() => {
 
   if (method.includes('카드')) {
     return {
-      title: '카드를 투입구에 넣어주세요',
-      subTitle: '결제가 완료될 때까지 카드를 빼지 마세요',
+      title: $t('process.card_title'),
+      subTitle: $t('process.card_subtitle'),
       image: '/payment/insert_card.gif', // 준비하신 카드 투입 애니메이션 이미지
       bgClass: 'bg-card'
     }
   } else if (method.includes('QR') || method.includes('페이') || method.includes('Easy')) {
     return {
-      title: 'NFC를 리더기에 스캔해주세요',
-      subTitle: '화면 아래 리더기에 NFC를 대주세요',
+      title: $t('process.nfc_title'),
+      subTitle: $t('process.nfc_subtitle'),
       image: '/payment/scan_nfc.png',
       bgClass: 'bg-qr'
     }
@@ -60,8 +60,8 @@ const guideInfo = computed(() => {
     }
   } */else {
     return {
-      title: '결제를 진행 중입니다',
-      subTitle: '잠시만 기다려주세요',
+      title: $t('process.general_title'),
+      subTitle: $t('process.general_subtitle'),
       image: '/payment/payment_processing.gif', // 공통 로딩 이미지
       bgClass: 'bg-common'
     }
@@ -98,7 +98,7 @@ const startTimer = () => {
   timerInterval = setInterval(() => {
     timeLeft.value--
     if (timeLeft.value <= 0) {
-      handleFail('시간이 초과되었습니다. 다시 시도해주세요.')
+      handleFail($t('process.timeout'))
     }
   }, 1000)
 }
@@ -158,7 +158,7 @@ const processPayment = async () => {
 
   } catch (error) {
     console.error('Payment Error:', error)
-    handleFail('결제 시스템 오류가 발생했습니다.')
+    handleFail($t('process.system_error'))
   }
 }
 
@@ -184,7 +184,7 @@ const handleComplete = () => {
 
     <div v-if="processStatus !== 'success'" class="content-container">
       <div class="guide-card">
-        <div class="timer-badge">{{ timeLeft }}초 남음</div>
+        <div class="timer-badge">{{ $t('process.time_left', { time: timeLeft }) }}</div>
 
         <div class="image-area">
           <img :src="guideInfo.image" class="guide-img" alt="가이드 이미지" />
@@ -193,11 +193,11 @@ const handleComplete = () => {
           </div>
         </div>
 
-        <h2 class="title">{{ processStatus === 'processing' ? '결제 승인 중...' : guideInfo.title }}</h2>
+        <h2 class="title">{{ processStatus === 'processing' ? $t('process.approving') : guideInfo.title }}</h2>
         <p class="subtitle">{{ guideInfo.subTitle }}</p>
 
-        <button class="cancel-btn" @click="handleFail('사용자가 결제를 취소했습니다.')">
-          결제 취소
+        <button class="cancel-btn" @click="handleFail($t('process.user_cancel'))">
+          {{ $t('process.cancel_btn') }}
         </button>
       </div>
     </div>

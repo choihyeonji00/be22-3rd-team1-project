@@ -18,14 +18,14 @@ const goToAdmin = () => {
   <div class="main-page">
     <!-- Admin Button -->
     <button class="admin-btn" @click="goToAdmin">
-      관리자 페이지 이동
+      {{ $t('main.admin_btn') }}
     </button>
 
     <!-- Background Area -->
     <div class="background-area">
       <div class="welcome-text">
-        <h1>환영합니다</h1>
-        <p>주문 방식을 선택해 주세요</p>
+        <h1>{{ $t('main.welcome') }}</h1>
+        <p>{{ $t('main.select_method') }}</p>
       </div>
     </div>
 
@@ -36,7 +36,7 @@ const goToAdmin = () => {
         @click="selectDiningOption('forHere')"
       >
         <span class="dining-icon">🍽️</span>
-        <span class="dining-text">매장</span>
+        <span class="dining-text">{{ $t('main.for_here') }}</span>
         <span class="dining-subtitle">For Here</span>
       </button>
 
@@ -45,7 +45,7 @@ const goToAdmin = () => {
         @click="selectDiningOption('toGo')"
       >
         <span class="dining-icon">🛍️</span>
-        <span class="dining-text">포장</span>
+        <span class="dining-text">{{ $t('main.to_go') }}</span>
         <span class="dining-subtitle">To Go</span>
       </button>
     </div>

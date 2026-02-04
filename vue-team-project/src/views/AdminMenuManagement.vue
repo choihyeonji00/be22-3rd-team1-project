@@ -39,7 +39,7 @@ const refreshData = async () => {
     categories.value = categoryData
   } catch (error) {
     console.error('Failed to fetch admin data:', error)
-    errorMessage.value = '데이터를 불러오는 데 실패했습니다.'
+    errorMessage.value = $t('admin.fetch_fail')
   } finally {
     isLoading.value = false
   }
@@ -47,7 +47,7 @@ const refreshData = async () => {
 
 const getCategoryName = (categoryId) => {
   const category = categories.value.find(cat => cat.id === categoryId)
-  return category ? category.name : '알 수 없음'
+  return category ? category.name : $t('admin.unknown')
 }
 
 const openAddModal = () => {
@@ -84,7 +84,7 @@ const saveMenuItem = async () => {
   errorMessage.value = ''
   try {
     if (!newMenuItem.value.name || !newMenuItem.value.price || !newMenuItem.value.category) {
-      errorMessage.value = '모든 필수 필드를 입력해주세요.'
+      errorMessage.value = $t('admin.fill_all_fields')
       return
     }
 
@@ -106,7 +106,7 @@ const saveMenuItem = async () => {
     closeModal()
   } catch (error) {
     console.error('Failed to save menu item:', error)
-    errorMessage.value = '메뉴 항목 저장에 실패했습니다.'
+    errorMessage.value = $t('admin.save_fail')
   }
 }
 
@@ -134,14 +134,14 @@ const removeChoice = (optionIndex, choiceIndex) => {
 // ------------------------------------
 
 const deleteMenuItem = async (id) => {
-  if (confirm('정말로 이 메뉴 항목을 삭제하시겠습니까?')) {
+  if (confirm($t('admin.delete_confirm'))) {
     try {
       await api.deleteMenuItem(id)
       console.log('Menu item deleted:', id)
       await refreshData()
     } catch (error) {
       console.error('Failed to delete menu item:', error)
-      errorMessage.value = '메뉴 항목 삭제에 실패했습니다.'
+      errorMessage.value = $t('admin.delete_fail')
     }
   }
 }
@@ -154,48 +154,48 @@ const goToDashboard = () => {
 <template>
   <div class="admin-menu-management">
     <header class="admin-header">
-      <h1>메뉴 관리</h1>
+      <h1>{{ $t('admin.menu_management') }}</h1>
       <div class="header-actions">
-        <button @click="goToDashboard" class="back-btn">대시보드로</button>
-        <button @click="openAddModal" class="add-btn">새 메뉴 추가</button>
+        <button @click="goToDashboard" class="back-btn">{{ $t('admin.back_to_dashboard') }}</button>
+        <button @click="openAddModal" class="add-btn">{{ $t('admin.add_new_menu') }}</button>
       </div>
     </header>
 
     <div class="content-area">
       <p v-if="errorMessage" class="error-message-banner">{{ errorMessage }}</p>
 
-      <div v-if="isLoading" class="loading-spinner">메뉴 데이터를 불러오는 중...</div>
+      <div v-if="isLoading" class="loading-spinner">{{ $t('admin.loading_menu') }}</div>
       <div v-else class="menu-table-container">
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>이름</th>
-              <th>가격</th>
-              <th>카테고리</th>
-              <th>옵션 설정</th>
-              <th>액션</th>
+              <th>{{ $t('admin.id') }}</th>
+              <th>{{ $t('admin.name') }}</th>
+              <th>{{ $t('admin.price') }}</th>
+              <th>{{ $t('admin.category') }}</th>
+              <th>{{ $t('admin.option_settings') }}</th>
+              <th>{{ $t('admin.actions') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="menu in menuItems" :key="menu.id">
               <td>{{ menu.id }}</td>
               <td>{{ menu.name }}</td>
-              <td>{{ menu.price.toLocaleString() }}원</td>
+              <td>{{ menu.price.toLocaleString() }}{{ $t('common.won') }}</td>
               <td>{{ getCategoryName(menu.category) }}</td>
               <td>
                 <div v-if="menu.options && menu.options.length > 0" class="options-summary">
-                  옵션 {{ menu.options.length }}개 설정됨
+                  {{ $t('admin.options_count', { count: menu.options.length }) }}
                 </div>
                 <span v-else>-</span>
               </td>
               <td>
-                <button @click="openEditModal(menu)" class="action-btn edit-btn">수정</button>
-                <button @click="deleteMenuItem(menu.id)" class="action-btn delete-btn">삭제</button>
+                <button @click="openEditModal(menu)" class="action-btn edit-btn">{{ $t('admin.edit') }}</button>
+                <button @click="deleteMenuItem(menu.id)" class="action-btn delete-btn">{{ $t('admin.delete') }}</button>
               </td>
             </tr>
             <tr v-if="menuItems.length === 0">
-              <td colspan="6" class="no-data">메뉴 항목이 없습니다.</td>
+              <td colspan="6" class="no-data">{{ $t('admin.no_menu_items') }}</td>
             </tr>
           </tbody>
         </table>
@@ -205,18 +205,18 @@ const goToDashboard = () => {
     <!-- Add/Edit Menu Modal -->
     <div v-if="isModalOpen" class="modal-overlay">
       <div class="modal-content">
-        <h3>{{ editingMenu ? '메뉴 수정' : '새 메뉴 추가' }}</h3>
+        <h3>{{ editingMenu ? $t('admin.edit_menu') : $t('admin.new_menu') }}</h3>
         <form @submit.prevent="saveMenuItem">
           <div class="form-group">
-            <label for="menuName">이름:</label>
+            <label for="menuName">{{ $t('admin.name') }}:</label>
             <input type="text" id="menuName" v-model="newMenuItem.name" required />
           </div>
           <div class="form-group">
-            <label for="menuPrice">가격:</label>
+            <label for="menuPrice">{{ $t('admin.price') }}:</label>
             <input type="number" id="menuPrice" v-model.number="newMenuItem.price" required min="0" />
           </div>
           <div class="form-group">
-            <label for="menuCategory">카테고리:</label>
+            <label for="menuCategory">{{ $t('admin.category') }}:</label>
             <select id="menuCategory" v-model="newMenuItem.category" required>
               <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                 {{ cat.name }}
@@ -224,45 +224,45 @@ const goToDashboard = () => {
             </select>
           </div>
           <div class="form-group">
-            <label for="menuDescription">설명:</label>
+            <label for="menuDescription">{{ $t('admin.description') }}:</label>
             <textarea id="menuDescription" v-model="newMenuItem.description" rows="2"></textarea>
           </div>
           <div class="form-group">
-            <label for="menuImageUrl">이미지 URL:</label>
+            <label for="menuImageUrl">{{ $t('admin.image_url') }}:</label>
             <input type="text" id="menuImageUrl" v-model="newMenuItem.image" placeholder="/src/assets/images/..." />
           </div>
 
           <!-- Options Section -->
           <div class="options-management">
             <div class="options-header">
-              <h4>옵션 설정</h4>
-              <button type="button" @click="addOptionGroup" class="small-add-btn">+ 그룹 추가</button>
+              <h4>{{ $t('admin.option_settings') }}</h4>
+              <button type="button" @click="addOptionGroup" class="small-add-btn">{{ $t('admin.add_group') }}</button>
             </div>
             
             <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
               <div class="option-group-header">
                 <input type="text" v-model="opt.name" placeholder="그룹명 (예: 사이즈, 토핑)" class="opt-name-input" />
                 <div class="opt-configs">
-                  <label><input type="checkbox" v-model="opt.required" /> 필수</label>
-                  <label><input type="checkbox" v-model="opt.multiple" /> 다중선택</label>
+                  <label><input type="checkbox" v-model="opt.required" /> {{ $t('admin.required') }}</label>
+                  <label><input type="checkbox" v-model="opt.multiple" /> {{ $t('admin.multiple') }}</label>
                 </div>
                 <button type="button" @click="removeOptionGroup(optIdx)" class="small-delete-btn">✕</button>
               </div>
 
               <div class="choices-list">
                 <div v-for="(choice, choiceIdx) in opt.choices" :key="choiceIdx" class="choice-row">
-                  <input type="text" v-model="choice.label" placeholder="라벨" />
-                  <input type="number" v-model.number="choice.price" placeholder="추가금" />
+                  <input type="text" v-model="choice.label" :placeholder="$t('admin.label')" />
+                  <input type="number" v-model.number="choice.price" :placeholder="$t('admin.extra_price')" />
                   <button type="button" @click="removeChoice(optIdx, choiceIdx)" class="choice-delete-btn">✕</button>
                 </div>
-                <button type="button" @click="addChoice(optIdx)" class="choice-add-btn">+ 선택지 추가</button>
+                <button type="button" @click="addChoice(optIdx)" class="choice-add-btn">{{ $t('admin.add_choice') }}</button>
               </div>
             </div>
           </div>
           <p v-if="errorMessage" class="error-message-modal">{{ errorMessage }}</p>
           <div class="modal-actions">
-            <button type="submit" class="save-btn">저장</button>
-            <button type="button" @click="closeModal" class="cancel-btn">취소</button>
+            <button type="submit" class="save-btn">{{ $t('admin.save') }}</button>
+            <button type="button" @click="closeModal" class="cancel-btn">{{ $t('common.cancel') }}</button>
           </div>
         </form>
       </div>

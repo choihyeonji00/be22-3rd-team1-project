@@ -143,13 +143,13 @@ const getCategoryIcon = (categoryId) => {
           <h2 class="menu-name">{{ menu.name }}</h2>
           <p class="menu-description">{{ menu.description }}</p>
           <!-- <p class="menu-price">{{ menu.price?.toLocaleString() }}원</p> -->
-           <p class="menu-price">{{ totalPrice?.toLocaleString() }}원</p>
+           <p class="menu-price">{{ totalPrice?.toLocaleString() }}{{ $t('common.won') }}</p>
         </div>
 
         <!-- Options -->
         <div class="options-container">
           <div v-for="option in menu.options" :key="option.name" class="option-group">
-            <h3>{{ option.name }} ({{ option.required ? '필수' : '선택' }})</h3>
+            <h3>{{ option.name }} ({{ option.required ? $t('admin.required') : $t('order.optional') }})</h3>
             
             <div class="option-grid">
               <div 
@@ -165,7 +165,7 @@ const getCategoryIcon = (categoryId) => {
                 </div>
                 <div class="option-card-info">
                   <div>{{ choice.label }}</div>
-                  <div>+{{ choice.price?.toLocaleString() }}원</div>
+                  <div>+{{ choice.price?.toLocaleString() }}{{ $t('common.won') }}</div>
                 </div>
               </div>
             </div>
@@ -182,10 +182,10 @@ const getCategoryIcon = (categoryId) => {
         <!-- Action Buttons -->
         <div class="modal-actions">
           <button class="action-btn cancel-btn" @click="handleCancel">
-            취소
+            {{ $t('common.cancel') }}
           </button>
           <button class="action-btn add-btn" @click="handleAdd">
-            담기
+            {{ $t('order.add_to_cart') }}
           </button>
         </div>
       </div>

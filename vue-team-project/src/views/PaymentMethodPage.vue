@@ -84,7 +84,7 @@ const handleNext = () => {
       orderStore.setUsedPoints(pointDiscount.value)
       
       // 결제 확인 모달 추가
-      showMessage('confirm', '결제 확인', `총 ${confirmPrice.value.toLocaleString()}원 결제를 진행하시겠습니까?`, () => {
+      showMessage('confirm', $t('payment.confirm_msg'), $t('payment.confirm_proceed', { amount: confirmPrice.value.toLocaleString() }), () => {
         modal.value.isOpen = false;
         router.push('/payment-confirm')
       })
@@ -116,14 +116,14 @@ const checkCoupon = async (code) => {
       const coupon = coupons[0]
       if(!coupon.used){
         couponDiscount.value = coupon.amount
-        showMessage('alert', '쿠폰 할인', `${coupon.amount.toLocaleString()}원 할인이 적용되었습니다.`)
+        showMessage('alert', $t('discount.coupon'), $t('discount.applied_coupon', { amount: coupon.amount.toLocaleString() }))
       }
       else{
-        showMessage('alert', '쿠폰 오류', '이미 사용된 쿠폰입니다.')
+        showMessage('alert', $t('discount.coupon_error'), $t('discount.used_coupon'))
       }
     }
     else{
-      showMessage('alert', '쿠폰 오류', '해당 쿠폰이 없습니다.')
+      showMessage('alert', $t('discount.coupon_error'), $t('discount.invalid_coupon'))
     }
 
   } catch (error) {
@@ -150,20 +150,20 @@ const checkMember = async (phone) => {
       isPhoneModalOpen.value = false;
       
       // confirm() 대신 커스텀 모달 호출
-      showMessage('confirm', '회원 가입 안내', '등록되지 않은 번호입니다.\n가입하고 적립하시겠습니까?', async () => {
+      showMessage('confirm', $t('discount.join_title'), $t('discount.join_msg'), async () => {
         const newMember = await api.createMember({ phone: rawPhone, points: 0 });
         currentMember.value = newMember;
         modal.value.isOpen = false; // 메세지 모달 닫기
         
         // 알림창도 커스텀 모달
         setTimeout(() => {
-          showMessage('alert', '가입 완료', '가입을 축하드립니다!\n지금부터 적립이 가능합니다.');
+          showMessage('alert', $t('discount.signup_complete'), $t('discount.join_success'));
         }, 300);
       });
     }
   } 
   catch (error) {
-    showMessage('alert', '조회 실패', '회원 조회 중 오류가 발생했습니다.')
+    showMessage('alert', $t('discount.lookup_fail'), $t('discount.lookup_error'))
   }
 };
 
@@ -171,7 +171,7 @@ const checkMember = async (phone) => {
 const applyPointAmount = (amount) => {
   const points = parseInt(amount);
   if (points > (currentMember.value?.points || 0)) {
-    showMessage('alert', '포인트 부족', `보유 포인트(${(currentMember.value?.points || 0).toLocaleString()}P)를 초과할 수 없습니다.`)
+    showMessage('alert', $t('discount.point_error'), $t('discount.point_insufficient', { points: (currentMember.value?.points || 0).toLocaleString() }))
     return;
   }
   pointDiscount.value = points;
@@ -179,7 +179,7 @@ const applyPointAmount = (amount) => {
 
   // 포인트 적용 확인 모달 추가
   if (points > 0) {
-    showMessage('alert', '포인트 적용', `${points.toLocaleString()}P가 적용되었습니다.`);
+    showMessage('alert', $t('discount.point'), $t('discount.applied_points', { points: points.toLocaleString() }));
   }
 };
 
@@ -196,24 +196,24 @@ watch(currentMember, (newMember) => {
   <div class="payment-method-page">
     <!-- Header -->
     <header class="page-header">
-      <h1>결제 수단 선택</h1>
+      <h1>{{ $t('payment.title') }}</h1>
     </header>
 
     <div class="price-info">
       <!-- Total Amount -->
       <div class="total-amount">
-        <span class="amount-label"> 결제 금액:</span>
-        <span class="amount-value">{{ totalPrice.toLocaleString() }}원</span>
+        <span class="amount-label"> {{ $t('payment.total_amount') }}:</span>
+        <span class="amount-value">{{ totalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
       </div>
       <!-- Discount Amount -->
       <div class="discount-amount">
-        <span class="discount-label">할인 금액:</span>
-        <span class="discount-value">- {{ totalDiscountPrice.toLocaleString() }}원</span>
+        <span class="discount-label">{{ $t('payment.discount_amount') }}:</span>
+        <span class="discount-value">- {{ totalDiscountPrice.toLocaleString() }}{{ $t('common.won') }}</span>
       </div>
       <!-- Confirm Price -->
       <div class="confirm-price">
-        <span class="confirm-label">총 결제 금액:</span>
-        <span class="confirm-value">{{ confirmPrice.toLocaleString() }}원</span>
+        <span class="confirm-label">{{ $t('payment.final_amount') }}:</span>
+        <span class="confirm-value">{{ confirmPrice.toLocaleString() }}{{ $t('common.won') }}</span>
       </div>
     </div>
 
@@ -221,7 +221,7 @@ watch(currentMember, (newMember) => {
     <div class="payment-sections">
       <!-- Discount -->
       <section class="payment-section">
-        <h2 class="section-title">Discount</h2>
+        <h2 class="section-title">{{ $t('payment.sections.discount') }}</h2>
         <div class="payment-options">
           <button
             v-for="method in paymentMethods.other"
@@ -236,7 +236,7 @@ watch(currentMember, (newMember) => {
       </section>
       <!-- Card Payment -->
       <section class="payment-section">
-        <h2 class="section-title">Card</h2>
+        <h2 class="section-title">{{ $t('payment.sections.card') }}</h2>
         <div class="payment-options">
           <button
             v-for="method in paymentMethods.card"
@@ -252,7 +252,7 @@ watch(currentMember, (newMember) => {
 
       <!-- Easy Pay -->
       <section class="payment-section">
-        <h2 class="section-title">Easy pay</h2>
+        <h2 class="section-title">{{ $t('payment.sections.easy_pay') }}</h2>
         <div class="payment-options three-col">
           <button
             v-for="method in paymentMethods.easyPay"
@@ -270,26 +270,28 @@ watch(currentMember, (newMember) => {
     <!-- Action Buttons -->
     <footer class="action-footer">
       <button class="footer-btn back" @click="handleBack">
-        이전
+        {{ $t('common.back') }}
       </button>
       <button
         class="footer-btn next"
         :disabled="!selectedPayment"
         @click="handleNext"
       >
-        다음
+        {{ $t('common.next') }}
       </button>
     </footer>
       <KeypadModal
         :isOpen="isCouponModalOpen"
-        title="쿠폰 번호를 입력하세요"
+        :title="$t('discount.coupon_title')"
+        type="coupon"
         placeholder=""
         @close="isCouponModalOpen = false"
         @confirm="checkCoupon"
       />
       <KeypadModal
         :isOpen="isPhoneModalOpen"
-        title="휴대폰 번호를 입력하세요"
+        :title="$t('discount.phone_title')"
+        type="phone"
         placeholder="010-1234-5678"
         @close="isPhoneModalOpen = false"
         @confirm="checkMember"
@@ -297,8 +299,9 @@ watch(currentMember, (newMember) => {
 
       <KeypadModal
         :isOpen="isPointAmountModalOpen"
-        title="사용할 포인트를 입력하세요"
-        :subtitle="currentMember ? `사용 가능 포인트: ${currentMember.points.toLocaleString()}P` : ''"
+        :title="$t('discount.point_title')"
+        type="point"
+        :subtitle="currentMember ? $t('discount.available_points', { points: currentMember.points.toLocaleString() }) : ''"
         :placeholder="currentMember ? currentMember.points.toString() : '0'"
         :maxLimit="currentMember ? currentMember.points : 0"
         @close="isPointAmountModalOpen = false"

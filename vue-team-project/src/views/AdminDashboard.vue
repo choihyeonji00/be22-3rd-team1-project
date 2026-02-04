@@ -21,21 +21,21 @@ const logout = () => {
 <template>
   <div class="admin-dashboard">
     <header class="admin-header">
-      <h1>관리자 대시보드</h1>
-      <button @click="logout" class="logout-btn">로그아웃</button>
+      <h1>{{ $t('admin.dashboard_title') }}</h1>
+      <button @click="logout" class="logout-btn">{{ $t('admin.logout') }}</button>
     </header>
 
     <div class="dashboard-content">
       <div class="dashboard-card" @click="goToMenuManagement">
         <span class="card-icon">🍕</span>
-        <h2>메뉴 관리</h2>
-        <p>메뉴 항목을 추가, 수정, 삭제합니다.</p>
+        <h2>{{ $t('admin.menu_management') }}</h2>
+        <p>{{ $t('admin.menu_desc') }}</p>
       </div>
 
       <div class="dashboard-card" @click="goToSalesStats">
         <span class="card-icon">📊</span>
-        <h2>매출 통계</h2>
-        <p>기간별, 메뉴별 매출 현황을 확인합니다.</p>
+        <h2>{{ $t('admin.sales_stats') }}</h2>
+        <p>{{ $t('admin.sales_desc') }}</p>
       </div>
     </div>
   </div>

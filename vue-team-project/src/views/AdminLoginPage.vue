@@ -20,11 +20,11 @@ const handleLogin = async () => {
       router.push('/admin') // 관리자 대시보드로 이동
     } else {
       // 로그인 실패
-      errorMessage.value = result.message || '로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다.'
+      errorMessage.value = result.message || $t('admin.login_fail')
     }
   } catch (error) {
     console.error('Login API error:', error)
-    errorMessage.value = '로그인 중 오류가 발생했습니다. 서버 상태를 확인해주세요.'
+    errorMessage.value = $t('admin.login_error')
   }
 }
 </script>
@@ -32,20 +32,20 @@ const handleLogin = async () => {
 <template>
   <div class="admin-login-page">
     <div class="login-container">
-      <h2>관리자 로그인</h2>
+      <h2>{{ $t('admin.login_title') }}</h2>
       <form @submit.prevent="handleLogin">
         <div class="form-group">
-          <label for="username">사용자 이름:</label>
+          <label for="username">{{ $t('admin.username') }}:</label>
           <input type="text" id="username" v-model="username" required />
         </div>
         <div class="form-group">
-          <label for="password">비밀번호:</label>
+          <label for="password">{{ $t('admin.password') }}:</label>
           <input type="password" id="password" v-model="password" required />
         </div>
-        <button type="submit" class="login-btn">로그인</button>
+        <button type="submit" class="login-btn">{{ $t('admin.login_btn') }}</button>
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </form>
-      <button class="back-to-main" @click="router.push('/')">메인으로 돌아가기</button>
+      <button class="back-to-main" @click="router.push('/')">{{ $t('admin.back_to_main') }}</button>
     </div>
   </div>
 </template>

@@ -165,6 +165,12 @@ const getCategoryIcon = (categoryId) => {
   }
   return iconMap[categoryId] || '🍽️'
 }
+
+const changeLanguage = (lang) => {
+  import('../locales/i18n').then(m => {
+    m.default.global.locale = lang;
+  });
+};
 </script>
 
 <template>
@@ -172,7 +178,17 @@ const getCategoryIcon = (categoryId) => {
     <!-- Header with Logo -->
     <header class="order-header">
       <div class="logo">
-        <span class="logo-text">KIOSK</span>
+        <span class="logo-text">{{ $t('order.kiosk') }}</span>
+      </div>
+      <div class="lang-switcher">
+        <button 
+          :class="['lang-btn', { active: $i18n.locale === 'ko' }]" 
+          @click="$i18n.locale = 'ko'"
+        >KO</button>
+        <button 
+          :class="['lang-btn', { active: $i18n.locale === 'en' }]" 
+          @click="$i18n.locale = 'en'"
+        >EN</button>
       </div>
     </header>
 
@@ -222,7 +238,7 @@ const getCategoryIcon = (categoryId) => {
           :disabled="currentPage === 0"
           @click="prevPage"
         >
-          이전
+          {{ $t('common.back') }}
         </button>
 
         <div class="page-dots">
@@ -239,7 +255,7 @@ const getCategoryIcon = (categoryId) => {
           :disabled="currentPage >= totalPages - 1"
           @click="nextPage"
         >
-          다음
+          {{ $t('common.next') }}
         </button>
       </div>
     </section>
@@ -247,9 +263,9 @@ const getCategoryIcon = (categoryId) => {
     <!-- Order List -->
     <section class="order-list-section">
       <div class="order-list-header">
-        <span class="header-name">메뉴명</span>
-        <span class="header-qty">수량</span>
-        <span class="header-price">가격</span>
+        <span class="header-name">{{ $t('order.menu_name') }}</span>
+        <span class="header-qty">{{ $t('order.quantity') }}</span>
+        <span class="header-price">{{ $t('order.price') }}</span>
       </div>
 
       <div class="order-list-body">
@@ -276,7 +292,7 @@ const getCategoryIcon = (categoryId) => {
         </div>
 
         <div v-if="orderList.length === 0" class="empty-order">
-          주문 내역이 없습니다
+          {{ $t('order.empty_cart') }}
         </div>
       </div>
     </section>
@@ -284,20 +300,20 @@ const getCategoryIcon = (categoryId) => {
     <!-- Bottom Action Bar -->
     <footer class="action-bar">
       <div class="total-price">
-        <span class="total-label">주문 금액</span>
-        <span class="total-value">{{ totalPrice.toLocaleString() }}원</span>
+        <span class="total-label">{{ $t('order.total_items_price') }}</span>
+        <span class="total-value">{{ totalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
       </div>
 
       <div class="action-buttons">
         <button class="action-btn cancel" @click="handleCancel">
-          취소
+          {{ $t('common.cancel') }}
         </button>
         <button
           class="action-btn pay"
           :disabled="orderList.length === 0"
           @click="handlePay"
         >
-          결제
+          {{ $t('common.pay') }}
         </button>
       </div>
     </footer>
@@ -342,6 +358,38 @@ const getCategoryIcon = (categoryId) => {
   color: white;
   padding: 8px 16px;
   border-radius: 8px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lang-switcher {
+  display: flex;
+  gap: 8px;
+}
+
+.lang-btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.lang-btn.active {
+  background-color: var(--primary-blue);
+  color: white;
+  border-color: var(--primary-blue);
+}
+
+.lang-btn:hover:not(.active) {
+  background-color: #f0f0f0;
 }
 
 /* Category Navigation */

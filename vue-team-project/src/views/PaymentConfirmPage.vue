@@ -454,7 +454,7 @@ const handlePay = () => {
 <template>
   <div class="payment-confirm-page">
     <header class="page-header">
-      <h1>결제 확인</h1>
+      <h1>{{ $t('confirm.title') }}</h1>
     </header>
 
     <div class="page-content">
@@ -464,7 +464,7 @@ const handlePay = () => {
       </div>
 
       <div class="info-section menu-list-section">
-        <span class="section-label">Menu :</span>
+        <span class="section-label">{{ $t('confirm.menu_label') }}</span>
 
         <div class="menu-list-container">
           <div class="menu-list">
@@ -475,24 +475,24 @@ const handlePay = () => {
             >
               <span class="menu-name">{{ item.name }}</span>
               <span class="menu-qty">x{{ item.quantity }}</span>
-              <span class="menu-price">{{ (item.price * item.quantity).toLocaleString() }}원</span>
+              <span class="menu-price">{{ (item.price * item.quantity).toLocaleString() }}{{ $t('common.won') }}</span>
             </div>
           </div>
 
           <div class="total-row raw-total">
-            <span class="total-label">total items :</span>
-            <span class="total-value">{{ totalPrice.toLocaleString() }}원</span>
+            <span class="total-label">{{ $t('confirm.total_items') }}</span>
+            <span class="total-value">{{ totalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
           </div>
           <div v-if="totalDiscount > 0" class="total-row discount-row">
-            <span class="total-label">discount :</span>
-            <span class="total-value">- {{ totalDiscount.toLocaleString() }}원</span>
+            <span class="total-label">{{ $t('confirm.discount') }}</span>
+            <span class="total-value">- {{ totalDiscount.toLocaleString() }}{{ $t('common.won') }}</span>
           </div>
           <div class="total-row final-total">
-            <span class="total-label">total payment :</span>
-            <span class="total-value">{{ finalPrice.toLocaleString() }}원</span>
+            <span class="total-label">{{ $t('confirm.total_payment') }}</span>
+            <span class="total-value">{{ finalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
           </div>
           <div v-if="orderStore.getCurrentMember()" class="total-row earned-points-row">
-            <span class="total-label">earned points :</span>
+            <span class="total-label">{{ $t('confirm.earned_points') }} :</span>
             <span class="total-value">+ {{ earnedPoints.toLocaleString() }}P</span>
           </div>
         </div>
@@ -501,10 +501,10 @@ const handlePay = () => {
 
     <footer class="action-footer">
       <button class="footer-btn cancel" @click="handleCancel">
-        취소
+        {{ $t('common.cancel') }}
       </button>
       <button class="footer-btn pay" @click="handlePay">
-        결제
+        {{ $t('common.pay') }}
       </button>
     </footer>
 
