@@ -69,7 +69,7 @@ onMounted(() => {
 const increaseQuantity = () => {
   // 재고 체크
   if (props.menu.stock !== undefined && quantity.value >= props.menu.stock) {
-    alert(`재고가 부족합니다. (최대 ${props.menu.stock}개)`)
+    alert(t('order.low_stock_alert', { count: props.menu.stock }))
     return
   }
   quantity.value++
@@ -204,7 +204,7 @@ const getCategoryIcon = (categoryId) => {
           >+</button>
         </div>
         <p v-if="menu.stock !== undefined" class="stock-info">
-          남은 수량: {{ menu.stock }}개
+          {{ $t('order.remaining_stock', { count: menu.stock }) }}
         </p>
 
         <!-- Action Buttons -->

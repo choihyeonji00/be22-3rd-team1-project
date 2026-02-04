@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const router = useRouter()
 
@@ -22,7 +23,10 @@ const logout = () => {
   <div class="admin-dashboard">
     <header class="admin-header">
       <h1>{{ $t('admin.dashboard_title') }}</h1>
-      <button @click="logout" class="logout-btn">{{ $t('admin.logout') }}</button>
+      <div class="header-right">
+        <LanguageSwitcher mode="inline" />
+        <button @click="logout" class="logout-btn">{{ $t('admin.logout') }}</button>
+      </div>
     </header>
 
     <div class="dashboard-content">
@@ -58,6 +62,12 @@ const logout = () => {
   background-color: var(--primary-blue);
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .admin-header h1 {

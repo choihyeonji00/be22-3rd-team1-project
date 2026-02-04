@@ -35,7 +35,8 @@ let timerInterval = null
 
 // 3. 결제 수단별 안내 메시지 및 이미지 매핑 (하드코딩)
 const guideInfo = computed(() => {
-  const method = paymentMethod.value
+  const methodObj = paymentMethod.value
+  const method = typeof methodObj === 'object' ? (methodObj.ko || '') : (methodObj || '')
 
   if (method.includes('카드')) {
     return {
@@ -136,6 +137,23 @@ const processPayment = async () => {
 
     // API 호출
     await api.createOrder(orderData)
+
+    // 4. 재고 차감 로직
+    await Promise.all(orderItems.value.map(async (item) => {
+      // item.id가 "1_..." 형태일 수 있으므로 원본 ID 추출
+      const originalId = item.id.toString().split('_')[0]
+      try {
+        const menuItems = await api.getMenuItems()
+        const menuData = menuItems.find(m => m.id === originalId)
+        
+        if (menuData && menuData.stock !== undefined) {
+          const newStock = menuData.stock - item.quantity
+          await api.updateMenuItemStock(originalId, Math.max(0, newStock))
+        }
+      } catch (err) {
+        console.error(`Failed to update stock for item ${originalId}:`, err)
+      }
+    }))
 
     // 회원 포인트 업데이트 로직
     const currentMember = orderStore.currentMember

@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { api } from '../services/api' // api 서비스 임포트
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -33,6 +34,7 @@ const handleLogin = async () => {
 
 <template>
   <div class="admin-login-page">
+    <LanguageSwitcher />
     <div class="login-container">
       <h2>{{ $t('admin.login_title') }}</h2>
       <form @submit.prevent="handleLogin">

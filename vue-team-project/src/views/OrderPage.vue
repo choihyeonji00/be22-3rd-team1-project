@@ -5,6 +5,7 @@ import MenuInfoModal from '../components/MenuInfoModal.vue'
 import { api } from '../services/api'
 import { useOrderStore } from '../stores/orderStore'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const { t, locale } = useI18n()
 
@@ -166,7 +167,7 @@ const increaseItemQuantity = (item) => {
 
   if (originalMenu && originalMenu.stock !== undefined) {
     if (item.quantity >= originalMenu.stock) {
-      alert(`재고가 부족합니다. (최대 ${originalMenu.stock}개)`)
+      alert(t('order.low_stock_alert', { count: originalMenu.stock }))
       return
     }
   }
@@ -214,6 +215,7 @@ const getCategoryIcon = (categoryId) => {
 
 <template>
   <div class="order-page">
+    <LanguageSwitcher />
     <!-- Header with Logo -->
     <header class="order-header">
       <div class="logo">
@@ -250,7 +252,7 @@ const getCategoryIcon = (categoryId) => {
 
             <!-- 품절 오버레이 -->
             <div v-if="menu.isSoldOut || (menu.stock !== undefined && menu.stock <= 0)" class="sold-out-overlay">
-              <span>SOLD OUT</span>
+              <span>{{ $t('order.sold_out') }}</span>
             </div>
           </div>
           <div class="menu-card-info">
@@ -412,6 +414,7 @@ const getCategoryIcon = (categoryId) => {
   -webkit-overflow-scrolling: touch;
   min-height: 64px;
   align-items: center;
+  justify-content: space-evenly;
 }
 
 .category-btn {
@@ -425,6 +428,8 @@ const getCategoryIcon = (categoryId) => {
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 100px;
+  width: 100px;
+  height: 40px;
   white-space: nowrap;
 }
 
@@ -447,12 +452,13 @@ const getCategoryIcon = (categoryId) => {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-bottom: 16px;
+  padding: 12px;
+  flex: 1;
 }
 
 .menu-card {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--primary-blue);
+  border: none;
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
@@ -485,7 +491,7 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .menu-card-image {
-  height: 80px;
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -542,6 +548,7 @@ const getCategoryIcon = (categoryId) => {
 
 .menu-card-price {
   font-size: 12px;
+  min-height: 20px;
   opacity: 0.9;
 }
 
@@ -571,6 +578,7 @@ const getCategoryIcon = (categoryId) => {
   border-radius: 8px;
   background-color: var(--primary-blue);
   color: white;
+  min-height: 40px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -719,6 +727,7 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .total-price {
+  flex : 1;
   background-color: var(--primary-orange);
   border-radius: 8px;
   color: white;
@@ -727,6 +736,7 @@ const getCategoryIcon = (categoryId) => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 10px;
 }
 
 .total-label {

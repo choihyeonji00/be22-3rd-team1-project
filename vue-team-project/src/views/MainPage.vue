@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const router = useRouter()
 
@@ -16,6 +17,7 @@ const goToAdmin = () => {
 
 <template>
   <div class="main-page">
+    <LanguageSwitcher />
     <!-- Admin Button -->
     <button class="admin-btn" @click="goToAdmin">
       {{ $t('main.admin_btn') }}

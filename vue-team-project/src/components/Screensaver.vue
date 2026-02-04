@@ -5,8 +5,9 @@ const currentImageIndex = ref(1)
 
 // 화면보호기 기능추가를위해 가져옴
 import { useRouter } from 'vue-router'
-import { orderStore } from '../stores/orderStore'
+import { useOrderStore } from '../stores/orderStore'
 const router = useRouter()
+const orderStore = useOrderStore()
 
 let activationTimer = null
 let slideshowInterval = null
@@ -28,9 +29,9 @@ const reset = () => {
 
   activationTimer = setTimeout(() => {
 
-    // ▼▼▼ [수정 3] 이제 위에서 import를 해왔으니, 이 코드가 정상 작동합니다! ▼▼▼
-    orderStore.clearOrder() // 장바구니 비우기
-    router.replace('/')     // 메인 화면으로 이동
+    // Pinia 스토어를 사용하여 장바구니 초기화 및 메인 이동
+    orderStore.clearOrder() 
+    router.replace('/')
 
     show.value = true
     currentImageIndex.value = 1
@@ -40,7 +41,7 @@ const reset = () => {
       currentImageIndex.value = (currentImageIndex.value % 5) + 1
     }, 5000)
 
-  }, 3000)
+  }, 300000)
 }
 
 onMounted(() => {

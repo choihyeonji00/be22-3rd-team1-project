@@ -6,6 +6,7 @@ import { useOrderStore } from '../stores/orderStore'
 import KeypadModal from '../components/KeypadModal.vue'
 import MessageModal from '../components/MessageModal.vue'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -208,6 +209,7 @@ watch(currentMember, (newMember) => {
 
 <template>
   <div class="payment-method-page">
+    <LanguageSwitcher />
     <!-- Header -->
     <header class="page-header">
       <h1>{{ $t('payment.title') }}</h1>

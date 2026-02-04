@@ -448,6 +448,9 @@ const handleComplete = () => {
 <script setup>
 import { useOrderStore } from '../stores/orderStore'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import { useRouter } from 'vue-router'
+import { computed } from 'vue'
 
 const { locale } = useI18n()
 const router = useRouter()
@@ -485,6 +488,7 @@ const handlePay = () => {
 
 <template>
   <div class="payment-confirm-page">
+    <LanguageSwitcher />
     <header class="page-header">
       <h1>{{ $t('confirm.title') }}</h1>
     </header>

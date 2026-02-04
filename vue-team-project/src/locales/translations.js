@@ -11,7 +11,8 @@ export const translations = {
             won: '원',
             processing: '처리중...',
             total: '총',
-            use_all: '전액사용'
+            use_all: '전액사용',
+            unit_qty: '개'
         },
         order: {
             kiosk: '키오스크',
@@ -25,7 +26,10 @@ export const translations = {
             select_options: '옵션 선택',
             add_to_cart: '담기',
             optional: '선택',
-            stock_warning: '품절 임박 ({count}개 남음)'
+            stock_warning: '품절 임박 ({count}개 남음)',
+            sold_out: '품절',
+            low_stock_alert: '재고가 부족합니다. (최대 {count}개)',
+            remaining_stock: '남은 수량: {count}개'
         },
         payment: {
             title: '결제 수단 선택',
@@ -194,7 +198,8 @@ export const translations = {
             won: 'KRW',
             processing: 'Processing...',
             total: 'Total',
-            use_all: 'Use All'
+            use_all: 'Use All',
+            unit_qty: 'pcs'
         },
         order: {
             kiosk: 'KIOSK',
@@ -208,7 +213,10 @@ export const translations = {
             select_options: 'Select Options',
             add_to_cart: 'Add to Cart',
             optional: 'Optional',
-            stock_warning: 'Low Stock ({count} left)'
+            stock_warning: 'Low Stock ({count} left)',
+            sold_out: 'SOLD OUT',
+            low_stock_alert: 'Insufficient stock. (Max {count} items)',
+            remaining_stock: 'Remaining: {count}'
         },
         payment: {
             title: 'Payment Method',

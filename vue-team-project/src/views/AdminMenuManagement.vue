@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { api } from '../services/api'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -77,21 +78,21 @@ const openEditModal = (menu) => {
   // deep copy for nested options
   const copiedMenu = JSON.parse(JSON.stringify(editingMenu.value))
   
+  // Normalize stock
+  if (copiedMenu.stock === undefined) copiedMenu.stock = 100
+
   // Normalize options names and labels
-  if (copiedMenu.options) {
+  if (copiedMenu.options && Array.isArray(copiedMenu.options)) {
     copiedMenu.options = copiedMenu.options.map(opt => ({
       ...opt,
       name: typeof opt.name === 'string' ? { ko: opt.name, en: '' } : { ...opt.name },
-      choices: opt.choices.map(choice => ({
+      choices: (opt.choices || []).map(choice => ({
         ...choice,
         label: typeof choice.label === 'string' ? { ko: choice.label, en: '' } : { ...choice.label }
       }))
     }))
   } else {
     copiedMenu.options = []
-  // Ensure stock exists
-  if (copiedMenu.stock === undefined) copiedMenu.stock = 100
-
   }
   
   newMenuItem.value = copiedMenu
@@ -101,7 +102,16 @@ const openEditModal = (menu) => {
 const closeModal = () => {
   isModalOpen.value = false
   editingMenu.value = null
-  newMenuItem.value = { name: { ko: '', en: '' }, price: 0, description: { ko: '', en: '' }, category: '', image: '', options: [] }
+  newMenuItem.value = { 
+    id: '',
+    name: { ko: '', en: '' }, 
+    price: 0, 
+    description: { ko: '', en: '' }, 
+    category: '', 
+    image: '', 
+    stock: 100,
+    options: [] 
+  }
   errorMessage.value = '' 
 }
 
@@ -181,6 +191,7 @@ const goToDashboard = () => {
     <header class="admin-header">
       <h1>{{ $t('admin.menu_management') }}</h1>
       <div class="header-actions">
+        <LanguageSwitcher mode="inline" />
         <button @click="goToDashboard" class="back-btn">{{ $t('admin.back_to_dashboard') }}</button>
         <button @click="openAddModal" class="add-btn">{{ $t('admin.add_new_menu') }}</button>
       </div>
@@ -194,13 +205,13 @@ const goToDashboard = () => {
         <table>
           <thead>
             <tr>
-              <th style="min-width: 60px;">{{ $t('admin.id') }}</th>
-              <th style="min-width: 150px;">{{ $t('admin.name') }}</th>
-              <th style="min-width: 100px;">{{ $t('admin.price') }}</th>
-              <th style="min-width: 120px;">{{ $t('admin.category') }}</th>
-              <th style="min-width: 100px;">{{ $t('admin.stock') }}</th>
-              <th style="min-width: 150px;">{{ $t('admin.option_settings') }}</th>
-              <th style="min-width: 180px;">{{ $t('admin.actions') }}</th>
+              <th style="width: 60px;">{{ $t('admin.id') }}</th>
+              <th style="width: 150px;">{{ $t('admin.name') }}</th>
+              <th style="width: 120px;">{{ $t('admin.price') }}</th>
+              <th style="width: 100px;">{{ $t('admin.category') }}</th>
+              <th style="width: 100px;">{{ $t('admin.stock') }}</th>
+              <th style="width: 150px;">{{ $t('admin.option_settings') }}</th>
+              <th style="width: 190px;">{{ $t('admin.actions') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -211,8 +222,8 @@ const goToDashboard = () => {
               <td>{{ getCategoryName(menu.category) }}</td>
               <td>
                 <span :class="{'out-of-stock': menu.stock <= 0}">
-                  {{ menu.stock !== undefined ? menu.stock : '-' }}개
-                  <span v-if="menu.stock <= 0">(품절)</span>
+                  {{ menu.stock !== undefined ? menu.stock : '-' }}{{ $t('common.unit_qty') }}
+                  <span v-if="menu.stock <= 0">({{ $t('order.sold_out') }})</span>
                 </span>
               </td>
               <td>
@@ -221,13 +232,13 @@ const goToDashboard = () => {
                 </div>
                 <span v-else>-</span>
               </td>
-              <td>
+              <td class="action-cell">
                 <button @click="openEditModal(menu)" class="action-btn edit-btn">{{ $t('admin.edit') }}</button>
                 <button @click="deleteMenuItem(menu.id)" class="action-btn delete-btn">{{ $t('admin.delete') }}</button>
               </td>
             </tr>
             <tr v-if="menuItems.length === 0">
-              <td colspan="6" class="no-data">{{ $t('admin.no_menu_items') }}</td>
+              <td colspan="7" class="no-data">{{ $t('admin.no_menu_items') }}</td>
             </tr>
           </tbody>
         </table>
@@ -235,86 +246,96 @@ const goToDashboard = () => {
     </div>
 
     <!-- Add/Edit Menu Modal -->
-    <div v-if="isModalOpen" class="modal-overlay">
-      <div class="modal-content">
-        <h3>{{ editingMenu ? $t('admin.edit_menu') : $t('admin.new_menu') }}</h3>
-        <form @submit.prevent="saveMenuItem">
-          <div class="form-group-row">
-            <div class="form-group flex-1">
-              <label for="menuNameKo">{{ $t('admin.name') }} (KO):</label>
-              <input type="text" id="menuNameKo" v-model="newMenuItem.name.ko" required />
-            </div>
-            <div class="form-group flex-1">
-              <label for="menuNameEn">{{ $t('admin.name') }} (EN):</label>
-              <input type="text" id="menuNameEn" v-model="newMenuItem.name.en" required />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="menuPrice">{{ $t('admin.price') }}:</label>
-            <input type="number" id="menuPrice" v-model.number="newMenuItem.price" required min="0" />
-          </div>
-          <div class="form-group">
-            <label for="menuCategory">카테고리:</label>
-            <select id="menuCategory" v-model="newMenuItem.category" required>
-              <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                {{ cat.name[locale] || cat.name }}
-              </option>
-            </select>
-          </div>
-          <div class="form-group-row">
-            <div class="form-group flex-1">
-              <label for="menuDescriptionKo">{{ $t('admin.description') }} (KO):</label>
-              <textarea id="menuDescriptionKo" v-model="newMenuItem.description.ko" rows="2"></textarea>
-            </div>
-            <div class="form-group flex-1">
-              <label for="menuDescriptionEn">{{ $t('admin.description') }} (EN):</label>
-              <textarea id="menuDescriptionEn" v-model="newMenuItem.description.en" rows="2"></textarea>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="menuImageUrl">{{ $t('admin.image_url') }}:</label>
-            <input type="text" id="menuImageUrl" v-model="newMenuItem.image" placeholder="/src/assets/images/..." />
-          </div>
-
-          <!-- Options Section -->
-          <div class="options-management">
-            <div class="options-header">
-              <h4>{{ $t('admin.option_settings') }}</h4>
-              <button type="button" @click="addOptionGroup" class="small-add-btn">{{ $t('admin.add_group') }}</button>
-            </div>
-
-            <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
-              <div class="option-group-header">
-                <div class="opt-name-inputs">
-                  <input type="text" v-model="opt.name.ko" placeholder="그룹명 (KO)" class="opt-name-input" />
-                  <input type="text" v-model="opt.name.en" placeholder="Group Name (EN)" class="opt-name-input" />
-                </div>
-                <div class="opt-configs">
-                  <label><input type="checkbox" v-model="opt.required" /> {{ $t('admin.required') }}</label>
-                  <label><input type="checkbox" v-model="opt.multiple" /> {{ $t('admin.multiple') }}</label>
-                </div>
-                <button type="button" @click="removeOptionGroup(optIdx)" class="small-delete-btn">✕</button>
+    <Teleport to="body">
+      <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+        <div class="modal-content">
+          <h3>{{ editingMenu ? $t('admin.edit_menu') : $t('admin.new_menu') }}</h3>
+          <form @submit.prevent="saveMenuItem">
+            <div class="form-group-row">
+              <div class="form-group flex-1">
+                <label for="menuNameKo">{{ $t('admin.name') }} (KO):</label>
+                <input type="text" id="menuNameKo" v-model="newMenuItem.name.ko" required />
               </div>
-
-              <div class="choices-list">
-                <div v-for="(choice, choiceIdx) in opt.choices" :key="choiceIdx" class="choice-row">
-                  <input type="text" v-model="choice.label.ko" placeholder="라벨 (KO)" />
-                  <input type="text" v-model="choice.label.en" placeholder="Label (EN)" />
-                  <input type="number" v-model.number="choice.price" :placeholder="$t('admin.extra_price')" />
-                  <button type="button" @click="removeChoice(optIdx, choiceIdx)" class="choice-delete-btn">✕</button>
-                </div>
-                <button type="button" @click="addChoice(optIdx)" class="choice-add-btn">{{ $t('admin.add_choice') }}</button>
+              <div class="form-group flex-1">
+                <label for="menuNameEn">{{ $t('admin.name') }} (EN):</label>
+                <input type="text" id="menuNameEn" v-model="newMenuItem.name.en" required />
               </div>
             </div>
-          </div>
-          <p v-if="errorMessage" class="error-message-modal">{{ errorMessage }}</p>
-          <div class="modal-actions">
-            <button type="submit" class="save-btn">{{ $t('admin.save') }}</button>
-            <button type="button" @click="closeModal" class="cancel-btn">{{ $t('common.cancel') }}</button>
-          </div>
-        </form>
+            
+            <div class="form-group-row">
+              <div class="form-group flex-1">
+                <label for="menuPrice">{{ $t('admin.price') }}:</label>
+                <input type="number" id="menuPrice" v-model.number="newMenuItem.price" required min="0" />
+              </div>
+              <div class="form-group flex-1">
+                <label for="menuStock">{{ $t('admin.stock') }}:</label>
+                <input type="number" id="menuStock" v-model.number="newMenuItem.stock" required min="0" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="menuCategory">{{ $t('admin.category') }}:</label>
+              <select id="menuCategory" v-model="newMenuItem.category" required>
+                <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                  {{ cat.name[locale] || cat.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group-row">
+              <div class="form-group flex-1">
+                <label for="menuDescriptionKo">{{ $t('admin.description') }} (KO):</label>
+                <textarea id="menuDescriptionKo" v-model="newMenuItem.description.ko" rows="2"></textarea>
+              </div>
+              <div class="form-group flex-1">
+                <label for="menuDescriptionEn">{{ $t('admin.description') }} (EN):</label>
+                <textarea id="menuDescriptionEn" v-model="newMenuItem.description.en" rows="2"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="menuImageUrl">{{ $t('admin.image_url') }}:</label>
+              <input type="text" id="menuImageUrl" v-model="newMenuItem.image" placeholder="/src/assets/images/..." />
+            </div>
+  
+            <!-- Options Section -->
+            <div class="options-management">
+              <div class="options-header">
+                <h4>{{ $t('admin.option_settings') }}</h4>
+                <button type="button" @click="addOptionGroup" class="small-add-btn">{{ $t('admin.add_group') }}</button>
+              </div>
+  
+              <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
+                <div class="option-group-header">
+                  <div class="opt-name-inputs">
+                    <input type="text" v-model="opt.name.ko" placeholder="그룹명 (KO)" class="opt-name-input" />
+                    <input type="text" v-model="opt.name.en" placeholder="Group Name (EN)" class="opt-name-input" />
+                  </div>
+                  <div class="opt-configs">
+                    <label><input type="checkbox" v-model="opt.required" /> {{ $t('admin.required') }}</label>
+                    <label><input type="checkbox" v-model="opt.multiple" /> {{ $t('admin.multiple') }}</label>
+                  </div>
+                  <button type="button" @click="removeOptionGroup(optIdx)" class="small-delete-btn">✕</button>
+                </div>
+  
+                <div class="choices-list">
+                  <div v-for="(choice, choiceIdx) in opt.choices" :key="choiceIdx" class="choice-row">
+                    <input type="text" v-model="choice.label.ko" placeholder="라벨 (KO)" />
+                    <input type="text" v-model="choice.label.en" placeholder="Label (EN)" />
+                    <input type="number" v-model.number="choice.price" :placeholder="$t('admin.extra_price')" />
+                    <button type="button" @click="removeChoice(optIdx, choiceIdx)" class="choice-delete-btn">✕</button>
+                  </div>
+                  <button type="button" @click="addChoice(optIdx)" class="choice-add-btn">{{ $t('admin.add_choice') }}</button>
+                </div>
+              </div>
+            </div>
+            <p v-if="errorMessage" class="error-message-modal">{{ errorMessage }}</p>
+            <div class="modal-actions">
+              <button type="submit" class="save-btn">{{ $t('admin.save') }}</button>
+              <button type="button" @click="closeModal" class="cancel-btn">{{ $t('common.cancel') }}</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
@@ -344,7 +365,8 @@ const goToDashboard = () => {
 
 .header-actions {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 15px;
 }
 
 .back-btn, .add-btn {
@@ -354,6 +376,8 @@ const goToDashboard = () => {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  min-height: 60px;
+  min-width: 160px;
 }
 
 .back-btn {
@@ -399,17 +423,27 @@ const goToDashboard = () => {
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
+  width: 100%;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* 고정 레이아웃 사용 */
 }
 
 th, td {
-  padding: 15px;
+  padding: 12px 10px;
   text-align: left;
   border-bottom: 1px solid #eee;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.action-cell {
+  overflow: visible;
+  white-space: normal;
 }
 
 th {
@@ -436,6 +470,8 @@ tr:hover {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-right: 5px;
+  min-height: 40px;
+  min-width: 70px;
 }
 
 .edit-btn {
@@ -575,6 +611,11 @@ tr:hover {
   flex: 1;
 }
 
+.choice-row>input:nth-of-type(3) {
+  flex: 1;
+  min-width: 100px;
+}
+
 .choice-delete-btn {
   background: none;
   border: none;
@@ -619,7 +660,7 @@ tr:hover {
 .form-group input[type="number"],
 .form-group textarea,
 .form-group select {
-  width: calc(100% - 20px);
+  width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;

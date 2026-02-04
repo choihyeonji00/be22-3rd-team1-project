@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { api } from '../services/api'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -184,7 +185,10 @@ const goToDashboard = () => {
   <div class="admin-sales-stats">
     <header class="admin-header">
       <h1>{{ $t('sales.title') }}</h1>
-      <button @click="goToDashboard" class="back-btn">{{ $t('admin.back_to_dashboard') }}</button>
+      <div class="header-right">
+        <LanguageSwitcher mode="inline" />
+        <button @click="goToDashboard" class="back-btn">{{ $t('admin.back_to_dashboard') }}</button>
+      </div>
     </header>
 
     <div class="content-area">
@@ -313,6 +317,12 @@ const goToDashboard = () => {
   background-color: var(--primary-blue);
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .admin-header h1 {
