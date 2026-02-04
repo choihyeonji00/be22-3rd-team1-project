@@ -5,8 +5,9 @@ const currentImageIndex = ref(1)
 
 // 화면보호기 기능추가를위해 가져옴
 import { useRouter } from 'vue-router'
-import { orderStore } from '../stores/orderStore'
+import { useOrderStore } from '../stores/orderStore'
 const router = useRouter()
+const orderStore = useOrderStore()
 
 let activationTimer = null
 let slideshowInterval = null
