@@ -228,30 +228,33 @@ const getCategoryIcon = (categoryId) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
+  backdrop-filter: blur(4px);
 }
 
 .modal-content {
-  background-color: #f0c14b;
-  border-radius: 16px;
+  background-color: var(--surface-white);
+  border-radius: 24px;
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
   max-height: 90vh;  
   display: flex;
   flex-direction: column; 
   overflow: hidden;
-  animation: modalSlideIn 0.3s ease;
+  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-subtle);
 }
 
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(20px);
+    transform: scale(0.95) translateY(20px);
   }
   to {
     opacity: 1;
@@ -261,8 +264,8 @@ const getCategoryIcon = (categoryId) => {
 
 .menu-image {
   width: 100%;
-  height: 200px;
-  background-color: var(--primary-blue);
+  height: 220px;
+  background-color: #fff5f5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -276,50 +279,55 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .menu-placeholder-icon {
-  font-size: 64px;
+  font-size: 80px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .menu-info {
-  padding: 20px;
+  padding: 24px;
   text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .menu-name {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-dark);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary-red);
   margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
 
 .menu-description {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 12px;
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.4;
 }
 
 .menu-price {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-dark);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary-red-dark);
 }
 
 .quantity-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.3);
+  gap: 24px;
+  padding: 20px;
+  background-color: var(--background-light);
 }
 
 .quantity-btn {
-  width: 40px;
-  height: 40px;
-  border: 2px solid #333;
-  border-radius: 8px;
-  background-color: white;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--primary-red);
+  border-radius: 12px;
+  background-color: var(--surface-white);
+  color: var(--primary-red);
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -327,76 +335,83 @@ const getCategoryIcon = (categoryId) => {
   justify-content: center;
 }
 
-.quantity-btn:hover {
-  background-color: #f5f5f5;
+.quantity-btn:hover:not(:disabled) {
+  background-color: var(--primary-red);
+  color: white;
 }
 
-.quantity-btn:active {
+.quantity-btn:active:not(:disabled) {
   transform: scale(0.95);
 }
 
 .quantity-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.3;
   cursor: not-allowed;
-  background-color: #e0e0e0;
+  border-color: #ccc;
+  color: #ccc;
 }
 
 .quantity-value {
-  font-size: 28px;
-  font-weight: 700;
-  min-width: 40px;
+  font-size: 32px;
+  font-weight: 800;
+  min-width: 48px;
   text-align: center;
+  color: var(--primary-red);
 }
 
 .stock-info {
   text-align: center;
   font-size: 14px;
   font-weight: 700;
-  color: #d32f2f;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  background-color: #fff3e0;
-  padding: 5px;
-  border-radius: 8px;
+  color: #dc3545;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 6px;
 }
 
 .modal-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   gap: 12px;
-  padding: 16px;
+  padding: 24px;
+  background-color: var(--surface-white);
 }
 
 .action-btn {
-  padding: 14px 24px;
+  padding: 16px 24px;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .cancel-btn {
-  background-color: #e57373;
-  color: white;
+  background-color: var(--background-light);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
 }
 
 .cancel-btn:hover {
-  background-color: #ef5350;
+  background-color: #f1f3f5;
+  color: var(--text-dark);
 }
 
 .add-btn {
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red);
   color: white;
+  box-shadow: var(--shadow-md);
 }
 
 .add-btn:hover {
-  background-color: var(--primary-blue-dark);
+  background-color: var(--primary-red-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .action-btn:active {
-  transform: scale(0.98);
+  transform: translateY(0);
 }
 .option-group{
   margin-bottom: 10px;
@@ -426,8 +441,9 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .option-card.active {
-  border-color: #4fc3f7; 
-  background-color: #f0faff;
+  border-color: var(--primary-red);
+  background-color: #fff5f5;
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.1);
 }
 .option-card-info {
   margin-top: 4px;

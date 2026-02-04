@@ -98,71 +98,111 @@ const formatPhoneNumber = (val) => {
         top:0; left:0; 
         width:100%; 
         height:100%; 
-        background:rgba(0,0,0,0.5); 
+        background:rgba(0,0,0,0.7); 
         display:flex; 
         align-items:center; 
         justify-content:center; 
         z-index: 2000; 
+        backdrop-filter: blur(4px);
     }
 
     .modal-content { 
-        background: white; 
-        padding: 20px; 
-        border-radius: 12px; 
-        width: 320px; 
+        background: var(--surface-white); 
+        padding: 32px; 
+        border-radius: 24px; 
+        width: 360px; 
         text-align: center;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border-subtle);
     }
 
     .modal-subtitle {
         font-size: 14px;
-        color: #666;
-        margin-bottom: 10px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
         text-align: right;
+        font-weight: 600;
     }
 
     .input-display { 
         flex: 1;
-        border: 2px solid #4fc3f7; 
-        padding:15px; 
+        border: 2px solid var(--primary-red); 
+        padding:16px; 
         text-align:center; 
-        font-size:24px; 
-        border-radius:8px; 
-        min-height: 60px; 
+        font-size:28px; 
+        border-radius:12px; 
+        min-height: 70px; 
+        background-color: #fff5f5;
+        color: var(--primary-red-dark);
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .input-container {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
     }
 
     .use-all-btn {
-        padding: 10px;
-        background: #ffcc00;
+        padding: 0 16px;
+        background: var(--primary-red);
+        color: white;
         border: none;
-        border-radius: 8px;
-        font-weight: bold;
+        border-radius: 12px;
+        font-weight: 800;
         white-space: nowrap;
-        height: 60px;
+        height: 70px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .use-all-btn:hover {
+        background: var(--primary-red-dark);
+        transform: translateY(-2px);
     }
 
     .modal-actions { 
         display:grid; 
-        grid-template-columns: 1fr 1fr; 
-        gap:10px; 
-        margin-top:20px; 
+        grid-template-columns: 1fr 1.5fr; 
+        gap:12px; 
+        margin-top:24px; 
     }
 
     .modal-actions button { 
-        padding: 10px; 
-        border-radius: 8px; 
+        padding: 16px; 
+        border-radius: 12px; 
         border: none; 
-        font-weight: bold; 
+        font-weight: 800; 
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .modal-actions button:not(.confirm) {
+        background: var(--background-light);
+        color: var(--text-muted);
+        border: 1px solid var(--border-subtle);
+    }
+
+    .modal-actions button:not(.confirm):hover {
+        background: #f1f3f5;
+        color: var(--text-dark);
     }
 
     .confirm { 
-        background: #4fc3f7; 
+        background: var(--primary-red); 
         color: white; 
+        box-shadow: var(--shadow-md);
+    }
+
+    .confirm:hover {
+        background: var(--primary-red-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
     }
 </style>

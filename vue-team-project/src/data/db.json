@@ -2078,6 +2078,59 @@
       "totalPrice": 19000,
       "createdAt": "2026-02-04T05:31:48.801Z",
       "status": "completed"
+    },
+    {
+      "id": "84f5",
+      "orderNumber": "ORD-20260204060329-8657",
+      "paymentMethod": {
+        "ko": "카드결제",
+        "en": "Credit Card"
+      },
+      "items": [
+        {
+          "id": "8_{\"사이즈\":\"레귤러\",\"추가 토핑\":[]}",
+          "name": {
+            "ko": "마르게리타 피자 (레귤러)",
+            "en": "Margherita Pizza (Regular)"
+          },
+          "price": 14000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 14000,
+      "createdAt": "2026-02-04T06:03:29.433Z",
+      "status": "completed"
+    },
+    {
+      "id": "37e8",
+      "orderNumber": "ORD-20260204062139-6052",
+      "paymentMethod": {
+        "ko": "카드결제",
+        "en": "Credit Card"
+      },
+      "items": [
+        {
+          "id": "2_{\"사이즈\":\"레귤러\",\"추가 토핑\":[]}",
+          "name": {
+            "ko": "치즈 피자 (레귤러)",
+            "en": "Cheese Pizza (Regular)"
+          },
+          "price": 13000,
+          "quantity": 1
+        },
+        {
+          "id": "1_{\"사이즈\":\"레귤러\",\"추가 토핑\":[]}",
+          "name": {
+            "ko": "페퍼로니 피자 (레귤러)",
+            "en": "Pepperoni Pizza (Regular)"
+          },
+          "price": 15000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 28000,
+      "createdAt": "2026-02-04T06:21:39.005Z",
+      "status": "completed"
     }
   ],
   "members": [
@@ -2094,6 +2147,16 @@
     {
       "id": "0596",
       "phone": "0109",
+      "points": 0
+    },
+    {
+      "id": "ecd6",
+      "phone": "01051112236",
+      "points": 1400
+    },
+    {
+      "id": "acec",
+      "phone": "01051112236",
       "points": 0
     }
   ],

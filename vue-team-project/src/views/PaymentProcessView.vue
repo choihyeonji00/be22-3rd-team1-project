@@ -241,48 +241,53 @@ const handleComplete = () => {
 <style scoped>
 .process-page {
   min-height: 100vh;
-  background-color: #f0f2f5;
+  background-color: var(--background-cream);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 24px;
 }
 
 .guide-card {
-  background: white;
-  padding: 40px;
-  border-radius: 20px;
+  background: var(--surface-white);
+  padding: 48px;
+  border-radius: 24px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 500px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid var(--border-subtle);
 }
 
 .timer-badge {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background: #ff5252;
+  top: 24px;
+  right: 24px;
+  background: #dc3545;
   color: white;
-  padding: 5px 12px;
+  padding: 6px 16px;
   border-radius: 20px;
-  font-weight: bold;
+  font-weight: 800;
   font-size: 14px;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
   animation: pulse 1s infinite;
 }
 
 .image-area {
-  width: 200px;
-  height: 200px;
-  margin: 20px 0;
+  width: 220px;
+  height: 220px;
+  margin: 32px 0;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #fff5f5;
+  border-radius: 50%;
+  padding: 20px;
 }
 
 .guide-img {
@@ -292,44 +297,52 @@ const handleComplete = () => {
 }
 
 .title {
-  font-size: 28px;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: 32px;
+  color: var(--primary-red);
+  margin-bottom: 12px;
   font-weight: 800;
-  min-height: 80px;
+  min-height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1.2;
 }
 
 .subtitle {
-  font-size: 18px;
-  color: #666;
-  margin-bottom: 40px;
+  font-size: 20px;
+  color: var(--text-muted);
+  margin-bottom: 48px;
   min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 500;
 }
 
 .cancel-btn {
-  background-color: #e0e0e0;
-  color: #555;
-  border: none;
-  padding: 15px 40px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: bold;
+  background-color: var(--surface-white);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  padding: 16px 40px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
   cursor: pointer;
   width: 100%;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background-color: var(--background-light);
+  color: var(--text-dark);
 }
 
 /* 로딩 스피너 스타일 */
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid var(--primary-blue, #4fc3f7);
+  width: 60px;
+  height: 60px;
+  border: 6px solid #fff5f5;
+  border-top: 6px solid var(--primary-red);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

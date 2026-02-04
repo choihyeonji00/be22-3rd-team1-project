@@ -191,7 +191,7 @@ const goToDashboard = () => {
     <header class="admin-header">
       <h1>{{ $t('admin.menu_management') }}</h1>
       <div class="header-actions">
-        <LanguageSwitcher mode="inline" />
+        <LanguageSwitcher mode="inline" variant="dark" />
         <button @click="goToDashboard" class="back-btn">{{ $t('admin.back_to_dashboard') }}</button>
         <button @click="openAddModal" class="add-btn">{{ $t('admin.add_new_menu') }}</button>
       </div>
@@ -353,7 +353,7 @@ const goToDashboard = () => {
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red-dark);
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -361,6 +361,8 @@ const goToDashboard = () => {
 .admin-header h1 {
   margin: 0;
   font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .header-actions {
@@ -370,30 +372,36 @@ const goToDashboard = () => {
 }
 
 .back-btn, .add-btn {
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  min-height: 60px;
-  min-width: 160px;
+  transition: all 0.2s ease;
+  min-height: 56px;
+  min-width: 150px;
 }
 
 .back-btn {
-  background-color: #6c757d;
+  background-color: rgba(255, 255, 255, 0.1);
   color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .back-btn:hover {
-  background-color: #5a6268;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: white;
 }
 
 .add-btn {
-  background-color: var(--primary-green);
-  color: white;
+  background-color: var(--surface-white);
+  color: var(--primary-red);
+  box-shadow: var(--shadow-sm);
 }
 .add-btn:hover {
-  background-color: #218838;
+  background-color: var(--background-cream);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .content-area {
@@ -447,9 +455,10 @@ td.action-cell {
 }
 
 th {
-  background-color: var(--primary-blue);
-  color: white;
-  font-weight: 600;
+  background-color: var(--background-cream);
+  color: var(--primary-red);
+  font-weight: 800;
+  border-bottom: 2px solid var(--border-subtle);
 }
 
 tr:hover {
@@ -475,19 +484,23 @@ tr:hover {
 }
 
 .edit-btn {
-  background-color: var(--primary-orange);
-  color: white;
+  background-color: #fff5f5;
+  color: var(--primary-red);
+  border: 1px solid var(--primary-red);
 }
 .edit-btn:hover {
-  background-color: #e67e22;
+  background-color: var(--primary-red);
+  color: white;
 }
 
 .delete-btn {
-  background-color: #e74c3c;
-  color: white;
+  background-color: #fff5f5;
+  color: #dc3545;
+  border: 1px solid #dc3545;
 }
 .delete-btn:hover {
-  background-color: #c0392b;
+  background-color: #dc3545;
+  color: white;
 }
 
 .out-of-stock {
@@ -541,7 +554,7 @@ tr:hover {
 
 .small-add-btn {
   padding: 5px 10px;
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red);
   color: white;
   border: none;
   border-radius: 4px;
@@ -638,10 +651,12 @@ tr:hover {
 
 .modal-content h3 {
   margin-top: 0;
-  margin-bottom: 25px;
-  color: var(--primary-blue);
-  font-size: 24px;
+  margin-bottom: 32px;
+  color: var(--primary-red);
+  font-size: 28px;
+  font-weight: 800;
   text-align: center;
+  letter-spacing: -0.5px;
 }
 
 .form-group {
@@ -709,11 +724,14 @@ tr:hover {
 }
 
 .save-btn {
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red);
   color: white;
+  box-shadow: var(--shadow-sm);
 }
 .save-btn:hover {
-  background-color: var(--primary-blue-dark);
+  background-color: var(--primary-red-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .cancel-btn {

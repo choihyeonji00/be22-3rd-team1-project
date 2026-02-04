@@ -336,7 +336,7 @@ watch(currentMember, (newMember) => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--background-cream);
 }
 
 /* Header */
@@ -414,9 +414,9 @@ watch(currentMember, (newMember) => {
 }
 
 .confirm-value {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-dark);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary-red);
 }
 
 /* Payment Sections */
@@ -458,25 +458,26 @@ watch(currentMember, (newMember) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px 16px;
-  min-height: 140px;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  background-color: var(--primary-yellow);
+  padding: 24px 16px;
+  min-height: 150px;
+  border: 1px solid var(--primary-orange);
+  border-radius: 16px;
+  background-color: var(--surface-white);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
 }
 
 .payment-btn:hover {
-  border-color: var(--primary-yellow-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-red);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(230, 57, 70, 0.1);
 }
 
 .payment-btn.selected {
-  border-color: var(--primary-blue);
-  background-color: rgba(79, 195, 247, 0.1);
-  box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.2);
+  border-color: var(--primary-red);
+  background-color: #fff5f5;
+  box-shadow: 0 0 0 2px var(--primary-red);
 }
 
 .payment-icon {
@@ -485,14 +486,15 @@ watch(currentMember, (newMember) => {
 }
 
 .payment-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-dark);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-navy);
   text-align: center;
-  min-height: 40px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1.2;
 }
 
 /* Action Footer */
@@ -520,21 +522,24 @@ watch(currentMember, (newMember) => {
 }
 
 .footer-btn.back {
-  background-color: #e0e0e0;
-  color: var(--text-dark);
+  background-color: var(--surface-white);
+  color: var(--text-muted);
+  border: 1px solid var(--primary-orange);
 }
 
 .footer-btn.back:hover {
-  background-color: #d0d0d0;
+  background-color: var(--background-light);
 }
 
 .footer-btn.next {
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red);
   color: white;
+  box-shadow: var(--shadow-md);
 }
 
 .footer-btn.next:hover:not(:disabled) {
-  background-color: var(--primary-blue-dark);
+  background-color: var(--primary-red-dark);
+  transform: translateY(-2px);
 }
 
 .footer-btn:disabled {
