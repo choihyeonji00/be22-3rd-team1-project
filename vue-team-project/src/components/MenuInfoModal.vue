@@ -1,6 +1,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const { t, locale } = useI18n();
+
+const router = useRouter();
+const route = useRoute();
 const props = defineProps({
   menu: {
     type: Object,
@@ -22,19 +28,25 @@ const totalPrice = computed(() => {
   let base = props.menu.price
   
   props.menu.options?.forEach(opt => {
-
-    const selected = selectedOptions.value[opt.name]
+    const optName = typeof opt.name === 'object' ? opt.name.ko : opt.name;
+    const selected = selectedOptions.value[optName]
 
     if (!selected) return
     
     if (opt.multiple) {
       selected.forEach(label => {
-        const choice = opt.choices.find(c => c.label === label)
+        const choice = opt.choices.find(c => {
+          const choiceLabelKo = typeof c.label === 'object' ? c.label.ko : c.label;
+          return choiceLabelKo === label || c.label === label;
+        })
         if (choice) base += choice.price
       })
     } 
     else {
-      const choice = opt.choices.find(c => c.label === selected)
+      const choice = opt.choices.find(c => {
+        const choiceLabelKo = typeof c.label === 'object' ? c.label.ko : c.label;
+        return choiceLabelKo === selected || c.label === selected;
+      })
       if (choice) base += choice.price
     }
   })
@@ -43,14 +55,15 @@ const totalPrice = computed(() => {
 })
 
 onMounted(() => {
-   props.menu.options?.forEach(option => {
-    if(option.required){
-      selectedOptions.value[option.name] = option.choices[0].label;
+  props.menu.options?.forEach(option => {
+    const optName = typeof option.name === 'object' ? option.name.ko : option.name;
+    if (option.required) {
+      const choiceLabel = typeof option.choices[0].label === 'object' ? option.choices[0].label.ko : option.choices[0].label;
+      selectedOptions.value[optName] = choiceLabel;
+    } else if (option.multiple) {
+      selectedOptions.value[optName] = [];
     }
-  else if(option.multiple){
-    selectedOptions.value[option.name] = [];
-  }
-})
+  })
 })
 
 const increaseQuantity = () => {
@@ -86,31 +99,34 @@ const handleAdd = () => {
 
   // 옵션 선택 처리 함수
 const handleOptionSelect = (option, choice) => {
+  const optName = typeof option.name === 'object' ? option.name.ko : option.name;
+  const choiceLabel = typeof choice.label === 'object' ? choice.label.ko : choice.label;
+
   if (option.required) {
-    // 필수 옵션: 기존 값을 덮어씀
-    selectedOptions.value[option.name] = choice.label;
+    selectedOptions.value[optName] = choiceLabel;
   } else if (option.multiple) {
-    // 다중 선택 옵션: 배열에 추가하거나 제거
-    const current = selectedOptions.value[option.name] || [];
-    const index = current.indexOf(choice.label);
+    const current = selectedOptions.value[optName] || [];
+    const index = current.indexOf(choiceLabel);
     
     if (index > -1) {
       current.splice(index, 1);
     } else {
-      current.push(choice.label);
+      current.push(choiceLabel);
     }
-    selectedOptions.value[option.name] = current;
+    selectedOptions.value[optName] = current;
   }
 };
 // 선택 여부 확인 함수 (isSelected)
 const isSelected = (option, choice) => {
-  const selected = selectedOptions.value[option.name];
+  const optName = typeof option.name === 'object' ? option.name.ko : option.name;
+  const choiceLabel = typeof choice.label === 'object' ? choice.label.ko : choice.label;
+  const selected = selectedOptions.value[optName];
   if (!selected) return false;
   
   if (option.required) {
-    return selected === choice.label;
+    return selected === choiceLabel;
   } else {
-    return selected.includes(choice.label);
+    return selected.includes(choiceLabel);
   }
 };
 
@@ -140,16 +156,16 @@ const getCategoryIcon = (categoryId) => {
 
         <!-- Menu Info -->
         <div class="menu-info">
-          <h2 class="menu-name">{{ menu.name }}</h2>
-          <p class="menu-description">{{ menu.description }}</p>
+          <h2 class="menu-name">{{ menu.name[$i18n.locale] || menu.name }}</h2>
+          <p class="menu-description">{{ menu.description[$i18n.locale] || menu.description }}</p>
           <!-- <p class="menu-price">{{ menu.price?.toLocaleString() }}원</p> -->
            <p class="menu-price">{{ totalPrice?.toLocaleString() }}{{ $t('common.won') }}</p>
         </div>
 
         <!-- Options -->
         <div class="options-container">
-          <div v-for="option in menu.options" :key="option.name" class="option-group">
-            <h3>{{ option.name }} ({{ option.required ? $t('admin.required') : $t('order.optional') }})</h3>
+          <div v-for="option in menu.options" :key="option.name[$i18n.locale] || option.name" class="option-group">
+            <h3>{{ option.name[$i18n.locale] || option.name }} ({{ option.required ? $t('admin.required') : $t('order.optional') }})</h3>
             
             <div class="option-grid">
               <div 
@@ -164,8 +180,8 @@ const getCategoryIcon = (categoryId) => {
                   <span v-else class="placeholder">{{ getCategoryIcon(menu.category) }}</span>
                 </div>
                 <div class="option-card-info">
-                  <div>{{ choice.label }}</div>
-                  <div>+{{ choice.price?.toLocaleString() }}{{ $t('common.won') }}</div>
+                  <div class="choice-label">{{ choice.label[$i18n.locale] || choice.label }}</div>
+                  <div class="choice-price">+{{ choice.price?.toLocaleString() }}{{ $t('common.won') }}</div>
                 </div>
               </div>
             </div>
@@ -372,12 +388,39 @@ const getCategoryIcon = (categoryId) => {
   padding: 10px;
   text-align: center;
   cursor: pointer;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .option-card.active {
   border-color: #4fc3f7; 
   background-color: #f0faff;
 }
+.option-card-info {
+  margin-top: 4px;
+  width: 100%;
+}
+
+.choice-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: keep-all;
+}
+
+.choice-price {
+  font-size: 12px;
+  color: #666;
+}
+
 .options-container {
   flex: 1;            
   overflow-y: auto;   

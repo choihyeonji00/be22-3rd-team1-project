@@ -65,7 +65,7 @@ const goToAdmin = () => {
 .admin-btn {
   position: absolute;
   top: 16px;
-  right: 16px;
+  left: 16px;
   padding: 10px 16px;
   background-color: var(--primary-blue);
   color: white;
@@ -122,6 +122,7 @@ const goToAdmin = () => {
   align-items: center;
   justify-content: center;
   padding: 32px 24px;
+  min-height: 240px;
   border: none;
   border-radius: 16px;
   cursor: pointer;
@@ -156,6 +157,9 @@ const goToAdmin = () => {
   font-weight: 700;
   color: white;
   margin-bottom: 4px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .dining-subtitle {

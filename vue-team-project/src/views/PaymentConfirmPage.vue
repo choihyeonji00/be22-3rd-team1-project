@@ -460,7 +460,7 @@ const handlePay = () => {
 
     <div class="page-content">
       <div class="info-section payment-method-section">
-        <span class="section-label">Payment :</span>
+        <span class="section-label">{{ $t('payment.payment_method') }} :</span>
         <span class="payment-badge">{{ selectedPaymentMethod }}</span>
       </div>
 
@@ -474,7 +474,7 @@ const handlePay = () => {
                 :key="item.id"
                 class="menu-item"
             >
-              <span class="menu-name">{{ item.name }}</span>
+              <span class="menu-name">{{ item.name[$i18n.locale] || item.name }}</span>
               <span class="menu-qty">x{{ item.quantity }}</span>
               <span class="menu-price">{{ (item.price * item.quantity).toLocaleString() }}{{ $t('common.won') }}</span>
             </div>
@@ -652,12 +652,16 @@ const handlePay = () => {
 .footer-btn {
   flex: 1;
   padding: 20px 24px;
+  min-height: 80px;
   border: none;
   border-radius: 12px;
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-btn.cancel {

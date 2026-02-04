@@ -31,6 +31,7 @@ export const translations = {
             total_amount: '결제 금액',
             discount_amount: '할인 금액',
             final_amount: '총 결제 금액',
+            payment_method: '결제 수단',
             sections: {
                 discount: '할인/적립',
                 card: '신용카드',
@@ -211,6 +212,7 @@ export const translations = {
             total_amount: 'Order Amount',
             discount_amount: 'Discount',
             final_amount: 'Total Payment',
+            payment_method: 'Payment',
             sections: {
                 discount: 'Discount/Reward',
                 card: 'Credit Card',

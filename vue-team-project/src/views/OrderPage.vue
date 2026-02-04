@@ -90,36 +90,64 @@ const closeModal = () => {
 //   orderStore.addItem(menuWithQuantity)
 // }
 const addToOrder = (orderData) => {
-  // 1. 옵션 문자열 생성 (예: "Large, Bacon")
-  const optionLabels = [];
+  const optionLabelsKo = [];
+  const optionLabelsEn = [];
   let optionsPriceSum = 0;
   
   if (orderData.selectedOptions && orderData.options) {
     Object.entries(orderData.selectedOptions).forEach(([groupName, value]) => {
-      const optionGroup = orderData.options.find(opt => opt.name === groupName);
+      // groupName is now an object in some cases, but search by key or localized name might be tricky
+      // Let's assume groupName is a string key for now if mapped correctly in MenuInfoModal
+      const optionGroup = orderData.options.find(opt => {
+        const optNameKo = typeof opt.name === 'object' ? opt.name.ko : opt.name;
+        return optNameKo === groupName || opt.name === groupName;
+      });
+      
       if (!optionGroup) return;
+      
       if (Array.isArray(value)) {
-        // 다중 선택
         value.forEach(label => {
-          optionLabels.push(label);
-          const choice = optionGroup.choices.find(c => c.label === label);
-          if (choice) optionsPriceSum += choice.price;
+          // label is the localized label string passed from MenuInfoModal
+          // We need to find the choice to get the price and other language version
+          const choice = optionGroup.choices.find(c => {
+            const choiceLabelKo = typeof c.label === 'object' ? c.label.ko : c.label;
+            const choiceLabelEn = typeof c.label === 'object' ? c.label.en : '';
+            return choiceLabelKo === label || choiceLabelEn === label || c.label === label;
+          });
+          
+          if (choice) {
+            optionsPriceSum += choice.price;
+            optionLabelsKo.push(typeof choice.label === 'object' ? choice.label.ko : choice.label);
+            optionLabelsEn.push(typeof choice.label === 'object' ? choice.label.en : choice.label);
+          }
         });
       } else {
-        // 단일 선택
-        optionLabels.push(value);
-        const choice = optionGroup.choices.find(c => c.label === value);
-        if (choice) optionsPriceSum += choice.price;
+        const choice = optionGroup.choices.find(c => {
+          const choiceLabelKo = typeof c.label === 'object' ? c.label.ko : c.label;
+          const choiceLabelEn = typeof c.label === 'object' ? c.label.en : '';
+          return choiceLabelKo === value || choiceLabelEn === value || c.label === value;
+        });
+        
+        if (choice) {
+          optionsPriceSum += choice.price;
+          optionLabelsKo.push(typeof choice.label === 'object' ? choice.label.ko : choice.label);
+          optionLabelsEn.push(typeof choice.label === 'object' ? choice.label.en : choice.label);
+        }
       }
     });
   }
-  const optionString = optionLabels.length > 0 ? ` (${optionLabels.join(', ')})` : '';
+  
+  const optionStringKo = optionLabelsKo.length > 0 ? ` (${optionLabelsKo.join(', ')})` : '';
+  const optionStringEn = optionLabelsEn.length > 0 ? ` (${optionLabelsEn.join(', ')})` : '';
   
   // 2. 가공된 주문 데이터 준비
   const processedItem = {
     ...orderData,
     id: `${orderData.id}_${JSON.stringify(orderData.selectedOptions)}`, // 옵션별 고유 ID
-    name: `${orderData.name}${optionString}`,
+    name: {
+      ko: `${typeof orderData.name === 'object' ? orderData.name.ko : orderData.name}${optionStringKo}`,
+      en: `${typeof orderData.name === 'object' ? orderData.name.en : orderData.name}${optionStringEn}`
+    },
     price: orderData.price + optionsPriceSum, // 단가 (옵션 포함)
     quantity: orderData.quantity
   };
@@ -181,16 +209,6 @@ const changeLanguage = (lang) => {
       <div class="logo">
         <span class="logo-text">{{ $t('order.kiosk') }}</span>
       </div>
-      <div class="lang-switcher">
-        <button 
-          :class="['lang-btn', { active: $i18n.locale === 'ko' }]" 
-          @click="$i18n.locale = 'ko'"
-        >KO</button>
-        <button 
-          :class="['lang-btn', { active: $i18n.locale === 'en' }]" 
-          @click="$i18n.locale = 'en'"
-        >EN</button>
-      </div>
     </header>
 
     <!-- Category Navigation -->
@@ -201,7 +219,7 @@ const changeLanguage = (lang) => {
         :class="['category-btn', { active: activeCategory === category.id }]"
         @click="selectCategory(category.id)"
       >
-        {{ category.name }}
+        {{ category.name[$i18n.locale] }}
       </button>
     </nav>
 
@@ -219,8 +237,8 @@ const changeLanguage = (lang) => {
             <span v-else class="menu-placeholder-icon">{{ getCategoryIcon(menu.category) }}</span>
           </div>
           <div class="menu-card-info">
-            <p class="menu-card-name">{{ menu.name }}</p>
-            <p class="menu-card-price">{{ menu.price.toLocaleString() }}원</p>
+            <p class="menu-card-name">{{ menu.name[$i18n.locale] || menu.name }}</p>
+            <p class="menu-card-price">{{ menu.price.toLocaleString() }} {{ $t('common.won') }}</p>
           </div>
         </button>
 
@@ -279,7 +297,7 @@ const changeLanguage = (lang) => {
           <span class="item-qty">{{ item.quantity }}</span>
           <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span> -->
           <div class="item-info">
-            <span class="item-name">{{ item.name }}</span>
+            <span class="item-name">{{ item.name[$i18n.locale] || item.name }}</span>
             <button class="remove-btn" @click="removeItem(item.id)">✕</button>
           </div>
           
@@ -289,7 +307,7 @@ const changeLanguage = (lang) => {
             <button class="qty-btn" @click="decreaseItemQuantity(item)">-</button>
           </div>
   
-  <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span>
+  <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}{{ $t('common.won') }}</span>
         </div>
 
         <div v-if="orderList.length === 0" class="empty-order">
@@ -354,43 +372,14 @@ const changeLanguage = (lang) => {
 .logo-text {
   font-size: 24px;
   font-weight: 700;
-  color: var(--primary-blue);
-  background-color: var(--primary-blue);
   color: white;
+  background-color: var(--primary-blue);
   padding: 8px 16px;
   border-radius: 8px;
-}
-
-.order-header {
-  display: flex;
-  justify-content: space-between;
+  min-width: 140px;
+  display: inline-flex;
+  justify-content: center;
   align-items: center;
-}
-
-.lang-switcher {
-  display: flex;
-  gap: 8px;
-}
-
-.lang-btn {
-  padding: 6px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.lang-btn.active {
-  background-color: var(--primary-blue);
-  color: white;
-  border-color: var(--primary-blue);
-}
-
-.lang-btn:hover:not(.active) {
-  background-color: #f0f0f0;
 }
 
 /* Category Navigation */
@@ -401,11 +390,15 @@ const changeLanguage = (lang) => {
   background-color: var(--primary-orange);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  min-height: 64px;
+  align-items: center;
 }
 
 .category-btn {
   flex-shrink: 0;
   padding: 10px 20px;
+  min-width: 100px;
+  white-space: nowrap;
   border: none;
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.3);
@@ -446,6 +439,9 @@ const changeLanguage = (lang) => {
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .menu-card:hover {
@@ -484,6 +480,10 @@ const changeLanguage = (lang) => {
 .menu-card-info {
   padding: 10px;
   color: white;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .menu-card-name {
@@ -506,6 +506,7 @@ const changeLanguage = (lang) => {
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
+  min-height: 60px;
 }
 
 .page-btn {
@@ -667,6 +668,11 @@ const changeLanguage = (lang) => {
   background-color: var(--primary-orange);
   border-radius: 8px;
   color: white;
+  min-width: 150px;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .total-label {
@@ -687,12 +693,17 @@ const changeLanguage = (lang) => {
 
 .action-btn {
   padding: 16px 24px;
+  min-width: 120px;
+  min-height: 70px;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .action-btn.cancel {

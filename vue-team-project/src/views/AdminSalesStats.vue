@@ -2,7 +2,9 @@
 import { ref, onMounted, computed } from 'vue'
 import { api } from '../services/api'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const { t, locale } = useI18n()
 const router = useRouter()
 
 const orders = ref([])
@@ -32,7 +34,7 @@ const refreshData = async () => {
     menuItems.value = menuData
   } catch (error) {
     console.error('Failed to fetch sales data:', error)
-    errorMessage.value = $t('sales.fetch_fail')
+    errorMessage.value = t('sales.fetch_fail')
   } finally {
     isLoading.value = false
   }
@@ -40,7 +42,7 @@ const refreshData = async () => {
 
 const getCategoryName = (categoryId) => {
   const category = categories.value.find(cat => cat.id === categoryId)
-  return category ? category.name : $t('admin.unknown')
+  return category ? (category.name[locale.value] || category.name) : t('admin.unknown')
 }
 
 // 1. 총 매출
@@ -70,7 +72,13 @@ const salesByMenuItem = computed(() => {
   const stats = {}
   orders.value.forEach(order => {
     order.items.forEach(item => {
-      const baseName = item.name.split('(')[0].trim()
+      let baseName = ''
+      if (typeof item.name === 'object') {
+        baseName = item.name[locale.value] || item.name['ko'] || 'Unknown'
+      } else {
+        baseName = item.name.split('(')[0].trim()
+      }
+      
       if (!stats[baseName]) stats[baseName] = 0
       stats[baseName] += item.price * item.quantity
     })
@@ -124,18 +132,25 @@ const selectedMenuDetails = computed(() => {
 
   orders.value.forEach(order => {
     order.items.forEach(item => {
-      const baseName = item.name.split('(')[0].trim()
+      let baseName = ''
+      const nameStr = typeof item.name === 'object' ? (item.name[locale.value] || item.name['ko'] || '') : item.name
+      
+      if (typeof item.name === 'object') {
+        baseName = nameStr.split('(')[0].trim()
+      } else {
+        baseName = item.name.split('(')[0].trim()
+      }
 
       if (baseName === selectedMenuName.value) {
         totalCount += item.quantity
-        const sizeMatch = item.name.match(/\(([^,)]+)/)
+        const sizeMatch = nameStr.match(/\(([^,)]+)/)
         if (sizeMatch) {
           const size = sizeMatch[1].trim()
           if (['Regular', 'Large'].includes(size)) {
             sizeStats[size] = (sizeStats[size] || 0) + item.quantity
           }
         }
-        const addOnMatch = item.name.match(/\(([^)]+)\)/)
+        const addOnMatch = nameStr.match(/\(([^)]+)\)/)
         if (addOnMatch) {
           const parts = addOnMatch[1].split(',').map(p => p.trim())
           parts.slice(1).forEach(addOn => {
@@ -343,6 +358,7 @@ const goToDashboard = () => {
   padding: 25px;
   display: flex;
   flex-direction: column;
+  min-height: 220px;
 }
 
 .stat-card h3 {

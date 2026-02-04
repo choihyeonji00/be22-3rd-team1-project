@@ -61,7 +61,7 @@ const handleComplete = () => {
                 :key="item.id"
                 class="order-item"
               >
-                <span class="item-name">{{ item.name }}</span>
+                <span class="item-name">{{ item.name[$i18n.locale] || item.name }}</span>
                 <span class="item-qty">x{{ item.quantity }}</span>
                 <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}{{ $t('common.won') }}</span>
               </div>
@@ -205,11 +205,13 @@ const handleComplete = () => {
 
 .order-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  padding: 8px 0;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  padding: 12px 0;
   font-size: 14px;
   color: var(--text-light);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  align-items: center;
+  min-height: 50px;
 }
 
 .order-item:last-child {

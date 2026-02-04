@@ -4,7 +4,9 @@ import { useRouter } from 'vue-router'
 import { useOrderStore } from '../stores/orderStore'
 import { api } from '../services/api'
 import OrderCompletionModal from '../components/OrderCompletionModal.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const orderStore = useOrderStore()
 
@@ -37,15 +39,15 @@ const guideInfo = computed(() => {
 
   if (method.includes('카드')) {
     return {
-      title: $t('process.card_title'),
-      subTitle: $t('process.card_subtitle'),
+      title: t('process.card_title'),
+      subTitle: t('process.card_subtitle'),
       image: '/payment/insert_card.gif', // 준비하신 카드 투입 애니메이션 이미지
       bgClass: 'bg-card'
     }
   } else if (method.includes('QR') || method.includes('페이') || method.includes('Easy')) {
     return {
-      title: $t('process.nfc_title'),
-      subTitle: $t('process.nfc_subtitle'),
+      title: t('process.nfc_title'),
+      subTitle: t('process.nfc_subtitle'),
       image: '/payment/scan_nfc.png',
       bgClass: 'bg-qr'
     }
@@ -61,8 +63,8 @@ const guideInfo = computed(() => {
     }
   } */else {
     return {
-      title: $t('process.general_title'),
-      subTitle: $t('process.general_subtitle'),
+      title: t('process.general_title'),
+      subTitle: t('process.general_subtitle'),
       image: '/payment/payment_processing.gif', // 공통 로딩 이미지
       bgClass: 'bg-common'
     }
@@ -99,7 +101,7 @@ const startTimer = () => {
   timerInterval = setInterval(() => {
     timeLeft.value--
     if (timeLeft.value <= 0) {
-      handleFail($t('process.timeout'))
+      handleFail(t('process.timeout'))
     }
   }, 1000)
 }
@@ -159,7 +161,7 @@ const processPayment = async () => {
 
   } catch (error) {
     console.error('Payment Error:', error)
-    handleFail($t('process.system_error'))
+    handleFail(t('process.system_error'))
   }
 }
 
@@ -197,7 +199,7 @@ const handleComplete = () => {
         <h2 class="title">{{ processStatus === 'processing' ? $t('process.approving') : guideInfo.title }}</h2>
         <p class="subtitle">{{ guideInfo.subTitle }}</p>
 
-        <button class="cancel-btn" @click="handleFail($t('process.user_cancel'))">
+        <button class="cancel-btn" @click="handleFail(t('process.user_cancel'))">
           {{ $t('process.cancel_btn') }}
         </button>
       </div>
@@ -276,12 +278,20 @@ const handleComplete = () => {
   color: #333;
   margin-bottom: 10px;
   font-weight: 800;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .subtitle {
   font-size: 18px;
   color: #666;
   margin-bottom: 40px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cancel-btn {

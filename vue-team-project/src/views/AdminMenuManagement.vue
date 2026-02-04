@@ -2,7 +2,9 @@
 import { ref, onMounted, computed } from 'vue'
 import { api } from '../services/api'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const { t, locale } = useI18n()
 const router = useRouter()
 
 const menuItems = ref([])
@@ -14,9 +16,9 @@ const errorMessage = ref('')
 const isModalOpen = ref(false)
 const editingMenu = ref(null) // null for add, object for edit
 const newMenuItem = ref({
-  name: '',
+  name: { ko: '', en: '' },
   price: 0,
-  description: '', // 설명 추가
+  description: { ko: '', en: '' }, // 설명 추가
   category: '', // category ID
   image: '', // image 필드로 수정 (기존 db.json과 일치)
   options: [] // 옵션 배열 추가
@@ -39,7 +41,7 @@ const refreshData = async () => {
     categories.value = categoryData
   } catch (error) {
     console.error('Failed to fetch admin data:', error)
-    errorMessage.value = $t('admin.fetch_fail')
+    errorMessage.value = t('admin.fetch_fail')
   } finally {
     isLoading.value = false
   }
@@ -47,15 +49,15 @@ const refreshData = async () => {
 
 const getCategoryName = (categoryId) => {
   const category = categories.value.find(cat => cat.id === categoryId)
-  return category ? category.name : $t('admin.unknown')
+  return category ? (category.name[locale.value] || category.name) : t('admin.unknown')
 }
 
 const openAddModal = () => {
   editingMenu.value = null
   newMenuItem.value = { 
-    name: '', 
+    name: { ko: '', en: '' }, 
     price: 0, 
-    description: '',
+    description: { ko: '', en: '' },
     category: categories.value[0]?.id || '', 
     image: '',
     options: [] 
@@ -64,11 +66,29 @@ const openAddModal = () => {
 }
 
 const openEditModal = (menu) => {
-  editingMenu.value = { ...menu }
+  // Ensure name and description are objects
+  const nameObj = typeof menu.name === 'string' ? { ko: menu.name, en: '' } : { ...menu.name }
+  const descObj = typeof menu.description === 'string' ? { ko: menu.description, en: '' } : { ...menu.description }
+  
+  editingMenu.value = { ...menu, name: nameObj, description: descObj }
+  
   // deep copy for nested options
-  const copiedMenu = JSON.parse(JSON.stringify(menu))
-  // Ensure options array exists
-  if (!copiedMenu.options) copiedMenu.options = []
+  const copiedMenu = JSON.parse(JSON.stringify(editingMenu.value))
+  
+  // Normalize options names and labels
+  if (copiedMenu.options) {
+    copiedMenu.options = copiedMenu.options.map(opt => ({
+      ...opt,
+      name: typeof opt.name === 'string' ? { ko: opt.name, en: '' } : { ...opt.name },
+      choices: opt.choices.map(choice => ({
+        ...choice,
+        label: typeof choice.label === 'string' ? { ko: choice.label, en: '' } : { ...choice.label }
+      }))
+    }))
+  } else {
+    copiedMenu.options = []
+  }
+  
   newMenuItem.value = copiedMenu
   isModalOpen.value = true
 }
@@ -76,15 +96,15 @@ const openEditModal = (menu) => {
 const closeModal = () => {
   isModalOpen.value = false
   editingMenu.value = null
-  newMenuItem.value = { name: '', price: 0, description: '', category: '', image: '', options: [] }
+  newMenuItem.value = { name: { ko: '', en: '' }, price: 0, description: { ko: '', en: '' }, category: '', image: '', options: [] }
   errorMessage.value = '' 
 }
 
 const saveMenuItem = async () => {
   errorMessage.value = ''
   try {
-    if (!newMenuItem.value.name || !newMenuItem.value.price || !newMenuItem.value.category) {
-      errorMessage.value = $t('admin.fill_all_fields')
+    if (!newMenuItem.value.name.ko || !newMenuItem.value.name.en || !newMenuItem.value.price || !newMenuItem.value.category) {
+      errorMessage.value = t('admin.fill_all_fields')
       return
     }
 
@@ -106,17 +126,17 @@ const saveMenuItem = async () => {
     closeModal()
   } catch (error) {
     console.error('Failed to save menu item:', error)
-    errorMessage.value = $t('admin.save_fail')
+    errorMessage.value = t('admin.save_fail')
   }
 }
 
 // --- Option Management Functions ---
 const addOptionGroup = () => {
   newMenuItem.value.options.push({
-    name: '',
+    name: { ko: '', en: '' },
     required: false,
     multiple: false,
-    choices: [{ label: '', price: 0 }]
+    choices: [{ label: { ko: '', en: '' }, price: 0 }]
   })
 }
 
@@ -125,7 +145,7 @@ const removeOptionGroup = (index) => {
 }
 
 const addChoice = (optionIndex) => {
-  newMenuItem.value.options[optionIndex].choices.push({ label: '', price: 0 })
+  newMenuItem.value.options[optionIndex].choices.push({ label: { ko: '', en: '' }, price: 0 })
 }
 
 const removeChoice = (optionIndex, choiceIndex) => {
@@ -134,14 +154,14 @@ const removeChoice = (optionIndex, choiceIndex) => {
 // ------------------------------------
 
 const deleteMenuItem = async (id) => {
-  if (confirm($t('admin.delete_confirm'))) {
+  if (confirm(t('admin.delete_confirm'))) {
     try {
       await api.deleteMenuItem(id)
       console.log('Menu item deleted:', id)
       await refreshData()
     } catch (error) {
       console.error('Failed to delete menu item:', error)
-      errorMessage.value = $t('admin.delete_fail')
+      errorMessage.value = t('admin.delete_fail')
     }
   }
 }
@@ -180,7 +200,7 @@ const goToDashboard = () => {
           <tbody>
             <tr v-for="menu in menuItems" :key="menu.id">
               <td>{{ menu.id }}</td>
-              <td>{{ menu.name }}</td>
+              <td>{{ menu.name[locale] || menu.name }}</td>
               <td>{{ menu.price.toLocaleString() }}{{ $t('common.won') }}</td>
               <td>{{ getCategoryName(menu.category) }}</td>
               <td>
@@ -207,9 +227,15 @@ const goToDashboard = () => {
       <div class="modal-content">
         <h3>{{ editingMenu ? $t('admin.edit_menu') : $t('admin.new_menu') }}</h3>
         <form @submit.prevent="saveMenuItem">
-          <div class="form-group">
-            <label for="menuName">{{ $t('admin.name') }}:</label>
-            <input type="text" id="menuName" v-model="newMenuItem.name" required />
+          <div class="form-group-row">
+            <div class="form-group flex-1">
+              <label for="menuNameKo">{{ $t('admin.name') }} (KO):</label>
+              <input type="text" id="menuNameKo" v-model="newMenuItem.name.ko" required />
+            </div>
+            <div class="form-group flex-1">
+              <label for="menuNameEn">{{ $t('admin.name') }} (EN):</label>
+              <input type="text" id="menuNameEn" v-model="newMenuItem.name.en" required />
+            </div>
           </div>
           <div class="form-group">
             <label for="menuPrice">{{ $t('admin.price') }}:</label>
@@ -219,13 +245,19 @@ const goToDashboard = () => {
             <label for="menuCategory">{{ $t('admin.category') }}:</label>
             <select id="menuCategory" v-model="newMenuItem.category" required>
               <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                {{ cat.name }}
+                {{ cat.name[locale] || cat.name }}
               </option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="menuDescription">{{ $t('admin.description') }}:</label>
-            <textarea id="menuDescription" v-model="newMenuItem.description" rows="2"></textarea>
+          <div class="form-group-row">
+            <div class="form-group flex-1">
+              <label for="menuDescriptionKo">{{ $t('admin.description') }} (KO):</label>
+              <textarea id="menuDescriptionKo" v-model="newMenuItem.description.ko" rows="2"></textarea>
+            </div>
+            <div class="form-group flex-1">
+              <label for="menuDescriptionEn">{{ $t('admin.description') }} (EN):</label>
+              <textarea id="menuDescriptionEn" v-model="newMenuItem.description.en" rows="2"></textarea>
+            </div>
           </div>
           <div class="form-group">
             <label for="menuImageUrl">{{ $t('admin.image_url') }}:</label>
@@ -241,7 +273,10 @@ const goToDashboard = () => {
             
             <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
               <div class="option-group-header">
-                <input type="text" v-model="opt.name" placeholder="그룹명 (예: 사이즈, 토핑)" class="opt-name-input" />
+                <div class="opt-name-inputs">
+                  <input type="text" v-model="opt.name.ko" placeholder="그룹명 (KO)" class="opt-name-input" />
+                  <input type="text" v-model="opt.name.en" placeholder="Group Name (EN)" class="opt-name-input" />
+                </div>
                 <div class="opt-configs">
                   <label><input type="checkbox" v-model="opt.required" /> {{ $t('admin.required') }}</label>
                   <label><input type="checkbox" v-model="opt.multiple" /> {{ $t('admin.multiple') }}</label>
@@ -251,7 +286,8 @@ const goToDashboard = () => {
 
               <div class="choices-list">
                 <div v-for="(choice, choiceIdx) in opt.choices" :key="choiceIdx" class="choice-row">
-                  <input type="text" v-model="choice.label" :placeholder="$t('admin.label')" />
+                  <input type="text" v-model="choice.label.ko" placeholder="라벨 (KO)" />
+                  <input type="text" v-model="choice.label.en" placeholder="Label (EN)" />
                   <input type="number" v-model.number="choice.price" :placeholder="$t('admin.extra_price')" />
                   <button type="button" @click="removeChoice(optIdx, choiceIdx)" class="choice-delete-btn">✕</button>
                 </div>
@@ -572,6 +608,24 @@ tr:hover {
   border-radius: 8px;
   font-size: 16px;
   font-family: inherit;
+}
+
+.form-group-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.flex-1 {
+  flex: 1;
+  margin-bottom: 0 !important;
+}
+
+.opt-name-inputs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .error-message-modal {

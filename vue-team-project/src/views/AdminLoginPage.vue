@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { api } from '../services/api' // api 서비스 임포트
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 
 const username = ref('')
@@ -20,11 +22,11 @@ const handleLogin = async () => {
       router.push('/admin') // 관리자 대시보드로 이동
     } else {
       // 로그인 실패
-      errorMessage.value = result.message || $t('admin.login_fail')
+      errorMessage.value = result.message || t('admin.login_fail')
     }
   } catch (error) {
     console.error('Login API error:', error)
-    errorMessage.value = $t('admin.login_error')
+    errorMessage.value = t('admin.login_error')
   }
 }
 </script>

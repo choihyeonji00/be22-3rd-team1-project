@@ -5,7 +5,9 @@ import { api } from '../services/api'
 import { useOrderStore } from '../stores/orderStore'
 import KeypadModal from '../components/KeypadModal.vue'
 import MessageModal from '../components/MessageModal.vue'
+import { useI18n} from 'vue-i18n'
 
+const { t, locale } = useI18n()
 const router = useRouter()
 const orderStore = useOrderStore()
 
@@ -80,12 +82,13 @@ const handleNext = () => {
     ]
     const selected = allMethods.find(m => m.id === selectedPayment.value)
     if (selected) {
-      orderStore.setPaymentMethod(selected.name)
+      const localizedName = typeof selected.name === 'object' ? (selected.name[locale.value] || selected.name['ko']) : selected.name
+      orderStore.setPaymentMethod(localizedName)
       orderStore.setTotalDiscount(totalDiscountPrice.value)
       orderStore.setUsedPoints(pointDiscount.value)
       
       // 결제 확인 모달 추가
-      showMessage('confirm', $t('payment.confirm_msg'), $t('payment.confirm_proceed', { amount: confirmPrice.value.toLocaleString() }), () => {
+      showMessage('confirm', t('payment.confirm_msg'), t('payment.confirm_proceed', { amount: confirmPrice.value.toLocaleString() }), () => {
         modal.value.isOpen = false;
         router.push('/payment-confirm')
       })
@@ -117,14 +120,14 @@ const checkCoupon = async (code) => {
       const coupon = coupons[0]
       if(!coupon.used){
         couponDiscount.value = coupon.amount
-        showMessage('alert', $t('discount.coupon'), $t('discount.applied_coupon', { amount: coupon.amount.toLocaleString() }))
+        showMessage('alert', t('discount.coupon'), t('discount.applied_coupon', { amount: coupon.amount.toLocaleString() }))
       }
       else{
-        showMessage('alert', $t('discount.coupon_error'), $t('discount.used_coupon'))
+        showMessage('alert', t('discount.coupon_error'), t('discount.used_coupon'))
       }
     }
     else{
-      showMessage('alert', $t('discount.coupon_error'), $t('discount.invalid_coupon'))
+      showMessage('alert', t('discount.coupon_error'), t('discount.invalid_coupon'))
     }
 
   } catch (error) {
@@ -151,20 +154,20 @@ const checkMember = async (phone) => {
       isPhoneModalOpen.value = false;
       
       // confirm() 대신 커스텀 모달 호출
-      showMessage('confirm', $t('discount.join_title'), $t('discount.join_msg'), async () => {
+      showMessage('confirm', t('discount.join_title'), t('discount.join_msg'), async () => {
         const newMember = await api.createMember({ phone: rawPhone, points: 0 });
         currentMember.value = newMember;
         modal.value.isOpen = false; // 메세지 모달 닫기
         
         // 알림창도 커스텀 모달
         setTimeout(() => {
-          showMessage('alert', $t('discount.signup_complete'), $t('discount.join_success'));
+          showMessage('alert', t('discount.signup_complete'), t('discount.join_success'));
         }, 300);
       });
     }
   } 
   catch (error) {
-    showMessage('alert', $t('discount.lookup_fail'), $t('discount.lookup_error'))
+    showMessage('alert', t('discount.lookup_fail'), t('discount.lookup_error'))
   }
 };
 
@@ -172,7 +175,7 @@ const checkMember = async (phone) => {
 const applyPointAmount = (amount) => {
   const points = parseInt(amount);
   if (points > (currentMember.value?.points || 0)) {
-    showMessage('alert', $t('discount.point_error'), $t('discount.point_insufficient', { points: (currentMember.value?.points || 0).toLocaleString() }))
+    showMessage('alert', t('discount.point_error'), t('discount.point_insufficient', { points: (currentMember.value?.points || 0).toLocaleString() }))
     return;
   }
   pointDiscount.value = points;
@@ -180,7 +183,7 @@ const applyPointAmount = (amount) => {
 
   // 포인트 적용 확인 모달 추가
   if (points > 0) {
-    showMessage('alert', $t('discount.point'), $t('discount.applied_points', { points: points.toLocaleString() }));
+    showMessage('alert', t('discount.point'), t('discount.applied_points', { points: points.toLocaleString() }));
   }
 };
 
@@ -231,7 +234,7 @@ watch(currentMember, (newMember) => {
             @click="openDiscountModal(method.id)"
           >
             <span class="payment-icon">{{ method.icon }}</span>
-            <span class="payment-name">{{ method.name }}</span>
+            <span class="payment-name">{{ method.name[$i18n.locale] || method.name }}</span>
           </button>
         </div>
       </section>
@@ -246,7 +249,7 @@ watch(currentMember, (newMember) => {
             @click="selectPayment(method.id)"
           >
             <span class="payment-icon">{{ method.icon }}</span>
-            <span class="payment-name">{{ method.name }}</span>
+            <span class="payment-name">{{ method.name[$i18n.locale] || method.name }}</span>
           </button>
         </div>
       </section>
@@ -262,7 +265,7 @@ watch(currentMember, (newMember) => {
             @click="selectPayment(method.id)"
           >
             <span class="payment-icon">{{ method.icon }}</span>
-            <span class="payment-name">{{ method.name }}</span>
+            <span class="payment-name">{{ method.name[$i18n.locale] || method.name }}</span>
           </button>
         </div>
       </section>
@@ -444,6 +447,7 @@ watch(currentMember, (newMember) => {
   align-items: center;
   justify-content: center;
   padding: 20px 16px;
+  min-height: 140px;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
   background-color: var(--primary-yellow);
@@ -473,6 +477,10 @@ watch(currentMember, (newMember) => {
   font-weight: 600;
   color: var(--text-dark);
   text-align: center;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Action Footer */
@@ -487,12 +495,16 @@ watch(currentMember, (newMember) => {
 .footer-btn {
   flex: 1;
   padding: 16px 24px;
+  min-height: 70px;
   border: none;
   border-radius: 8px;
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-btn.back {

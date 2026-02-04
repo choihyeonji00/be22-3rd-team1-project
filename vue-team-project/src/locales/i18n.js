@@ -3,8 +3,9 @@ import { translations } from './translations'
 
 const i18n = createI18n({
     legacy: false,
+    globalInjection: true,
     locale: 'ko',
-    fallbackLocale: 'en',
+    fallbackLocale: 'ko',
     messages: translations
 })
 

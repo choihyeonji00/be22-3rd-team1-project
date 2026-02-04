@@ -10,66 +10,111 @@
   "categories": [
     {
       "id": "pizza",
-      "name": "피자"
+      "name": {
+        "ko": "피자",
+        "en": "Pizza"
+      }
     },
     {
       "id": "hamburger",
-      "name": "햄버거"
+      "name": {
+        "ko": "햄버거",
+        "en": "Hamburger"
+      }
     },
     {
       "id": "drink",
-      "name": "음료"
+      "name": {
+        "ko": "음료",
+        "en": "Drinks"
+      }
     },
     {
       "id": "sandwich",
-      "name": "샌드위치"
+      "name": {
+        "ko": "샌드위치",
+        "en": "Sandwich"
+      }
     },
     {
       "id": "side",
-      "name": "사이드"
+      "name": {
+        "ko": "사이드",
+        "en": "Sides"
+      }
     },
     {
       "id": "dessert",
-      "name": "디저트"
+      "name": {
+        "ko": "디저트",
+        "en": "Dessert"
+      }
     }
   ],
   "menuItems": [
     {
       "id": "1",
-      "name": "페퍼로니 피자",
+      "name": {
+        "ko": "페퍼로니 피자",
+        "en": "Pepperoni Pizza"
+      },
       "price": 15000,
       "image": "/src/assets/images/pizza/pepperoni.png",
-      "description": "클래식 페퍼로니 피자",
+      "description": {
+        "ko": "클래식 페퍼로니 피자",
+        "en": "Classic pepperoni pizza"
+      },
       "category": "pizza",
       "options": [
         {
-          "name": "Size",
+          "name": {
+            "ko": "사이즈",
+            "en": "Size"
+          },
           "required": true,
           "choices": [
             {
-              "label": "Regular",
+              "label": {
+                "ko": "일반",
+                "en": "Regular"
+              },
               "price": 0
             },
             {
-              "label": "Large",
+              "label": {
+                "ko": "라지",
+                "en": "Large"
+              },
               "price": 2000
             }
           ]
         },
         {
-          "name": "Add-ons",
+          "name": {
+            "ko": "추가 토핑",
+            "en": "Add-ons"
+          },
           "multiple": true,
           "choices": [
             {
-              "label": "Extra Cheese",
+              "label": {
+                "ko": "치즈 추가",
+                "en": "Extra Cheese"
+              },
               "price": 1000
             },
             {
-              "label": "Bacon",
+              "label": {
+                "ko": "베이컨",
+                "en": "Bacon"
+              },
               "price": 1500
             },
             {
-              "label": "Avocado",
+              "label": {
+                "ko": "아보카도",
+                "en": "Avocado"
+              },
               "price": 2000
             }
           ]
@@ -78,40 +123,67 @@
     },
     {
       "id": "2",
-      "name": "치즈 피자",
+      "name": {
+        "ko": "치즈 피자",
+        "en": "Cheese Pizza"
+      },
       "price": 13000,
       "image": "/src/assets/images/pizza/cheese.png",
-      "description": "고소한 치즈 피자",
+      "description": {
+        "ko": "고소한 치즈 피자",
+        "en": "Rich and savory cheese pizza"
+      },
       "category": "pizza",
       "options": [
         {
-          "name": "Size",
+          "name": {
+            "ko": "사이즈",
+            "en": "Size"
+          },
           "required": true,
           "choices": [
             {
-              "label": "Regular",
+              "label": {
+                "ko": "일반",
+                "en": "Regular"
+              },
               "price": 0
             },
             {
-              "label": "Large",
+              "label": {
+                "ko": "라지",
+                "en": "Large"
+              },
               "price": 2000
             }
           ]
         },
         {
-          "name": "Add-ons",
+          "name": {
+            "ko": "추가 토핑",
+            "en": "Add-ons"
+          },
           "multiple": true,
           "choices": [
             {
-              "label": "Extra Cheese",
+              "label": {
+                "ko": "치즈 추가",
+                "en": "Extra Cheese"
+              },
               "price": 1000
             },
             {
-              "label": "Bacon",
+              "label": {
+                "ko": "베이컨",
+                "en": "Bacon"
+              },
               "price": 1500
             },
             {
-              "label": "Avocado",
+              "label": {
+                "ko": "아보카도",
+                "en": "Avocado"
+              },
               "price": 2000
             }
           ]
@@ -120,40 +192,67 @@
     },
     {
       "id": "3",
-      "name": "불고기 피자",
+      "name": {
+        "ko": "불고기 피자",
+        "en": "Bulgogi Pizza"
+      },
       "price": 17000,
       "image": "/src/assets/images/pizza/boolgogi.png",
-      "description": "한국식 불고기 피자",
+      "description": {
+        "ko": "한국식 불고기 피자",
+        "en": "Korean style beef pizza"
+      },
       "category": "pizza",
       "options": [
         {
-          "name": "Size",
+          "name": {
+            "ko": "사이즈",
+            "en": "Size"
+          },
           "required": true,
           "choices": [
             {
-              "label": "Regular",
+              "label": {
+                "ko": "일반",
+                "en": "Regular"
+              },
               "price": 0
             },
             {
-              "label": "Large",
+              "label": {
+                "ko": "라지",
+                "en": "Large"
+              },
               "price": 2000
             }
           ]
         },
         {
-          "name": "Add-ons",
+          "name": {
+            "ko": "추가 토핑",
+            "en": "Add-ons"
+          },
           "multiple": true,
           "choices": [
             {
-              "label": "Extra Cheese",
+              "label": {
+                "ko": "치즈 추가",
+                "en": "Extra Cheese"
+              },
               "price": 1000
             },
             {
-              "label": "Bacon",
+              "label": {
+                "ko": "베이컨",
+                "en": "Bacon"
+              },
               "price": 1500
             },
             {
-              "label": "Avocado",
+              "label": {
+                "ko": "아보카도",
+                "en": "Avocado"
+              },
               "price": 2000
             }
           ]
@@ -162,40 +261,67 @@
     },
     {
       "id": "4",
-      "name": "하와이안 피자",
+      "name": {
+        "ko": "하와이안 피자",
+        "en": "Hawaiian Pizza"
+      },
       "price": 16000,
       "image": "/src/assets/images/pizza/hawaiian.png",
-      "description": "파인애플 토핑 피자",
+      "description": {
+        "ko": "파인애플 토핑 피자",
+        "en": "Pineapple topped pizza"
+      },
       "category": "pizza",
       "options": [
         {
-          "name": "Size",
+          "name": {
+            "ko": "사이즈",
+            "en": "Size"
+          },
           "required": true,
           "choices": [
             {
-              "label": "Regular",
+              "label": {
+                "ko": "일반",
+                "en": "Regular"
+              },
               "price": 0
             },
             {
-              "label": "Large",
+              "label": {
+                "ko": "라지",
+                "en": "Large"
+              },
               "price": 2000
             }
           ]
         },
         {
-          "name": "Add-ons",
+          "name": {
+            "ko": "추가 토핑",
+            "en": "Add-ons"
+          },
           "multiple": true,
           "choices": [
             {
-              "label": "Extra Cheese",
+              "label": {
+                "ko": "치즈 추가",
+                "en": "Extra Cheese"
+              },
               "price": 1000
             },
             {
-              "label": "Bacon",
+              "label": {
+                "ko": "베이컨",
+                "en": "Bacon"
+              },
               "price": 1500
             },
             {
-              "label": "Avocado",
+              "label": {
+                "ko": "아보카도",
+                "en": "Avocado"
+              },
               "price": 2000
             }
           ]
@@ -204,40 +330,67 @@
     },
     {
       "id": "5",
-      "name": "콤비네이션 피자",
+      "name": {
+        "ko": "콤비네이션 피자",
+        "en": "Combination Pizza"
+      },
       "price": 18000,
       "image": "/src/assets/images/pizza/combination.png",
-      "description": "다양한 토핑의 피자",
+      "description": {
+        "ko": "다양한 토핑의 피자",
+        "en": "Pizza with various toppings"
+      },
       "category": "pizza",
       "options": [
         {
-          "name": "Size",
+          "name": {
+            "ko": "사이즈",
+            "en": "Size"
+          },
           "required": true,
           "choices": [
             {
-              "label": "Regular",
+              "label": {
+                "ko": "일반",
+                "en": "Regular"
+              },
               "price": 0
             },
             {
-              "label": "Large",
+              "label": {
+                "ko": "라지",
+                "en": "Large"
+              },
               "price": 2000
             }
           ]
         },
         {
-          "name": "Add-ons",
+          "name": {
+            "ko": "추가 토핑",
+            "en": "Add-ons"
+          },
           "multiple": true,
           "choices": [
             {
-              "label": "Extra Cheese",
+              "label": {
+                "ko": "치즈 추가",
+                "en": "Extra Cheese"
+              },
               "price": 1000
             },
             {
-              "label": "Bacon",
+              "label": {
+                "ko": "베이컨",
+                "en": "Bacon"
+              },
               "price": 1500
             },
             {
-              "label": "Avocado",
+              "label": {
+                "ko": "아보카도",
+                "en": "Avocado"
+              },
               "price": 2000
             }
           ]
@@ -372,34 +525,58 @@
     },
     {
       "id": "9",
-      "name": "클래식 버거",
+      "name": {
+        "ko": "클래식 버거",
+        "en": "Classic Burger"
+      },
       "price": 8000,
       "image": "/src/assets/images/hamburger/classic_burger.png",
-      "description": "기본 햄버거",
+      "description": {
+        "ko": "기본 햄버거",
+        "en": "Traditional classic burger"
+      },
       "category": "hamburger"
     },
     {
       "id": "10",
-      "name": "치즈 버거",
+      "name": {
+        "ko": "치즈 버거",
+        "en": "Cheese Burger"
+      },
       "price": 9000,
       "image": "/src/assets/images/hamburger/cheese_burger.png",
-      "description": "치즈 햄버거",
+      "description": {
+        "ko": "치즈 햄버거",
+        "en": "Delicious cheeseburger"
+      },
       "category": "hamburger"
     },
     {
       "id": "11",
-      "name": "콜라",
+      "name": {
+        "ko": "콜라",
+        "en": "Cola"
+      },
       "price": 2000,
       "image": "/src/assets/images/drink/cola.jpeg",
-      "description": "코카콜라",
+      "description": {
+        "ko": "코카콜라",
+        "en": "Refreshingly cold Coca-Cola"
+      },
       "category": "drink"
     },
     {
       "id": "12",
-      "name": "사이다",
+      "name": {
+        "ko": "사이다",
+        "en": "Cider"
+      },
       "price": 2000,
       "image": "/src/assets/images/drink/cider.png",
-      "description": "칠성사이다",
+      "description": {
+        "ko": "칠성사이다",
+        "en": "Refreshing Chilsung Cider"
+      },
       "category": "drink"
     },
     {
@@ -468,18 +645,30 @@
     },
     {
       "id": "21",
-      "name": "참치 샌드위치",
+      "name": {
+        "ko": "참치 샌드위치",
+        "en": "Tuna Sandwich"
+      },
       "price": 6500,
       "image": "/src/assets/images/sandwich/tuna_sandwich.png",
-      "description": "고소한 참치 샌드위치",
+      "description": {
+        "ko": "고소한 참치 샌드위치",
+        "en": "Savory tuna salad sandwich"
+      },
       "category": "sandwich"
     },
     {
       "id": "22",
-      "name": "BLT 샌드위치",
+      "name": {
+        "ko": "BLT 샌드위치",
+        "en": "BLT Sandwich"
+      },
       "price": 7000,
       "image": "/src/assets/images/sandwich/blt_sandwich.png",
-      "description": "베이컨, 양상추, 토마토",
+      "description": {
+        "ko": "베이컨, 양상추, 토마토",
+        "en": "Bacon, Lettuce, and Tomato"
+      },
       "category": "sandwich"
     },
     {
@@ -548,18 +737,30 @@
     },
     {
       "id": "31",
-      "name": "치킨 너겟",
+      "name": {
+        "ko": "치킨 너겟",
+        "en": "Chicken Nuggets"
+      },
       "price": 4500,
       "image": "/src/assets/images/side/chicken_nuggets.png",
-      "description": "바삭한 치킨 너겟 6조각",
+      "description": {
+        "ko": "바삭한 치킨 너겟 6조각",
+        "en": "6 pieces of crispy chicken nuggets"
+      },
       "category": "side"
     },
     {
       "id": "32",
-      "name": "어니언 링",
+      "name": {
+        "ko": "어니언 링",
+        "en": "Onion Rings"
+      },
       "price": 4000,
       "image": "/src/assets/images/side/onion_rings.png",
-      "description": "바삭한 양파 링",
+      "description": {
+        "ko": "바삭한 양파 링",
+        "en": "Golden crispy onion rings"
+      },
       "category": "side"
     },
     {
@@ -596,18 +797,30 @@
     },
     {
       "id": "37",
-      "name": "초코 아이스크림",
+      "name": {
+        "ko": "초코 아이스크림",
+        "en": "Choco Ice Cream"
+      },
       "price": 3500,
       "image": "/src/assets/images/dessert/choco_ice_cream.png",
-      "description": "진한 초콜릿 아이스크림",
+      "description": {
+        "ko": "진한 초콜릿 아이스크림",
+        "en": "Rich chocolate ice cream"
+      },
       "category": "dessert"
     },
     {
       "id": "38",
-      "name": "딸기 아이스크림",
+      "name": {
+        "ko": "딸기 아이스크림",
+        "en": "Strawberry Ice Cream"
+      },
       "price": 3500,
       "image": "/src/assets/images/dessert/strawberry_ice_cream.png",
-      "description": "상큼한 딸기 아이스크림",
+      "description": {
+        "ko": "상큼한 딸기 아이스크림",
+        "en": "Fresh strawberry ice cream"
+      },
       "category": "dessert"
     },
     {
@@ -711,41 +924,62 @@
     "card": [
       {
         "id": "samsung-pay",
-        "name": "삼성페이",
+        "name": {
+          "ko": "삼성페이",
+          "en": "Samsung Pay"
+        },
         "icon": "💳"
       },
       {
         "id": "card-payment",
-        "name": "카드결제",
+        "name": {
+          "ko": "카드결제",
+          "en": "Credit Card"
+        },
         "icon": "💳"
       }
     ],
     "easyPay": [
       {
         "id": "kakao-pay",
-        "name": "카카오페이",
+        "name": {
+          "ko": "카카오페이",
+          "en": "Kakao Pay"
+        },
         "icon": "💛"
       },
       {
         "id": "toss-pay",
-        "name": "토스페이",
+        "name": {
+          "ko": "토스페이",
+          "en": "Toss Pay"
+        },
         "icon": "💙"
       },
       {
         "id": "other-pay",
-        "name": "기타페이",
+        "name": {
+          "ko": "기타페이",
+          "en": "Other Easy Pay"
+        },
         "icon": "📱"
       }
     ],
     "other": [
       {
         "id": "coupon",
-        "name": "쿠폰 등록",
+        "name": {
+          "ko": "쿠폰 등록",
+          "en": "Register Coupon"
+        },
         "icon": "🎟️"
       },
       {
         "id": "point",
-        "name": "포인트 적립 및 결제",
+        "name": {
+          "ko": "포인트 적립 및 결제",
+          "en": "Points & Rewards"
+        },
         "icon": "🪙"
       }
     ]
@@ -1506,13 +1740,80 @@
       "totalPrice": 120000,
       "createdAt": "2026-02-04T02:23:30.558Z",
       "status": "completed"
+    },
+    {
+      "id": "c15e",
+      "orderNumber": "ORD-20260204024350-9977",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\"]}",
+          "name": "콤비네이션 피자 (Regular, Bacon)",
+          "price": 19500,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 19500,
+      "createdAt": "2026-02-04T02:43:50.051Z",
+      "status": "completed"
+    },
+    {
+      "id": "9bd7",
+      "orderNumber": "ORD-20260204025442-7517",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[\"Avocado\"]}",
+          "name": "불고기 피자 (Regular, Avocado)",
+          "price": 19000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 19000,
+      "createdAt": "2026-02-04T02:54:42.540Z",
+      "status": "completed"
+    },
+    {
+      "id": "cffa",
+      "orderNumber": "ORD-20260204025525-7653",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Regular)",
+          "price": 19000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 19000,
+      "createdAt": "2026-02-04T02:55:25.278Z",
+      "status": "completed"
+    },
+    {
+      "id": "b282",
+      "orderNumber": "ORD-20260204034313-1341",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "3_{\"사이즈\":\"일반\",\"추가 토핑\":[\"아보카도\"]}",
+          "name": {
+            "ko": "불고기 피자 (일반, 아보카도)",
+            "en": "Bulgogi Pizza (Regular, Avocado)"
+          },
+          "price": 19000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 19000,
+      "createdAt": "2026-02-04T03:43:13.085Z",
+      "status": "completed"
     }
   ],
   "members": [
     {
       "id": "1",
       "phone": "01012345678",
-      "points": 918
+      "points": 1868
     },
     {
       "id": "5e3d",

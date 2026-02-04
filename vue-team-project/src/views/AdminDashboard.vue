@@ -93,11 +93,16 @@ const logout = () => {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 30px;
+  padding: 24px;
   width: 300px;
+  min-height: 200px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .dashboard-card:hover {
