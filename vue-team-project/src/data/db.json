@@ -1158,6 +1158,22 @@
       "totalPrice": 20000,
       "createdAt": "2026-02-03T17:20:14.342Z",
       "status": "completed"
+    },
+    {
+      "id": "84db",
+      "orderNumber": "ORD-20260204000932-2792",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 13000,
+      "createdAt": "2026-02-04T00:09:32.647Z",
+      "status": "completed"
     }
   ],
   "members": [

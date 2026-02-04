@@ -442,7 +442,7 @@ const handleCancel = () => {
   router.push('/order')
 }
 
-// ★★★ 여기가 핵심 변경 사항입니다 ★★★
+
 const handlePay = () => {
   // 이제 여기서 결제를 직접 처리하지 않고,
   // '결제 진행/대기 화면'으로 이동만 시킵니다.
