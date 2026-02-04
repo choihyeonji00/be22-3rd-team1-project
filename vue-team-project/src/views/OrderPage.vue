@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MenuInfoModal from '../components/MenuInfoModal.vue'
 import { api } from '../services/api'
@@ -153,6 +153,7 @@ const handleCancel = () => {
 const handlePay = () => {
   router.push('/payment-method')
 }
+
 
 const getCategoryIcon = (categoryId) => {
   const iconMap = {
@@ -310,6 +311,7 @@ const getCategoryIcon = (categoryId) => {
       @close="closeModal"
       @add="addToOrder"
     />
+
   </div>
 </template>
 
@@ -694,5 +696,23 @@ const getCategoryIcon = (categoryId) => {
   .action-btn {
     flex: 1;
   }
+}
+
+
+.timeout-actions {
+  display: flex; gap: 10px;
+}
+
+.timeout-btn {
+  flex: 1; padding: 14px;
+  border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+}
+
+.timeout-btn.cancel {
+  background-color: #f0f0f0; color: #666;
+}
+.timeout-btn.continue {
+  background-color: var(--primary-orange); color: white;
 }
 </style>
