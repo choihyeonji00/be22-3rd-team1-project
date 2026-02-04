@@ -41,6 +41,7 @@
       "image": "/src/assets/images/pizza/pepperoni.png",
       "description": "클래식 페퍼로니 피자",
       "category": "pizza",
+      "stock": 12,
       "options": [
         {
           "name": "Size",
@@ -74,12 +75,15 @@
             }
           ]
         }
-      ]
+      ],
+      "sizes": [],
+      "addOns": []
     },
     {
       "id": "2",
       "name": "치즈 피자",
       "price": 13000,
+      "stock": 4,
       "image": "/src/assets/images/pizza/cheese.png",
       "description": "고소한 치즈 피자",
       "category": "pizza",
@@ -122,6 +126,7 @@
       "id": "3",
       "name": "불고기 피자",
       "price": 17000,
+      "stock": 0,
       "image": "/src/assets/images/pizza/boolgogi.png",
       "description": "한국식 불고기 피자",
       "category": "pizza",
@@ -164,6 +169,7 @@
       "id": "4",
       "name": "하와이안 피자",
       "price": 16000,
+      "stock": 100,
       "image": "/src/assets/images/pizza/hawaiian.png",
       "description": "파인애플 토핑 피자",
       "category": "pizza",
@@ -206,6 +212,7 @@
       "id": "5",
       "name": "콤비네이션 피자",
       "price": 18000,
+      "stock": 100,
       "image": "/src/assets/images/pizza/combination.png",
       "description": "다양한 토핑의 피자",
       "category": "pizza",
@@ -248,6 +255,7 @@
       "id": "6",
       "name": "고르곤졸라 피자",
       "price": 19000,
+      "stock": 100,
       "image": "/src/assets/images/pizza/gorgonzola.png",
       "description": "블루치즈 피자",
       "category": "pizza",
@@ -290,6 +298,7 @@
       "id": "7",
       "name": "슈프림 피자",
       "price": 20000,
+      "stock": 100,
       "image": "/src/assets/images/pizza/supreme.png",
       "description": "프리미엄 피자",
       "category": "pizza",
@@ -332,6 +341,7 @@
       "id": "8",
       "name": "마르게리타 피자",
       "price": 14000,
+      "stock": 100,
       "image": "/src/assets/images/pizza/margherita.png",
       "description": "토마토와 바질",
       "category": "pizza",
@@ -374,6 +384,7 @@
       "id": "9",
       "name": "클래식 버거",
       "price": 8000,
+      "stock": 100,
       "image": "/src/assets/images/hamburger/classic_burger.png",
       "description": "기본 햄버거",
       "category": "hamburger"
@@ -382,6 +393,7 @@
       "id": "10",
       "name": "치즈 버거",
       "price": 9000,
+      "stock": 100,
       "image": "/src/assets/images/hamburger/cheese_burger.png",
       "description": "치즈 햄버거",
       "category": "hamburger"
@@ -390,6 +402,7 @@
       "id": "11",
       "name": "콜라",
       "price": 2000,
+      "stock": 100,
       "image": "/src/assets/images/drink/cola.jpeg",
       "description": "코카콜라",
       "category": "drink"
@@ -398,6 +411,7 @@
       "id": "12",
       "name": "사이다",
       "price": 2000,
+      "stock": 100,
       "image": "/src/assets/images/drink/cider.png",
       "description": "칠성사이다",
       "category": "drink"
@@ -406,22 +420,27 @@
       "id": "13",
       "name": "새우 버거",
       "price": 9500,
+      "stock": 5,
       "image": "/src/assets/images/hamburger/shrimp_burger.png",
       "description": "바삭한 새우 패티 버거",
-      "category": "hamburger"
+      "category": "hamburger",
+      "options": []
     },
     {
       "id": "14",
       "name": "베이컨 버거",
       "price": 10000,
+      "stock": 0,
       "image": "/src/assets/images/hamburger/bacon_burger.png",
       "description": "스모키 베이컨 버거",
-      "category": "hamburger"
+      "category": "hamburger",
+      "options": []
     },
     {
       "id": "15",
       "name": "치킨 버거",
       "price": 8500,
+      "stock": 100,
       "image": "/src/assets/images/hamburger/chicken_burger.png",
       "description": "크리스피 치킨 버거",
       "category": "hamburger"
@@ -430,6 +449,7 @@
       "id": "16",
       "name": "트러플 버거",
       "price": 12000,
+      "stock": 100,
       "image": "/src/assets/images/hamburger/truffle_burger.png",
       "description": "트러플 소스 프리미엄 버거",
       "category": "hamburger"
@@ -438,6 +458,7 @@
       "id": "17",
       "name": "불고기 버거",
       "price": 9000,
+      "stock": 100,
       "image": "/src/assets/images/hamburger/bulgogi_burger.png",
       "description": "한국식 불고기 버거",
       "category": "hamburger"
@@ -446,6 +467,7 @@
       "id": "18",
       "name": "더블 치즈 버거",
       "price": 11000,
+      "stock": 100,
       "image": "/src/assets/images/hamburger/double_cheese_burger.png",
       "description": "더블 패티와 치즈",
       "category": "hamburger"
@@ -454,6 +476,7 @@
       "id": "19",
       "name": "머쉬룸 버거",
       "price": 9500,
+      "stock": 100,
       "image": "/src/assets/images/hamburger/mushroom_burger.png",
       "description": "버섯과 치즈 버거",
       "category": "hamburger"
@@ -462,6 +485,7 @@
       "id": "20",
       "name": "핫 스파이시 버거",
       "price": 9000,
+      "stock": 100,
       "image": "/src/assets/images/hamburger/hot_spicy_burger.png",
       "description": "매콤한 스파이시 버거",
       "category": "hamburger"
@@ -470,6 +494,7 @@
       "id": "21",
       "name": "참치 샌드위치",
       "price": 6500,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/tuna_sandwich.png",
       "description": "고소한 참치 샌드위치",
       "category": "sandwich"
@@ -478,14 +503,17 @@
       "id": "22",
       "name": "BLT 샌드위치",
       "price": 7000,
+      "stock": 0,
       "image": "/src/assets/images/sandwich/blt_sandwich.png",
       "description": "베이컨, 양상추, 토마토",
-      "category": "sandwich"
+      "category": "sandwich",
+      "options": []
     },
     {
       "id": "23",
       "name": "아보카도 샌드위치",
       "price": 7500,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/avocado_sandwich.png",
       "description": "신선한 아보카도 샌드위치",
       "category": "sandwich"
@@ -494,6 +522,7 @@
       "id": "24",
       "name": "햄 치즈 샌드위치",
       "price": 6000,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/ham_cheese_sandwich.png",
       "description": "클래식 햄 치즈 샌드위치",
       "category": "sandwich"
@@ -502,6 +531,7 @@
       "id": "25",
       "name": "비프 샌드위치",
       "price": 8000,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/beef_sandwich.png",
       "description": "로스트 비프 샌드위치",
       "category": "sandwich"
@@ -510,6 +540,7 @@
       "id": "26",
       "name": "단호박 샌드위치",
       "price": 6500,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/pumpkin_sandwich.png",
       "description": "달콤한 단호박 샌드위치",
       "category": "sandwich"
@@ -518,6 +549,7 @@
       "id": "27",
       "name": "크랩 샌드위치",
       "price": 7500,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/crab_sandwich.png",
       "description": "게살 샐러드 샌드위치",
       "category": "sandwich"
@@ -526,6 +558,7 @@
       "id": "28",
       "name": "에그 샌드위치",
       "price": 5500,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/egg_sandwich.png",
       "description": "부드러운 계란 샌드위치",
       "category": "sandwich"
@@ -534,6 +567,7 @@
       "id": "29",
       "name": "베지 샌드위치",
       "price": 6000,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/veggie_sandwich.png",
       "description": "신선한 야채 샌드위치",
       "category": "sandwich"
@@ -542,6 +576,7 @@
       "id": "30",
       "name": "치킨 클럽 샌드위치",
       "price": 8000,
+      "stock": 100,
       "image": "/src/assets/images/sandwich/chicken_club_sandwich.png",
       "description": "치킨 클럽 샌드위치",
       "category": "sandwich"
@@ -550,6 +585,7 @@
       "id": "31",
       "name": "치킨 너겟",
       "price": 4500,
+      "stock": 100,
       "image": "/src/assets/images/side/chicken_nuggets.png",
       "description": "바삭한 치킨 너겟 6조각",
       "category": "side"
@@ -558,6 +594,7 @@
       "id": "32",
       "name": "어니언 링",
       "price": 4000,
+      "stock": 100,
       "image": "/src/assets/images/side/onion_rings.png",
       "description": "바삭한 양파 링",
       "category": "side"
@@ -566,6 +603,7 @@
       "id": "33",
       "name": "코울슬로",
       "price": 3000,
+      "stock": 100,
       "image": "/src/assets/images/side/coleslaw.png",
       "description": "신선한 코울슬로 샐러드",
       "category": "side"
@@ -574,6 +612,7 @@
       "id": "34",
       "name": "시즈닝 감자튀김",
       "price": 4000,
+      "stock": 100,
       "image": "/src/assets/images/side/seasoned_fries.png",
       "description": "시즈닝 감자튀김",
       "category": "side"
@@ -582,6 +621,7 @@
       "id": "35",
       "name": "치즈 스틱",
       "price": 4500,
+      "stock": 100,
       "image": "/src/assets/images/side/cheese_sticks.png",
       "description": "모짜렐라 치즈 스틱",
       "category": "side"
@@ -590,6 +630,7 @@
       "id": "36",
       "name": "감자튀김",
       "price": 3500,
+      "stock": 100,
       "image": "/src/assets/images/side/french_fries.png",
       "description": "클래식 감자튀김",
       "category": "side"
@@ -598,6 +639,7 @@
       "id": "37",
       "name": "초코 아이스크림",
       "price": 3500,
+      "stock": 100,
       "image": "/src/assets/images/dessert/choco_ice_cream.png",
       "description": "진한 초콜릿 아이스크림",
       "category": "dessert"
@@ -606,6 +648,7 @@
       "id": "38",
       "name": "딸기 아이스크림",
       "price": 3500,
+      "stock": 100,
       "image": "/src/assets/images/dessert/strawberry_ice_cream.png",
       "description": "상큼한 딸기 아이스크림",
       "category": "dessert"
@@ -614,6 +657,7 @@
       "id": "39",
       "name": "치즈 케이크",
       "price": 5500,
+      "stock": 100,
       "image": "/src/assets/images/dessert/cheese_cake.png",
       "description": "부드러운 치즈 케이크",
       "category": "dessert"
@@ -622,6 +666,7 @@
       "id": "40",
       "name": "소프트 아이스크림",
       "price": 2500,
+      "stock": 100,
       "image": "/src/assets/images/dessert/soft_ice_cream.png",
       "description": "부드러운 소프트 아이스크림",
       "category": "dessert"
@@ -630,6 +675,7 @@
       "id": "41",
       "name": "애플파이",
       "price": 4000,
+      "stock": 100,
       "image": "/src/assets/images/dessert/apple_pie.png",
       "description": "따뜻한 사과파이",
       "category": "dessert"
@@ -638,6 +684,7 @@
       "id": "42",
       "name": "초코 브라우니",
       "price": 4500,
+      "stock": 100,
       "image": "/src/assets/images/dessert/choco_brownie.png",
       "description": "진한 초코 브라우니",
       "category": "dessert"
@@ -646,6 +693,7 @@
       "id": "43",
       "name": "환타 파인애플",
       "price": 2000,
+      "stock": 100,
       "image": "/src/assets/images/drink/fanta_pine.png",
       "description": "환타 파인애플",
       "category": "drink"
@@ -654,6 +702,7 @@
       "id": "44",
       "name": "마운틴듀",
       "price": 2000,
+      "stock": 100,
       "image": "/src/assets/images/drink/mountain_dew.png",
       "description": "마운틴듀",
       "category": "drink"
@@ -662,6 +711,7 @@
       "id": "45",
       "name": "아이스 라떼",
       "price": 4000,
+      "stock": 100,
       "image": "/src/assets/images/drink/iced_latte.png",
       "description": "시원한 아이스 라떼",
       "category": "drink"
@@ -670,6 +720,7 @@
       "id": "46",
       "name": "제로 콜라",
       "price": 2500,
+      "stock": 100,
       "image": "/src/assets/images/drink/zero_cola.jpeg",
       "description": "제로 칼로리 콜라",
       "category": "drink"
@@ -678,6 +729,7 @@
       "id": "47",
       "name": "환타 오렌지",
       "price": 2000,
+      "stock": 100,
       "image": "/src/assets/images/drink/fanta_orange.png",
       "description": "환타 오렌지",
       "category": "drink"
@@ -686,6 +738,7 @@
       "id": "48",
       "name": "아이스 아메리카노",
       "price": 3500,
+      "stock": 100,
       "image": "/src/assets/images/drink/iced_americano.png",
       "description": "시원한 아이스 아메리카노",
       "category": "drink"
@@ -694,6 +747,7 @@
       "id": "49",
       "name": "레모네이드",
       "price": 3500,
+      "stock": 100,
       "image": "/src/assets/images/drink/lemonade.png",
       "description": "상큼한 레모네이드",
       "category": "drink"
@@ -702,6 +756,7 @@
       "id": "50",
       "name": "오렌지 주스",
       "price": 3500,
+      "stock": 100,
       "image": "/src/assets/images/drink/orange_juice.png",
       "description": "100% 오렌지 주스",
       "category": "drink"

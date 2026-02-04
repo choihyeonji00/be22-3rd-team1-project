@@ -77,6 +77,11 @@ const isModalOpen = ref(false)
 const selectedMenu = ref(null)
 
 const openMenuModal = (menu) => {
+  // 품절된 메뉴는 모달을 열지 않음
+  if (menu.isSoldOut) return
+  // 재고가 0 이하인 경우도 열지 않음 (이중 체크)
+  if (menu.stock !== undefined && menu.stock <= 0) return
+
   selectedMenu.value = menu
   isModalOpen.value = true
 }
@@ -86,9 +91,6 @@ const closeModal = () => {
   selectedMenu.value = null
 }
 
-// const addToOrder = (menuWithQuantity) => {
-//   orderStore.addItem(menuWithQuantity)
-// }
 const addToOrder = (orderData) => {
   // 1. 옵션 문자열 생성 (예: "Large, Bacon")
   const optionLabels = [];
@@ -128,8 +130,21 @@ const addToOrder = (orderData) => {
 
 // 수량 증가
 const increaseItemQuantity = (item) => {
+  // 원본 메뉴 정보 찾기 (재고 확인용)
+  // item.id는 옵션이 포함된 ID일 수 있으므로 원본 ID 추출
+  const originalId = item.id.toString().split('_')[0]
+  const originalMenu = menuItems.value.find(m => m.id === originalId)
+
+  if (originalMenu && originalMenu.stock !== undefined) {
+    if (item.quantity >= originalMenu.stock) {
+      alert(`재고가 부족합니다. (최대 ${originalMenu.stock}개)`)
+      return
+    }
+  }
+
   orderStore.updateQuantity(item.id, item.quantity + 1);
 };
+
 // 수량 감소 (1 이하로 내려가지 않게 처리)
 const decreaseItemQuantity = (item) => {
   if (item.quantity > 1) {
@@ -196,15 +211,25 @@ const getCategoryIcon = (categoryId) => {
           v-for="menu in paginatedMenuItems"
           :key="menu.id"
           class="menu-card"
+          :class="{ 'sold-out': (menu.isSoldOut || (menu.stock !== undefined && menu.stock <= 0)) }"
+          :disabled="menu.isSoldOut || (menu.stock !== undefined && menu.stock <= 0)"
           @click="openMenuModal(menu)"
         >
           <div class="menu-card-image">
-            <img v-if="menu.image" :src="menu.image" :alt="menu.name" class="menu-img" />
+            <img v-if="menu.image || menu.imageUrl" :src="menu.image || menu.imageUrl" :alt="menu.name" class="menu-img" />
             <span v-else class="menu-placeholder-icon">{{ getCategoryIcon(menu.category) }}</span>
+
+            <!-- 품절 오버레이 -->
+            <div v-if="menu.isSoldOut || (menu.stock !== undefined && menu.stock <= 0)" class="sold-out-overlay">
+              <span>SOLD OUT</span>
+            </div>
           </div>
           <div class="menu-card-info">
             <p class="menu-card-name">{{ menu.name }}</p>
             <p class="menu-card-price">{{ menu.price.toLocaleString() }}원</p>
+            <p v-if="menu.stock !== undefined && menu.stock <= 5 && menu.stock > 0" class="stock-warning">
+              품절 임박 ({{ menu.stock }}개 남음)
+            </p>
           </div>
         </button>
 
@@ -259,9 +284,6 @@ const getCategoryIcon = (categoryId) => {
           :key="item.id"
           class="order-item"
         >
-          <!-- <span class="item-name">{{ item.name }}</span>
-          <span class="item-qty">{{ item.quantity }}</span>
-          <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span> -->
           <div class="item-info">
             <span class="item-name">{{ item.name }}</span>
             <button class="remove-btn" @click="removeItem(item.id)">✕</button>
@@ -398,6 +420,7 @@ const getCategoryIcon = (categoryId) => {
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+  position: relative;
 }
 
 .menu-card:hover {
@@ -415,12 +438,18 @@ const getCategoryIcon = (categoryId) => {
   box-shadow: none;
 }
 
+.menu-card.sold-out {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .menu-card-image {
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.2);
+  position: relative;
 }
 
 .menu-placeholder-icon {
@@ -431,6 +460,22 @@ const getCategoryIcon = (categoryId) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.sold-out-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 18px;
+  z-index: 10;
 }
 
 .menu-card-info {
@@ -450,6 +495,17 @@ const getCategoryIcon = (categoryId) => {
 .menu-card-price {
   font-size: 12px;
   opacity: 0.9;
+}
+
+.stock-warning {
+  font-size: 12px;
+  color: #d32f2f;
+  font-weight: 800;
+  margin-top: 6px;
+  background-color: #ffebee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
 }
 
 /* Pagination */

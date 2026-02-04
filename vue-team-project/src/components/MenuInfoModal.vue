@@ -54,6 +54,11 @@ onMounted(() => {
 })
 
 const increaseQuantity = () => {
+  // 재고 체크
+  if (props.menu.stock !== undefined && quantity.value >= props.menu.stock) {
+    alert(`재고가 부족합니다. (최대 ${props.menu.stock}개)`)
+    return
+  }
   quantity.value++
 }
 
@@ -176,8 +181,15 @@ const getCategoryIcon = (categoryId) => {
         <div class="quantity-controls">
           <button class="quantity-btn" @click="decreaseQuantity">-</button>
           <span class="quantity-value">{{ quantity }}</span>
-          <button class="quantity-btn" @click="increaseQuantity">+</button>
+          <button
+            class="quantity-btn"
+            @click="increaseQuantity"
+            :disabled="menu.stock !== undefined && quantity >= menu.stock"
+          >+</button>
         </div>
+        <p v-if="menu.stock !== undefined" class="stock-info">
+          남은 수량: {{ menu.stock }}개
+        </p>
 
         <!-- Action Buttons -->
         <div class="modal-actions">
@@ -307,11 +319,29 @@ const getCategoryIcon = (categoryId) => {
   transform: scale(0.95);
 }
 
+.quantity-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+}
+
 .quantity-value {
   font-size: 28px;
   font-weight: 700;
   min-width: 40px;
   text-align: center;
+}
+
+.stock-info {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #d32f2f;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  background-color: #fff3e0;
+  padding: 5px;
+  border-radius: 8px;
 }
 
 .modal-actions {

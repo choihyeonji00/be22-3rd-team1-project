@@ -86,6 +86,30 @@ const handlePay = async () => {
 
     await api.createOrder(orderData)
 
+    // 재고 차감 로직 추가
+    // 각 주문 항목에 대해 재고 업데이트 수행
+    await Promise.all(orderItems.value.map(async (item) => {
+      // item.id가 "1_..." 형태일 수 있으므로 원본 ID 추출
+      const originalId = item.id.toString().split('_')[0]
+
+      try {
+        // 현재 메뉴 정보 가져오기 (최신 재고 확인)
+        // api.js에 getMenuItemById가 없으므로 fetch 직접 사용하거나 api.getMenuItems()에서 찾음
+        // 여기서는 fetch 직접 사용 (JSON Server URL 가정)
+        const response = await fetch(`http://localhost:3000/menuItems/${originalId}`)
+        if (response.ok) {
+          const menuData = await response.json()
+          if (menuData.stock !== undefined) {
+            const newStock = menuData.stock - item.quantity
+            // 재고가 0보다 작아지지 않도록 처리 (품절 상태로 0)
+            await api.updateMenuItemStock(originalId, Math.max(0, newStock))
+          }
+        }
+      } catch (err) {
+        console.error(`Failed to update stock for item ${originalId}:`, err)
+      }
+    }))
+
     // 회원이 결제한 경우 포인트 업데이트
     const currentMember = orderStore.currentMember
     if (currentMember) {
