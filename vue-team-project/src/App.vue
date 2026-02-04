@@ -1,10 +1,11 @@
 <script setup>
-
+import Screensaver from './components/Screensaver.vue'
 </script>
 
 <template>
   <div class="kiosk-app">
-    <router-view/>
+    <router-view />
+    <Screensaver />
   </div>
 </template>
 

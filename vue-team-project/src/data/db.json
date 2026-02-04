@@ -1366,19 +1366,200 @@
       "status": "completed"
     },
     {
-      "id": "2f43",
-      "orderNumber": "ORD-20260204091627-7288",
+      "id": "72ab",
+      "orderNumber": "ORD-20260203213455-4517",
       "paymentMethod": "삼성페이",
       "items": [
         {
-          "id": "6_{\"Size\":\"Large\",\"Add-ons\":[\"Extra Cheese\"]}",
-          "name": "고르곤졸라 피자 (Large, Extra Cheese)",
-          "price": 22000,
-          "quantity": 2
+          "id": "4_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "하와이안 피자 (Regular)",
+          "price": 16000,
+          "quantity": 1
         }
       ],
-      "totalPrice": 44000,
-      "createdAt": "2026-02-04T00:16:27.929Z",
+      "totalPrice": 16000,
+      "createdAt": "2026-02-03T12:34:55.764Z",
+      "status": "completed"
+    },
+    {
+      "id": "a063",
+      "orderNumber": "ORD-20260204010034-2262",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 18000,
+      "createdAt": "2026-02-03T16:00:34.199Z",
+      "status": "completed"
+    },
+    {
+      "id": "e104",
+      "orderNumber": "ORD-20260204015903-2968",
+      "paymentMethod": "카드결제",
+      "items": [],
+      "totalPrice": 0,
+      "createdAt": "2026-02-03T16:59:03.606Z",
+      "status": "completed"
+    },
+    {
+      "id": "2f98",
+      "orderNumber": "ORD-20260204015913-5868",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "1_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "페퍼로니 피자 (Regular)",
+          "price": 15000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 15000,
+      "createdAt": "2026-02-03T16:59:13.918Z",
+      "status": "completed"
+    },
+    {
+      "id": "5367",
+      "orderNumber": "ORD-20260203170927-3862",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "3_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "불고기 피자 (Regular)",
+          "price": 17000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 17000,
+      "createdAt": "2026-02-03T17:09:27.004Z",
+      "status": "completed"
+    },
+    {
+      "id": "42a7",
+      "orderNumber": "ORD-20260203170944-4061",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 13000,
+      "createdAt": "2026-02-03T17:09:44.675Z",
+      "status": "completed"
+    },
+    {
+      "id": "6cf4",
+      "orderNumber": "ORD-20260203171322-6933",
+      "paymentMethod": "카드결제",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Regular)",
+          "price": 19000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 19000,
+      "createdAt": "2026-02-03T17:13:22.687Z",
+      "status": "completed"
+    },
+    {
+      "id": "5c80",
+      "orderNumber": "ORD-20260203171334-5925",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "6_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "고르곤졸라 피자 (Regular)",
+          "price": 19000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 19000,
+      "createdAt": "2026-02-03T17:13:34.485Z",
+      "status": "completed"
+    },
+    {
+      "id": "71b8",
+      "orderNumber": "ORD-20260203171354-7726",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 18000,
+      "createdAt": "2026-02-03T17:13:54.585Z",
+      "status": "completed"
+    },
+    {
+      "id": "de88",
+      "orderNumber": "ORD-20260203172014-4373",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "5_{\"Size\":\"Large\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Large)",
+          "price": 20000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 20000,
+      "createdAt": "2026-02-03T17:20:14.342Z",
+      "status": "completed"
+    },
+    {
+      "id": "84db",
+      "orderNumber": "ORD-20260204000932-2792",
+      "paymentMethod": "삼성페이",
+      "items": [
+        {
+          "id": "2_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "치즈 피자 (Regular)",
+          "price": 13000,
+          "quantity": 1
+        }
+      ],
+      "totalPrice": 13000,
+      "createdAt": "2026-02-04T00:09:32.647Z",
+      "status": "completed"
+    },
+    {
+      "id": "ade6",
+      "orderNumber": "ORD-20260204022330-1724",
+      "paymentMethod": "카카오페이",
+      "items": [
+        {
+          "id": "1_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "페퍼로니 피자 (Regular)",
+          "price": 15000,
+          "quantity": 3
+        },
+        {
+          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
+          "name": "콤비네이션 피자 (Regular)",
+          "price": 18000,
+          "quantity": 3
+        },
+        {
+          "id": "22_{}",
+          "name": "BLT 샌드위치",
+          "price": 7000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 120000,
+      "createdAt": "2026-02-04T02:23:30.558Z",
       "status": "completed"
     }
   ],
@@ -1387,6 +1568,16 @@
       "id": "1",
       "phone": "01012345678",
       "points": 918
+    },
+    {
+      "id": "5e3d",
+      "phone": "0109",
+      "points": 900
+    },
+    {
+      "id": "0596",
+      "phone": "0109",
+      "points": 0
     }
   ],
   "coupons": [
