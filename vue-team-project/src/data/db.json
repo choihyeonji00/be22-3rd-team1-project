@@ -1480,31 +1480,19 @@
       "status": "completed"
     },
     {
-      "id": "ade6",
-      "orderNumber": "ORD-20260204022330-1724",
-      "paymentMethod": "카카오페이",
+      "id": "35f5",
+      "orderNumber": "ORD-20260204033601-8774",
+      "paymentMethod": "삼성페이",
       "items": [
         {
-          "id": "1_{\"Size\":\"Regular\",\"Add-ons\":[]}",
-          "name": "페퍼로니 피자 (Regular)",
-          "price": 15000,
-          "quantity": 3
-        },
-        {
-          "id": "5_{\"Size\":\"Regular\",\"Add-ons\":[]}",
-          "name": "콤비네이션 피자 (Regular)",
-          "price": 18000,
-          "quantity": 3
-        },
-        {
-          "id": "22_{}",
-          "name": "BLT 샌드위치",
-          "price": 7000,
+          "id": "6_{\"Size\":\"Regular\",\"Add-ons\":[\"Bacon\"]}",
+          "name": "고르곤졸라 피자 (Regular, Bacon)",
+          "price": 20500,
           "quantity": 3
         }
       ],
-      "totalPrice": 120000,
-      "createdAt": "2026-02-04T02:23:30.558Z",
+      "totalPrice": 61500,
+      "createdAt": "2026-02-04T03:36:01.103Z",
       "status": "completed"
     }
   ],
