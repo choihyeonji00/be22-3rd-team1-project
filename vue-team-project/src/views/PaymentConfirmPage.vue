@@ -446,15 +446,22 @@ const handleComplete = () => {
 
 
 <script setup>
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { useOrderStore } from '../stores/orderStore'
+import { useI18n } from 'vue-i18n'
 
+const { locale } = useI18n()
 const router = useRouter()
 const orderStore = useOrderStore()
 
 // 스토어에서 데이터 가져오기 (화면 표시용)
-const selectedPaymentMethod = computed(() => orderStore.selectedPaymentMethod || '카드결제')
+const selectedPaymentMethod = computed(() => {
+  const method = orderStore.selectedPaymentMethod
+  if (!method) return '카드결제'
+  if (typeof method === 'object') {
+    return method[locale.value] || method['ko']
+  }
+  return method
+})
 const orderItems = computed(() => orderStore.orderList)
 const totalPrice = computed(() => orderStore.calculatedTotalPrice)
 const totalDiscount = computed(() => orderStore.totalDiscount)

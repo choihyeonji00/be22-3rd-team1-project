@@ -24,7 +24,8 @@ export const translations = {
             page: '페이지',
             select_options: '옵션 선택',
             add_to_cart: '담기',
-            optional: '선택'
+            optional: '선택',
+            stock_warning: '품절 임박 ({count}개 남음)'
         },
         payment: {
             title: '결제 수단 선택',
@@ -85,6 +86,7 @@ export const translations = {
             name: '이름',
             price: '가격',
             category: '카테고리',
+            stock: '재고',
             option_settings: '옵션 설정',
             actions: '액션',
             options_count: '옵션 {count}개 설정됨',
@@ -205,7 +207,8 @@ export const translations = {
             page: 'Page',
             select_options: 'Select Options',
             add_to_cart: 'Add to Cart',
-            optional: 'Optional'
+            optional: 'Optional',
+            stock_warning: 'Low Stock ({count} left)'
         },
         payment: {
             title: 'Payment Method',
@@ -266,6 +269,7 @@ export const translations = {
             name: 'Name',
             price: 'Price',
             category: 'Category',
+            stock: 'Stock',
             option_settings: 'Option Settings',
             actions: 'Actions',
             options_count: 'Options {count} set',

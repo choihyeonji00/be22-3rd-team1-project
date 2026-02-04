@@ -5,7 +5,7 @@ import { api } from '../services/api'
 import { useOrderStore } from '../stores/orderStore'
 import KeypadModal from '../components/KeypadModal.vue'
 import MessageModal from '../components/MessageModal.vue'
-import { useI18n} from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -13,6 +13,16 @@ const orderStore = useOrderStore()
 
 // Get total price from order store
 const totalPrice = computed(() => orderStore.calculatedTotalPrice)
+
+// 스토어에서 데이터 가져오기 (화면 표시용)
+const selectedPaymentMethod = computed(() => {
+  const method = orderStore.selectedPaymentMethod
+  if (!method) return '카드결제'
+  if (typeof method === 'object') {
+    return method[locale.value] || method['ko']
+  }
+  return method
+})
 
 const couponDiscount = ref(0);
 const pointDiscount = ref(0);
@@ -82,8 +92,8 @@ const handleNext = () => {
     ]
     const selected = allMethods.find(m => m.id === selectedPayment.value)
     if (selected) {
-      const localizedName = typeof selected.name === 'object' ? (selected.name[locale.value] || selected.name['ko']) : selected.name
-      orderStore.setPaymentMethod(localizedName)
+      // Save the name object itself for reactive translation in the next page
+      orderStore.setPaymentMethod(selected.name)
       orderStore.setTotalDiscount(totalDiscountPrice.value)
       orderStore.setUsedPoints(pointDiscount.value)
       

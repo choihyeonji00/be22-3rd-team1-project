@@ -160,6 +160,7 @@ const goToAdmin = () => {
   min-height: 40px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .dining-subtitle {

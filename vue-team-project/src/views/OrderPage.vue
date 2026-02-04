@@ -4,6 +4,9 @@ import { useRouter } from 'vue-router'
 import MenuInfoModal from '../components/MenuInfoModal.vue'
 import { api } from '../services/api'
 import { useOrderStore } from '../stores/orderStore'
+import { useI18n } from 'vue-i18n'
+
+const { t, locale } = useI18n()
 
 const router = useRouter()
 const orderStore = useOrderStore()
@@ -93,36 +96,62 @@ const closeModal = () => {
 
 const addToOrder = (orderData) => {
   // 1. 옵션 문자열 생성 (예: "Large, Bacon")
-  const optionLabels = [];
+  const optionLabelsKo = [];
+  const optionLabelsEn = [];
   let optionsPriceSum = 0;
   
   if (orderData.selectedOptions && orderData.options) {
     Object.entries(orderData.selectedOptions).forEach(([groupName, value]) => {
-      const optionGroup = orderData.options.find(opt => opt.name === groupName);
+      const optionGroup = orderData.options.find(opt => {
+        const optNameKo = typeof opt.name === 'object' ? opt.name.ko : opt.name;
+        return optNameKo === groupName || opt.name === groupName;
+      });
+      
       if (!optionGroup) return;
+      
       if (Array.isArray(value)) {
-        // 다중 선택
         value.forEach(label => {
-          optionLabels.push(label);
-          const choice = optionGroup.choices.find(c => c.label === label);
-          if (choice) optionsPriceSum += choice.price;
+          // label is the localized label string passed from MenuInfoModal
+          const choice = optionGroup.choices.find(c => {
+            const choiceLabelKo = typeof c.label === 'object' ? c.label.ko : c.label;
+            const choiceLabelEn = typeof c.label === 'object' ? c.label.en : '';
+            return choiceLabelKo === label || choiceLabelEn === label || c.label === label;
+          });
+          
+          if (choice) {
+            optionsPriceSum += choice.price;
+            optionLabelsKo.push(typeof choice.label === 'object' ? choice.label.ko : choice.label);
+            optionLabelsEn.push(typeof choice.label === 'object' ? choice.label.en : choice.label);
+          }
         });
       } else {
-        // 단일 선택
-        optionLabels.push(value);
-        const choice = optionGroup.choices.find(c => c.label === value);
-        if (choice) optionsPriceSum += choice.price;
+        const choice = optionGroup.choices.find(c => {
+          const choiceLabelKo = typeof c.label === 'object' ? c.label.ko : c.label;
+          const choiceLabelEn = typeof c.label === 'object' ? c.label.en : '';
+          return choiceLabelKo === value || choiceLabelEn === value || c.label === value;
+        });
+        
+        if (choice) {
+          optionsPriceSum += choice.price;
+          optionLabelsKo.push(typeof choice.label === 'object' ? choice.label.ko : choice.label);
+          optionLabelsEn.push(typeof choice.label === 'object' ? choice.label.en : choice.label);
+        }
       }
     });
   }
-  const optionString = optionLabels.length > 0 ? ` (${optionLabels.join(', ')})` : '';
+  
+  const optionStringKo = optionLabelsKo.length > 0 ? ` (${optionLabelsKo.join(', ')})` : '';
+  const optionStringEn = optionLabelsEn.length > 0 ? ` (${optionLabelsEn.join(', ')})` : '';
   
   // 2. 가공된 주문 데이터 준비
   const processedItem = {
     ...orderData,
-    id: `${orderData.id}_${JSON.stringify(orderData.selectedOptions)}`, // 옵션별 고유 ID
-    name: `${orderData.name}${optionString}`,
-    price: orderData.price + optionsPriceSum, // 단가 (옵션 포함)
+    id: `${orderData.id}_${JSON.stringify(orderData.selectedOptions)}`, 
+    name: {
+      ko: `${typeof orderData.name === 'object' ? orderData.name.ko : orderData.name}${optionStringKo}`,
+      en: `${typeof orderData.name === 'object' ? orderData.name.en : orderData.name}${optionStringEn}`
+    },
+    price: orderData.price + optionsPriceSum, 
     quantity: orderData.quantity
   };
   orderStore.addItem(processedItem);
@@ -200,7 +229,7 @@ const getCategoryIcon = (categoryId) => {
         :class="['category-btn', { active: activeCategory === category.id }]"
         @click="selectCategory(category.id)"
       >
-        {{ category.name }}
+        {{ category.name[locale] || category.name }}
       </button>
     </nav>
 
@@ -225,10 +254,10 @@ const getCategoryIcon = (categoryId) => {
             </div>
           </div>
           <div class="menu-card-info">
-            <p class="menu-card-name">{{ menu.name }}</p>
-            <p class="menu-card-price">{{ menu.price.toLocaleString() }}원</p>
+            <p class="menu-card-name">{{ menu.name[locale] || menu.name }}</p>
+            <p class="menu-card-price">{{ menu.price.toLocaleString() }} {{ $t('common.won') }}</p>
             <p v-if="menu.stock !== undefined && menu.stock <= 5 && menu.stock > 0" class="stock-warning">
-              품절 임박 ({{ menu.stock }}개 남음)
+              {{ $t('order.stock_warning', { count: menu.stock }) }}
             </p>
           </div>
         </button>
@@ -248,7 +277,7 @@ const getCategoryIcon = (categoryId) => {
           :disabled="currentPage === 0"
           @click="prevPage"
         >
-          이전
+          {{ $t('common.back') }}
         </button>
 
         <div class="page-dots">
@@ -265,7 +294,7 @@ const getCategoryIcon = (categoryId) => {
           :disabled="currentPage >= totalPages - 1"
           @click="nextPage"
         >
-          다음
+          {{ $t('common.next') }}
         </button>
       </div>
     </section>
@@ -273,9 +302,9 @@ const getCategoryIcon = (categoryId) => {
     <!-- Order List -->
     <section class="order-list-section">
       <div class="order-list-header">
-        <span class="header-name">메뉴명</span>
-        <span class="header-qty">수량</span>
-        <span class="header-price">가격</span>
+        <span class="header-name">{{ $t('order.menu_name') }}</span>
+        <span class="header-qty">{{ $t('order.quantity') }}</span>
+        <span class="header-price">{{ $t('order.price') }}</span>
       </div>
 
       <div class="order-list-body">
@@ -285,7 +314,7 @@ const getCategoryIcon = (categoryId) => {
           class="order-item"
         >
           <div class="item-info">
-            <span class="item-name">{{ item.name }}</span>
+            <span class="item-name">{{ item.name[locale] || item.name }}</span>
             <button class="remove-btn" @click="removeItem(item.id)">✕</button>
           </div>
           
@@ -295,11 +324,11 @@ const getCategoryIcon = (categoryId) => {
             <button class="qty-btn" @click="decreaseItemQuantity(item)">-</button>
           </div>
   
-  <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span>
+  <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}{{ $t('common.won') }}</span>
         </div>
 
         <div v-if="orderList.length === 0" class="empty-order">
-          주문 내역이 없습니다
+          {{ $t('order.empty_cart') }}
         </div>
       </div>
     </section>
@@ -307,20 +336,23 @@ const getCategoryIcon = (categoryId) => {
     <!-- Bottom Action Bar -->
     <footer class="action-bar">
       <div class="total-price">
-        <span class="total-label">주문 금액</span>
-        <span class="total-value">{{ totalPrice.toLocaleString() }}원</span>
+        <span class="total-label">{{ $t('order.total_items_price') }}</span>
+        <span class="total-value">{{ totalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
       </div>
 
       <div class="action-buttons">
-        <button class="action-btn cancel" @click="handleCancel">
-          취소
+        <button
+          class="action-btn cancel"
+          @click="handleCancel"
+        >
+          {{ $t('common.cancel') }}
         </button>
         <button
           class="action-btn pay"
           :disabled="orderList.length === 0"
           @click="handlePay"
         >
-          결제
+          {{ $t('common.pay') }}
         </button>
       </div>
     </footer>
@@ -360,11 +392,14 @@ const getCategoryIcon = (categoryId) => {
 .logo-text {
   font-size: 24px;
   font-weight: 700;
-  color: var(--primary-blue);
-  background-color: var(--primary-blue);
   color: white;
+  background-color: var(--primary-blue);
   padding: 8px 16px;
   border-radius: 8px;
+  min-width: 140px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Category Navigation */
@@ -375,10 +410,11 @@ const getCategoryIcon = (categoryId) => {
   background-color: var(--primary-orange);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  min-height: 64px;
+  align-items: center;
 }
 
 .category-btn {
-  flex-shrink: 0;
   padding: 10px 20px;
   border: none;
   border-radius: 20px;
@@ -388,6 +424,8 @@ const getCategoryIcon = (categoryId) => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 100px;
+  white-space: nowrap;
 }
 
 .category-btn.active {
@@ -413,13 +451,16 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .menu-card {
-  background-color: var(--primary-blue);
-  border: none;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   position: relative;
 }
 
@@ -481,12 +522,19 @@ const getCategoryIcon = (categoryId) => {
 .menu-card-info {
   padding: 10px;
   color: white;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .menu-card-name {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   margin-bottom: 4px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -514,6 +562,7 @@ const getCategoryIcon = (categoryId) => {
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
+  min-height: 60px;
 }
 
 .page-btn {
@@ -670,11 +719,14 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .total-price {
-  flex: 1;
-  padding: 12px 16px;
   background-color: var(--primary-orange);
   border-radius: 8px;
   color: white;
+  min-width: 150px;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .total-label {
@@ -695,12 +747,17 @@ const getCategoryIcon = (categoryId) => {
 
 .action-btn {
   padding: 16px 24px;
+  min-width: 120px;
+  min-height: 70px;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .action-btn.cancel {

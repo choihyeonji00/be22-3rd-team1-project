@@ -194,12 +194,13 @@ const goToDashboard = () => {
         <table>
           <thead>
             <tr>
-              <th>{{ $t('admin.id') }}</th>
-              <th>{{ $t('admin.name') }}</th>
-              <th>{{ $t('admin.price') }}</th>
-              <th>{{ $t('admin.category') }}</th>
-              <th>{{ $t('admin.option_settings') }}</th>
-              <th>{{ $t('admin.actions') }}</th>
+              <th style="min-width: 60px;">{{ $t('admin.id') }}</th>
+              <th style="min-width: 150px;">{{ $t('admin.name') }}</th>
+              <th style="min-width: 100px;">{{ $t('admin.price') }}</th>
+              <th style="min-width: 120px;">{{ $t('admin.category') }}</th>
+              <th style="min-width: 100px;">{{ $t('admin.stock') }}</th>
+              <th style="min-width: 150px;">{{ $t('admin.option_settings') }}</th>
+              <th style="min-width: 180px;">{{ $t('admin.actions') }}</th>
             </tr>
           </thead>
           <tbody>
