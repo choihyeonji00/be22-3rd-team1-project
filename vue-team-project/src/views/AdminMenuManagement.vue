@@ -16,10 +16,11 @@ const editingMenu = ref(null) // null for add, object for edit
 const newMenuItem = ref({
   name: '',
   price: 0,
-  description: '', // 설명 추가
+  description: '',
   category: '', // category ID
-  image: '', // image 필드로 수정 (기존 db.json과 일치)
-  options: [] // 옵션 배열 추가
+  image: '',
+  stock: 100, // 재고 수량 추가
+  options: []
 })
 
 // Fetch data on component mount
@@ -52,13 +53,14 @@ const getCategoryName = (categoryId) => {
 
 const openAddModal = () => {
   editingMenu.value = null
-  newMenuItem.value = { 
-    name: '', 
-    price: 0, 
+  newMenuItem.value = {
+    name: '',
+    price: 0,
     description: '',
-    category: categories.value[0]?.id || '', 
+    category: categories.value[0]?.id || '',
     image: '',
-    options: [] 
+    stock: 100,
+    options: []
   }
   isModalOpen.value = true
 }
@@ -69,6 +71,9 @@ const openEditModal = (menu) => {
   const copiedMenu = JSON.parse(JSON.stringify(menu))
   // Ensure options array exists
   if (!copiedMenu.options) copiedMenu.options = []
+  // Ensure stock exists
+  if (copiedMenu.stock === undefined) copiedMenu.stock = 100
+
   newMenuItem.value = copiedMenu
   isModalOpen.value = true
 }
@@ -76,8 +81,8 @@ const openEditModal = (menu) => {
 const closeModal = () => {
   isModalOpen.value = false
   editingMenu.value = null
-  newMenuItem.value = { name: '', price: 0, description: '', category: '', image: '', options: [] }
-  errorMessage.value = '' 
+  newMenuItem.value = { name: '', price: 0, description: '', category: '', image: '', stock: 100, options: [] }
+  errorMessage.value = ''
 }
 
 const saveMenuItem = async () => {
@@ -173,6 +178,7 @@ const goToDashboard = () => {
               <th>이름</th>
               <th>가격</th>
               <th>카테고리</th>
+              <th>재고</th>
               <th>옵션 설정</th>
               <th>액션</th>
             </tr>
@@ -183,6 +189,12 @@ const goToDashboard = () => {
               <td>{{ menu.name }}</td>
               <td>{{ menu.price.toLocaleString() }}원</td>
               <td>{{ getCategoryName(menu.category) }}</td>
+              <td>
+                <span :class="{'out-of-stock': menu.stock <= 0}">
+                  {{ menu.stock !== undefined ? menu.stock : '-' }}개
+                  <span v-if="menu.stock <= 0">(품절)</span>
+                </span>
+              </td>
               <td>
                 <div v-if="menu.options && menu.options.length > 0" class="options-summary">
                   옵션 {{ menu.options.length }}개 설정됨
@@ -195,7 +207,7 @@ const goToDashboard = () => {
               </td>
             </tr>
             <tr v-if="menuItems.length === 0">
-              <td colspan="6" class="no-data">메뉴 항목이 없습니다.</td>
+              <td colspan="7" class="no-data">메뉴 항목이 없습니다.</td>
             </tr>
           </tbody>
         </table>
@@ -214,6 +226,10 @@ const goToDashboard = () => {
           <div class="form-group">
             <label for="menuPrice">가격:</label>
             <input type="number" id="menuPrice" v-model.number="newMenuItem.price" required min="0" />
+          </div>
+          <div class="form-group">
+            <label for="menuStock">재고 수량:</label>
+            <input type="number" id="menuStock" v-model.number="newMenuItem.stock" required min="0" />
           </div>
           <div class="form-group">
             <label for="menuCategory">카테고리:</label>
@@ -238,7 +254,7 @@ const goToDashboard = () => {
               <h4>옵션 설정</h4>
               <button type="button" @click="addOptionGroup" class="small-add-btn">+ 그룹 추가</button>
             </div>
-            
+
             <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
               <div class="option-group-header">
                 <input type="text" v-model="opt.name" placeholder="그룹명 (예: 사이즈, 토핑)" class="opt-name-input" />
@@ -404,6 +420,11 @@ tr:hover {
 }
 .delete-btn:hover {
   background-color: #c0392b;
+}
+
+.out-of-stock {
+  color: #e74c3c;
+  font-weight: bold;
 }
 
 /* Modal Styles */

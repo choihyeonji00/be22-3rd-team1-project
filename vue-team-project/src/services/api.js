@@ -113,6 +113,18 @@ export const api = {
     return response.json()
   },
 
+  // 재고 업데이트 함수 추가
+  async updateMenuItemStock(id, newStock) {
+    const response = await fetch(`${API_BASE_URL}/menuItems/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ stock: newStock })
+    })
+    return response.json()
+  },
+
   async deleteMenuItem(id) {
     const response = await fetch(`${API_BASE_URL}/menuItems/${id}`, {
       method: 'DELETE'
