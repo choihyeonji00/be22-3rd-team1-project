@@ -34,7 +34,7 @@ const handleLogin = async () => {
 
 <template>
   <div class="admin-login-page">
-    <LanguageSwitcher />
+    <LanguageSwitcher variant="dark"/>
     <div class="login-container">
       <h2>{{ $t('admin.login_title') }}</h2>
       <form @submit.prevent="handleLogin">
@@ -60,92 +60,110 @@ const handleLogin = async () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
   padding: 20px;
 }
 
 .login-container {
-  background-color: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background-color: var(--surface-white);
+  padding: 48px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
   text-align: center;
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
+  border: 1px solid var(--border-subtle);
 }
 
 h2 {
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 28px;
-  font-weight: 700;
+  color: var(--primary-red);
+  margin-bottom: 32px;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   text-align: left;
 }
 
 label {
   display: block;
-  margin-bottom: 8px;
-  color: #555;
-  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 14px;
 }
 
 input[type="text"],
 input[type="password"] {
-  width: calc(100% - 20px);
-  padding: 12px 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border-subtle);
+  border-radius: 12px;
   font-size: 16px;
-  transition: border-color 0.3s ease;
+  transition: all 0.2s ease;
+  background-color: var(--background-light);
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-  border-color: var(--primary-blue);
+  border-color: var(--primary-red);
+  background-color: var(--surface-white);
   outline: none;
+  box-shadow: 0 0 0 4px #fff5f5;
 }
 
 .login-btn {
   width: 100%;
-  padding: 15px;
-  background-color: var(--primary-blue);
+  padding: 16px;
+  background-color: var(--primary-red);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 10px;
+  transition: all 0.2s ease;
+  margin-top: 12px;
+  box-shadow: var(--shadow-md);
 }
 
 .login-btn:hover {
-  background-color: var(--primary-blue-dark);
+  background-color: var(--primary-red-dark);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .error-message {
-  color: #e74c3c;
-  margin-top: 15px;
+  color: #dc3545;
+  margin-top: 16px;
   font-size: 14px;
+  font-weight: 600;
+  background-color: #fff5f5;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ffe3e3;
 }
 
 .back-to-main {
-  margin-top: 25px;
+  margin-top: 32px;
   background: none;
   border: none;
-  color: var(--primary-blue);
+  color: var(--primary-red);
   font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  text-decoration: underline;
-  transition: color 0.3s ease;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 8px;
 }
 
 .back-to-main:hover {
-  color: var(--primary-blue-dark);
+  color: var(--primary-red-dark);
+  background-color: #fff5f5;
 }
 </style>

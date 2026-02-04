@@ -109,30 +109,33 @@ const handleComplete = () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
+  backdrop-filter: blur(4px);
 }
 
 .modal-content {
-  background-color: var(--primary-yellow);
-  border-radius: 16px;
+  background-color: var(--surface-white);
+  border-radius: 24px;
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: modalSlideIn 0.3s ease;
+  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-subtle);
 }
 
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(20px);
+    transform: scale(0.95) translateY(20px);
   }
   to {
     opacity: 1;
@@ -142,63 +145,71 @@ const handleComplete = () => {
 
 .modal-title {
   text-align: center;
-  font-size: 20px;
-  font-weight: 700;
-  padding: 20px;
-  background-color: var(--primary-blue);
-  color: var(--text-light);
+  font-size: 24px;
+  font-weight: 800;
+  padding: 24px;
+  background-color: var(--primary-red-dark);
+  color: white;
+  letter-spacing: -0.5px;
 }
 
 .modal-body {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 24px;
 }
 
 /* Order Number Section */
 .order-number-section {
   text-align: center;
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
-  margin-bottom: 16px;
+  padding: 24px;
+  background-color: #fff5f5;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: 1px solid var(--primary-red);
 }
 
 .order-number-label {
   display: block;
   font-size: 16px;
   font-weight: 700;
-  color: var(--text-dark);
+  color: var(--primary-red);
   margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .order-number-value {
   display: block;
-  font-size: 64px;
-  font-weight: 700;
-  color: var(--text-dark);
-  letter-spacing: 8px;
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--primary-red-dark);
+  letter-spacing: 4px;
+  line-height: 1;
 }
 
 /* Order Info Section */
 .order-info-section {
-  background-color: var(--primary-blue);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
+  background-color: var(--background-light);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-subtle);
 }
 
 .order-info-label {
   display: block;
   text-align: center;
   font-size: 16px;
-  font-weight: 700;
-  color: var(--text-light);
-  margin-bottom: 12px;
+  font-weight: 800;
+  color: var(--primary-red);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .order-items-list {
-  min-height: 100px;
+  min-height: 80px;
   max-height: 180px;
   overflow-y: auto;
 }
@@ -208,10 +219,9 @@ const handleComplete = () => {
   grid-template-columns: 2fr 1fr 1.5fr;
   padding: 12px 0;
   font-size: 14px;
-  color: var(--text-light);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-dark);
+  border-bottom: 1px solid var(--border-subtle);
   align-items: center;
-  min-height: 50px;
 }
 
 .order-item:last-child {
@@ -219,97 +229,124 @@ const handleComplete = () => {
 }
 
 .item-name {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .item-qty {
   text-align: center;
+  color: var(--text-muted);
 }
 
 .item-price {
   text-align: right;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--primary-red);
+}
+
+.order-total-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 2px solid var(--primary-red);
+}
+
+.order-total-label {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-dark);
 }
 
 .order-total-value {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-dark);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary-red-dark);
 }
 
 /* Points Info Section */
 .points-info-section {
-  margin-top: 16px;
-  padding: 12px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
+  margin-top: 20px;
+  padding: 16px;
+  background-color: var(--background-cream);
+  border-radius: 12px;
+  border: 1px solid var(--primary-red);
 }
 
 .points-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .points-row.total-points {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed rgba(0, 0, 0, 0.1);
-  font-weight: 700;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--primary-red);
+  font-weight: 800;
 }
 
 .points-label {
   font-size: 14px;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .points-value {
-  font-size: 14px;
-  color: var(--primary-blue-dark);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-red);
 }
 
 .total-points .points-value {
-  color: var(--text-dark);
+  color: var(--primary-red-dark);
+  font-size: 16px;
 }
 
-/* Modal Actions - matches MenuInfoModal */
+/* Modal Actions */
 .modal-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  padding: 16px;
+  padding: 24px;
+  background-color: var(--surface-white);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .action-btn {
-  padding: 14px 24px;
+  padding: 18px 24px;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .home-btn {
-  background-color: #e57373;
-  color: var(--text-light);
+  background-color: var(--background-light);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
 }
 
 .home-btn:hover {
-  background-color: #ef5350;
+  background-color: #f1f3f5;
+  color: var(--text-dark);
 }
 
 .complete-btn {
-  background-color: var(--primary-blue);
-  color: var(--text-light);
+  background-color: var(--primary-red);
+  color: white;
+  box-shadow: var(--shadow-md);
 }
 
 .complete-btn:hover {
-  background-color: var(--primary-blue-dark);
+  background-color: var(--primary-red-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .action-btn:active {
-  transform: scale(0.98);
+  transform: translateY(0);
 }
 
 /* Responsive */

@@ -393,49 +393,53 @@ const getCategoryIcon = (categoryId) => {
 
 .logo-text {
   font-size: 24px;
-  font-weight: 700;
-  color: white;
-  background-color: var(--primary-blue);
-  padding: 8px 16px;
-  border-radius: 8px;
-  min-width: 140px;
+  font-weight: 800;
+  color: var(--primary-red);
+  background-color: var(--background-cream);
+  padding: 8px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--primary-red-dark);
+  min-width: 160px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  letter-spacing: -0.5px;
 }
 
 /* Category Navigation */
 .category-nav {
   display: flex;
-  gap: 8px;
-  padding: 12px 16px;
-  background-color: var(--primary-orange);
+  gap: 12px;
+  padding: 12px 24px;
+  background-color: var(--primary-red-dark);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  min-height: 64px;
+  min-height: 72px;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  box-shadow: var(--shadow-md);
 }
 
 .category-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.3);
+  padding: 10px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.15);
   color: white;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 100px;
-  width: 100px;
-  height: 40px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 110px;
+  height: 48px;
   white-space: nowrap;
 }
 
 .category-btn.active {
-  background-color: white;
-  color: var(--primary-orange);
+  background-color: var(--surface-white);
+  color: var(--primary-red);
+  border-color: var(--surface-white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .category-btn:hover:not(.active) {
@@ -457,22 +461,24 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .menu-card {
-  background-color: var(--primary-blue);
-  border: none;
-  border-radius: 12px;
+  background-color: var(--surface-white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
   display: flex;
   flex-direction: column;
   height: 100%;
   position: relative;
+  box-shadow: var(--shadow-sm);
 }
 
 .menu-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  border-color: var(--primary-red);
+  box-shadow: 0 8px 20px rgba(230, 57, 70, 0.15);
 }
 
 .menu-card.empty {
@@ -495,7 +501,7 @@ const getCategoryIcon = (categoryId) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #fff5f5;
   position: relative;
 }
 
@@ -527,7 +533,7 @@ const getCategoryIcon = (categoryId) => {
 
 .menu-card-info {
   padding: 10px;
-  color: white;
+  color: black;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -550,6 +556,7 @@ const getCategoryIcon = (categoryId) => {
   font-size: 12px;
   min-height: 20px;
   opacity: 0.9;
+  color : var(--primary-red);
 }
 
 .stock-warning {
@@ -576,7 +583,7 @@ const getCategoryIcon = (categoryId) => {
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red);
   color: white;
   min-height: 40px;
   font-size: 14px;
@@ -591,7 +598,7 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .page-btn:hover:not(:disabled) {
-  background-color: var(--primary-blue-dark);
+  background-color: var(--primary-red-dark);
 }
 
 .page-dots {
@@ -686,8 +693,7 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .item-qty {
-  text-align: center;
-  color: var(--primary-blue);
+  color: var(--primary-red);
   font-weight: 600;
 }
 
@@ -704,9 +710,8 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .item-price {
-  text-align: right;
-  color: var(--primary-green);
-  font-weight: 600;
+  color: var(--primary-red-dark);
+  font-weight: 700;
 } 
 
 .empty-order {
@@ -728,15 +733,16 @@ const getCategoryIcon = (categoryId) => {
 
 .total-price {
   flex : 1;
-  background-color: var(--primary-orange);
-  border-radius: 8px;
+  background-color: var(--primary-red);
+  border-radius: 12px;
   color: white;
   min-width: 150px;
-  min-height: 70px;
+  min-height: 72px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 10px;
+  padding: 12px 20px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .total-label {
@@ -771,13 +777,23 @@ const getCategoryIcon = (categoryId) => {
 }
 
 .action-btn.cancel {
-  background-color: var(--primary-orange);
-  color: white;
+  background-color: var(--background-light);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.action-btn.cancel:hover {
+  background-color: #f1f3f5;
+  color: var(--text-dark);
 }
 
 .action-btn.pay {
-  background-color: var(--primary-green);
+  background-color: var(--primary-red);
   color: white;
+}
+
+.action-btn.pay:hover {
+  background-color: var(--primary-red-dark);
 }
 
 .action-btn:disabled {

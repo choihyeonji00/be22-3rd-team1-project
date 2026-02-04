@@ -299,7 +299,7 @@ const handleComplete = () => {
 
 .payment-badge {
   padding: 10px 20px;
-  background-color: var(&#45;&#45;primary-blue);
+  background-color: var(--primary-red);
   color: white;
   border-radius: 8px;
   font-size: 14px;
@@ -315,7 +315,7 @@ const handleComplete = () => {
 }
 
 .menu-list-container {
-  background-color: var(&#45;&#45;primary-blue);
+  background-color: var(--primary-red-dark);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -357,7 +357,7 @@ const handleComplete = () => {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--primary-red-dark);
   color: white;
 }
 
@@ -391,21 +391,21 @@ const handleComplete = () => {
 }
 
 .footer-btn.cancel {
-  background-color: var(&#45;&#45;primary-blue);
+  background-color: var(--primary-red);
   color: white;
 }
 
 .footer-btn.cancel:hover {
-  background-color: var(&#45;&#45;primary-blue-dark);
+  background-color: var(--primary-red-dark);
 }
 
 .footer-btn.pay {
-  background-color: var(&#45;&#45;primary-blue);
+  background-color: var(--primary-red);
   color: white;
 }
 
 .footer-btn.pay:hover {
-  background-color: var(&#45;&#45;primary-blue-dark);
+  background-color: var(--primary-red-dark);
 }
 
 .footer-btn:active {
@@ -603,12 +603,14 @@ const handlePay = () => {
 }
 
 .payment-badge {
-  padding: 10px 20px;
-  background-color: var(--primary-blue);
-  color: white;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 10px 24px;
+  background-color: #fff5f5;
+  color: var(--primary-red);
+  border: 1px solid var(--primary-red);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
 }
 
 /* Menu List Section */
@@ -620,9 +622,11 @@ const handlePay = () => {
 }
 
 .menu-list-container {
-  background-color: var(--primary-blue);
-  border-radius: 12px;
+  background-color: var(--surface-white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: var(--shadow-md);
 }
 
 .menu-list {
@@ -634,10 +638,10 @@ const handlePay = () => {
 .menu-item {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  padding: 12px 0;
-  color: white;
-  font-size: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 16px;
+  color: var(--text-dark);
+  font-size: 15px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .menu-item:last-child {
@@ -661,18 +665,35 @@ const handlePay = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  background-color: rgba(0, 0, 0, 0.1);
-  color: white;
+  padding: 16px 20px;
+  background-color: var(--background-cream);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .total-label {
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .total-value {
   font-size: 20px;
   font-weight: 700;
+  color: var(--text-navy);
+}
+
+.final-total {
+  background-color: #fff5f5;
+}
+
+.final-total .total-label {
+  color: var(--primary-red);
+  font-weight: 800;
+}
+
+.final-total .total-value {
+  color: var(--primary-red-dark);
+  font-size: 24px;
 }
 
 /* Action Footer */
@@ -700,21 +721,24 @@ const handlePay = () => {
 }
 
 .footer-btn.cancel {
-  background-color: var(--primary-blue);
-  color: white;
+  background-color: var(--surface-white);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
 }
 
 .footer-btn.cancel:hover {
-  background-color: var(--primary-blue-dark);
+  background-color: var(--background-light);
 }
 
 .footer-btn.pay {
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red);
   color: white;
+  box-shadow: var(--shadow-md);
 }
 
 .footer-btn.pay:hover {
-  background-color: var(--primary-blue-dark);
+  background-color: var(--primary-red-dark);
+  transform: translateY(-2px);
 }
 
 .footer-btn:active {

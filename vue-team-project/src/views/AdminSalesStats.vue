@@ -92,7 +92,8 @@ const overallTopSizes = computed(() => {
   const stats = {}
   orders.value.forEach(order => {
     order.items.forEach(item => {
-      const match = item.name.match(/\(([^,)]+)/)
+      const nameStr = typeof item.name === 'object' ? (item.name[locale.value] || item.name['ko'] || '') : item.name;
+      const match = nameStr.match(/\(([^,)]+)/)
       if (match) {
         const size = match[1].trim()
         if (['Regular', 'Large'].includes(size)) {
@@ -109,7 +110,8 @@ const overallTopAddOns = computed(() => {
   const stats = {}
   orders.value.forEach(order => {
     order.items.forEach(item => {
-      const match = item.name.match(/\(([^)]+)\)/)
+      const nameStr = typeof item.name === 'object' ? (item.name[locale.value] || item.name['ko'] || '') : item.name;
+      const match = nameStr.match(/\(([^)]+)\)/)
       if (match) {
         const parts = match[1].split(',').map(p => p.trim())
         parts.slice(1).forEach(addOn => {
@@ -186,7 +188,7 @@ const goToDashboard = () => {
     <header class="admin-header">
       <h1>{{ $t('sales.title') }}</h1>
       <div class="header-right">
-        <LanguageSwitcher mode="inline" />
+        <LanguageSwitcher mode="inline" variant="dark" />
         <button @click="goToDashboard" class="back-btn">{{ $t('admin.back_to_dashboard') }}</button>
       </div>
     </header>
@@ -314,7 +316,7 @@ const goToDashboard = () => {
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red-dark);
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -328,20 +330,24 @@ const goToDashboard = () => {
 .admin-header h1 {
   margin: 0;
   font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .back-btn {
-  padding: 10px 20px;
-  background-color: #6c757d;
+  padding: 10px 24px;
+  background-color: rgba(255, 255, 255, 0.1);
   color: white;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 .back-btn:hover {
-  background-color: #5a6268;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: white;
 }
 
 .content-area {
@@ -372,19 +378,22 @@ const goToDashboard = () => {
 }
 
 .stat-card h3 {
-  color: var(--primary-blue);
-  font-size: 18px;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
+  color: var(--primary-red);
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border-subtle);
+  padding-bottom: 12px;
   margin-top: 0;
+  letter-spacing: -0.5px;
 }
 
 .stat-card .stat-value {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--primary-green);
-  margin-top: 10px;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--primary-red-dark);
+  margin-top: 12px;
+  letter-spacing: -1px;
 }
 
 .stat-count {
@@ -426,12 +435,13 @@ const goToDashboard = () => {
 }
 
 .clickable-list li:hover {
-  background-color: #f0f7ff;
+  background-color: #fff5f5;
 }
 
 .clickable-list li.active {
-  background-color: var(--primary-blue);
+  background-color: var(--primary-red);
   color: white;
+  box-shadow: var(--shadow-md);
 }
 
 .clickable-list li.active span:last-child {
@@ -440,7 +450,8 @@ const goToDashboard = () => {
 
 /* 상세 카드 스타일 */
 .detail-card {
-  border: 2px solid var(--primary-blue);
+  border: 1px solid var(--primary-red);
+  background-color: #fff5f5;
 }
 
 .detail-header {
