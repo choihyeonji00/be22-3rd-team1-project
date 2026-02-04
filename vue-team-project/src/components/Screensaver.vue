@@ -27,7 +27,7 @@ const reset = () => {
       currentImageIndex.value = (currentImageIndex.value % 5) + 1
     }, 5000)
 
-  }, 100000)
+  }, 10000)
 }
 
 onMounted(() => {

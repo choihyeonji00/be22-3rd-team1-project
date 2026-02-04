@@ -1,17 +1,18 @@
 <script setup>
 import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { orderStore } from '../stores/orderStore'
+import { useOrderStore } from '../stores/orderStore'
 import { api } from '../services/api'
 import OrderCompletionModal from '../components/OrderCompletionModal.vue'
 
 const router = useRouter()
+const orderStore = useOrderStore()
 
 // 1. 스토어에서 주문 데이터 가져오기
-const paymentMethod = computed(() => orderStore.getSelectedPaymentMethod() || '카드결제')
-const orderItems = computed(() => orderStore.getOrderList())
-const totalPrice = orderStore.getTotalPrice
-const totalDiscount = computed(() => orderStore.getTotalDiscount())
+const paymentMethod = computed(() => orderStore.selectedPaymentMethod || '카드결제')
+const orderItems = computed(() => orderStore.orderList)
+const totalPrice = computed(() => orderStore.calculatedTotalPrice)
+const totalDiscount = computed(() => orderStore.totalDiscount)
 const finalPrice = computed(() => totalPrice.value - totalDiscount.value)
 // 포인트 계산
 const earnedPoints = computed(() => Math.floor(finalPrice.value * 0.05))
@@ -135,9 +136,9 @@ const processPayment = async () => {
     await api.createOrder(orderData)
 
     // 회원 포인트 업데이트 로직
-    const currentMember = orderStore.getCurrentMember()
+    const currentMember = orderStore.currentMember
     if (currentMember) {
-      const usedPoints = orderStore.getUsedPoints()
+      const usedPoints = orderStore.usedPoints
       const newPoints = currentMember.points - usedPoints + earnedPoints.value
       await api.updateMember({ ...currentMember, points: newPoints })
       orderStore.setCurrentMember({ ...currentMember, points: newPoints })
@@ -208,8 +209,8 @@ const handleComplete = () => {
         :order-number="completedOrderInfo.orderNumber"
         :order-items="completedOrderInfo.items"
         :total-price="completedOrderInfo.totalPrice"
-        :earned-points="orderStore.getCurrentMember() ? earnedPoints : 0"
-        :current-points="orderStore.getCurrentMember()?.points || 0"
+        :earned-points="orderStore.currentMember ? earnedPoints : 0"
+        :current-points="orderStore.currentMember?.points || 0"
         @go-home="handleComplete"
         @complete="handleComplete"
     />
