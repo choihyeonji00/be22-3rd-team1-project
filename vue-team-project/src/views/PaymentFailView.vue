@@ -22,12 +22,12 @@ const goHome = () => {
     <div class="fail-card">
       <div class="icon-area">⚠️</div>
 
-      <h1>결제 실패</h1>
+      <h1>{{ $t('fail.title') }}</h1>
       <p class="reason-text">{{ failReason }}</p>
 
       <div class="btn-group">
-        <button class="btn retry" @click="goRetry">다시 결제하기</button>
-        <button class="btn home" @click="goHome">처음으로</button>
+        <button class="btn retry" @click="goRetry">{{ $t('fail.retry_btn') }}</button>
+        <button class="btn home" @click="goHome">{{ $t('fail.home_btn') }}</button>
       </div>
     </div>
   </div>

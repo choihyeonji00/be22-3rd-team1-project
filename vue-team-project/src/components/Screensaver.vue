@@ -29,9 +29,9 @@ const reset = () => {
 
   activationTimer = setTimeout(() => {
 
-    // ▼▼▼ [수정 3] 이제 위에서 import를 해왔으니, 이 코드가 정상 작동합니다! ▼▼▼
-    orderStore.clearOrder() // 장바구니 비우기
-    router.replace('/')     // 메인 화면으로 이동
+    // Pinia 스토어를 사용하여 장바구니 초기화 및 메인 이동
+    orderStore.clearOrder() 
+    router.replace('/')
 
     show.value = true
     currentImageIndex.value = 1
@@ -41,7 +41,7 @@ const reset = () => {
       currentImageIndex.value = (currentImageIndex.value % 5) + 1
     }, 5000)
 
-  }, 3000)
+  }, 300000)
 }
 
 onMounted(() => {
@@ -67,8 +67,8 @@ onUnmounted(() => {
       />
 
       <div class="text-container">
-        <h1 class="animate-pulse">터치하여 주문하기</h1>
-        <p>Touch screen to order</p>
+        <h1 class="animate-pulse">{{ $t('screensaver.touch_to_order') }}</h1>
+        <p>{{ $t('screensaver.touch_screen') }}</p>
       </div>
     </div>
   </Transition>

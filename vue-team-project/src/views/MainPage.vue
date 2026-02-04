@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const router = useRouter()
 
@@ -16,16 +17,17 @@ const goToAdmin = () => {
 
 <template>
   <div class="main-page">
+    <LanguageSwitcher />
     <!-- Admin Button -->
     <button class="admin-btn" @click="goToAdmin">
-      관리자 페이지 이동
+      {{ $t('main.admin_btn') }}
     </button>
 
     <!-- Background Area -->
     <div class="background-area">
       <div class="welcome-text">
-        <h1>환영합니다</h1>
-        <p>주문 방식을 선택해 주세요</p>
+        <h1>{{ $t('main.welcome') }}</h1>
+        <p>{{ $t('main.select_method') }}</p>
       </div>
     </div>
 
@@ -36,7 +38,7 @@ const goToAdmin = () => {
         @click="selectDiningOption('forHere')"
       >
         <span class="dining-icon">🍽️</span>
-        <span class="dining-text">매장</span>
+        <span class="dining-text">{{ $t('main.for_here') }}</span>
         <span class="dining-subtitle">For Here</span>
       </button>
 
@@ -45,7 +47,7 @@ const goToAdmin = () => {
         @click="selectDiningOption('toGo')"
       >
         <span class="dining-icon">🛍️</span>
-        <span class="dining-text">포장</span>
+        <span class="dining-text">{{ $t('main.to_go') }}</span>
         <span class="dining-subtitle">To Go</span>
       </button>
     </div>
@@ -65,7 +67,7 @@ const goToAdmin = () => {
 .admin-btn {
   position: absolute;
   top: 16px;
-  right: 16px;
+  left: 16px;
   padding: 10px 16px;
   background-color: var(--primary-blue);
   color: white;
@@ -122,6 +124,7 @@ const goToAdmin = () => {
   align-items: center;
   justify-content: center;
   padding: 32px 24px;
+  min-height: 240px;
   border: none;
   border-radius: 16px;
   cursor: pointer;
@@ -156,6 +159,10 @@ const goToAdmin = () => {
   font-weight: 700;
   color: white;
   margin-bottom: 4px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dining-subtitle {

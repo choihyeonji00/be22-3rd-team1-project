@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
 const router = useRouter()
 
@@ -21,21 +22,24 @@ const logout = () => {
 <template>
   <div class="admin-dashboard">
     <header class="admin-header">
-      <h1>관리자 대시보드</h1>
-      <button @click="logout" class="logout-btn">로그아웃</button>
+      <h1>{{ $t('admin.dashboard_title') }}</h1>
+      <div class="header-right">
+        <LanguageSwitcher mode="inline" />
+        <button @click="logout" class="logout-btn">{{ $t('admin.logout') }}</button>
+      </div>
     </header>
 
     <div class="dashboard-content">
       <div class="dashboard-card" @click="goToMenuManagement">
         <span class="card-icon">🍕</span>
-        <h2>메뉴 관리</h2>
-        <p>메뉴 항목을 추가, 수정, 삭제합니다.</p>
+        <h2>{{ $t('admin.menu_management') }}</h2>
+        <p>{{ $t('admin.menu_desc') }}</p>
       </div>
 
       <div class="dashboard-card" @click="goToSalesStats">
         <span class="card-icon">📊</span>
-        <h2>매출 통계</h2>
-        <p>기간별, 메뉴별 매출 현황을 확인합니다.</p>
+        <h2>{{ $t('admin.sales_stats') }}</h2>
+        <p>{{ $t('admin.sales_desc') }}</p>
       </div>
     </div>
   </div>
@@ -58,6 +62,12 @@ const logout = () => {
   background-color: var(--primary-blue);
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .admin-header h1 {
@@ -93,11 +103,16 @@ const logout = () => {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 30px;
+  padding: 24px;
   width: 300px;
+  min-height: 200px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .dashboard-card:hover {

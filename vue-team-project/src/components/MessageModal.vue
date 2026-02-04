@@ -20,8 +20,8 @@ const emit = defineEmits(['close', 'confirm']);
         
         <div class="modal-actions">
           <!-- Confirm 타입일 때만 취소 버튼 노출 -->
-          <button v-if="type === 'confirm'" @click="emit('close')" class="btn-cancel">취소</button>
-          <button @click="emit('confirm')" class="btn-confirm">확인</button>
+          <button v-if="type === 'confirm'" @click="emit('close')" class="btn-cancel">{{ $t('common.cancel') }}</button>
+          <button @click="emit('confirm')" class="btn-confirm">{{ $t('common.confirm') }}</button>
         </div>
       </div>
     </div>

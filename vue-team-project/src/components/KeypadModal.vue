@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import VirtualKeypad from './VirtualKeypad.vue';
 
-const props = defineProps(['isOpen', 'title', 'placeholder', 'subtitle', 'maxLimit']);
+const props = defineProps(['isOpen', 'title', 'placeholder', 'subtitle', 'maxLimit', 'type']);
 const emit = defineEmits(['close', 'confirm']);
 
 const inputValue = ref('');
@@ -21,10 +21,10 @@ const onUseAll = () => {
 // };
 const onInput = (val) => { 
   // 번호는 최대 11자까지만 입력되도록 제한 (01012345678)
-  if (props.title.includes('휴대폰') && inputValue.value.length >= 11) return;
+  if (props.type === 'phone' && inputValue.value.length >= 11) return;
   
   // 포인트 입력 시 초기 '0'은 새 숫자로 대체
-  if (props.title.includes('포인트') && inputValue.value === '0') {
+  if (props.type === 'point' && inputValue.value === '0') {
     inputValue.value = val;
   } else {
     inputValue.value += val; 
@@ -32,12 +32,12 @@ const onInput = (val) => {
 };
 const onDelete = () => { 
   inputValue.value = inputValue.value.slice(0, -1); 
-  if (props.title.includes('포인트') && inputValue.value === '') {
+  if (props.type === 'point' && inputValue.value === '') {
     inputValue.value = '0';
   }
 };
 const onClear = () => { 
-  if (props.title.includes('포인트')) {
+  if (props.type === 'point') {
     inputValue.value = '0';
   } else {
     inputValue.value = ''; 
@@ -51,9 +51,9 @@ const handleConfirm = () => {
 // 1. 모달이 열릴 때(isOpen이 true가 될 때) '010' 초기화
 watch(() => props.isOpen, (newVal) => {
   if (newVal) {
-    if (props.title.includes('휴대폰')) {
+    if (props.type === 'phone') {
       inputValue.value = '010';
-    } else if (props.title.includes('포인트')) {
+    } else if (props.type === 'point') {
       inputValue.value = '0'; // 포인트 입력 시 기본값 0
     } else {
       inputValue.value = ''; // 쿠폰 입력 시에는 비움
@@ -63,7 +63,7 @@ watch(() => props.isOpen, (newVal) => {
 
 const formatPhoneNumber = (val) => {
   if (!val) return '';
-  if (!props.title || !props.title.includes('휴대폰')) return val;
+  if (props.type !== 'phone') return val;
   
   let digits = val.replace(/[^0-9]/g, '');
   if (digits.length <= 3) return digits;
@@ -80,12 +80,12 @@ const formatPhoneNumber = (val) => {
         <p v-if="subtitle" class="modal-subtitle">{{ subtitle }}</p>
         <div class="input-container">
           <div class="input-display">{{ formatPhoneNumber(inputValue) || placeholder }}</div>
-          <button v-if="title.includes('포인트') && maxLimit" @click="onUseAll" class="use-all-btn">전액사용</button>
+          <button v-if="type === 'point' && maxLimit" @click="onUseAll" class="use-all-btn">{{ $t('common.use_all') }}</button>
         </div>
         <VirtualKeypad @input="onInput" @delete="onDelete" @clear="onClear" />
         <div class="modal-actions">
-          <button @click="emit('close')">취소</button>
-          <button @click="handleConfirm" class="confirm">확인</button>
+          <button @click="emit('close')">{{ $t('common.cancel') }}</button>
+          <button @click="handleConfirm" class="confirm">{{ $t('common.confirm') }}</button>
         </div>
       </div>
     </div>

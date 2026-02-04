@@ -446,15 +446,25 @@ const handleComplete = () => {
 
 
 <script setup>
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { useOrderStore } from '../stores/orderStore'
+import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import { useRouter } from 'vue-router'
+import { computed } from 'vue'
 
+const { locale } = useI18n()
 const router = useRouter()
 const orderStore = useOrderStore()
 
 // 스토어에서 데이터 가져오기 (화면 표시용)
-const selectedPaymentMethod = computed(() => orderStore.selectedPaymentMethod || '카드결제')
+const selectedPaymentMethod = computed(() => {
+  const method = orderStore.selectedPaymentMethod
+  if (!method) return '카드결제'
+  if (typeof method === 'object') {
+    return method[locale.value] || method['ko']
+  }
+  return method
+})
 const orderItems = computed(() => orderStore.orderList)
 const totalPrice = computed(() => orderStore.calculatedTotalPrice)
 const totalDiscount = computed(() => orderStore.totalDiscount)
@@ -478,18 +488,19 @@ const handlePay = () => {
 
 <template>
   <div class="payment-confirm-page">
+    <LanguageSwitcher />
     <header class="page-header">
-      <h1>결제 확인</h1>
+      <h1>{{ $t('confirm.title') }}</h1>
     </header>
 
     <div class="page-content">
       <div class="info-section payment-method-section">
-        <span class="section-label">Payment :</span>
+        <span class="section-label">{{ $t('payment.payment_method') }} :</span>
         <span class="payment-badge">{{ selectedPaymentMethod }}</span>
       </div>
 
       <div class="info-section menu-list-section">
-        <span class="section-label">Menu :</span>
+        <span class="section-label">{{ $t('confirm.menu_label') }}</span>
 
         <div class="menu-list-container">
           <div class="menu-list">
@@ -498,26 +509,26 @@ const handlePay = () => {
                 :key="item.id"
                 class="menu-item"
             >
-              <span class="menu-name">{{ item.name }}</span>
+              <span class="menu-name">{{ item.name[$i18n.locale] || item.name }}</span>
               <span class="menu-qty">x{{ item.quantity }}</span>
-              <span class="menu-price">{{ (item.price * item.quantity).toLocaleString() }}원</span>
+              <span class="menu-price">{{ (item.price * item.quantity).toLocaleString() }}{{ $t('common.won') }}</span>
             </div>
           </div>
 
           <div class="total-row raw-total">
-            <span class="total-label">total items :</span>
-            <span class="total-value">{{ totalPrice.toLocaleString() }}원</span>
+            <span class="total-label">{{ $t('confirm.total_items') }}</span>
+            <span class="total-value">{{ totalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
           </div>
           <div v-if="totalDiscount > 0" class="total-row discount-row">
-            <span class="total-label">discount :</span>
-            <span class="total-value">- {{ totalDiscount.toLocaleString() }}원</span>
+            <span class="total-label">{{ $t('confirm.discount') }}</span>
+            <span class="total-value">- {{ totalDiscount.toLocaleString() }}{{ $t('common.won') }}</span>
           </div>
           <div class="total-row final-total">
-            <span class="total-label">total payment :</span>
-            <span class="total-value">{{ finalPrice.toLocaleString() }}원</span>
+            <span class="total-label">{{ $t('confirm.total_payment') }}</span>
+            <span class="total-value">{{ finalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
           </div>
           <div v-if="orderStore.currentMember" class="total-row earned-points-row">
-            <span class="total-label">earned points :</span>
+            <span class="total-label">{{ $t('confirm.earned_points') }} :</span>
             <span class="total-value">+ {{ earnedPoints.toLocaleString() }}P</span>
           </div>
         </div>
@@ -526,10 +537,10 @@ const handlePay = () => {
 
     <footer class="action-footer">
       <button class="footer-btn cancel" @click="handleCancel">
-        취소
+        {{ $t('common.cancel') }}
       </button>
       <button class="footer-btn pay" @click="handlePay">
-        결제
+        {{ $t('common.pay') }}
       </button>
     </footer>
 
@@ -676,12 +687,16 @@ const handlePay = () => {
 .footer-btn {
   flex: 1;
   padding: 20px 24px;
+  min-height: 80px;
   border: none;
   border-radius: 12px;
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-btn.cancel {

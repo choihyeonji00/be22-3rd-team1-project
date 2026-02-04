@@ -4,7 +4,9 @@ import { useRouter } from 'vue-router'
 import { useOrderStore } from '../stores/orderStore'
 import { api } from '../services/api'
 import OrderCompletionModal from '../components/OrderCompletionModal.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const orderStore = useOrderStore()
 
@@ -33,19 +35,20 @@ let timerInterval = null
 
 // 3. 결제 수단별 안내 메시지 및 이미지 매핑 (하드코딩)
 const guideInfo = computed(() => {
-  const method = paymentMethod.value
+  const methodObj = paymentMethod.value
+  const method = typeof methodObj === 'object' ? (methodObj.ko || '') : (methodObj || '')
 
   if (method.includes('카드')) {
     return {
-      title: '카드를 투입구에 넣어주세요',
-      subTitle: '결제가 완료될 때까지 카드를 빼지 마세요',
+      title: t('process.card_title'),
+      subTitle: t('process.card_subtitle'),
       image: '/payment/insert_card.gif', // 준비하신 카드 투입 애니메이션 이미지
       bgClass: 'bg-card'
     }
   } else if (method.includes('QR') || method.includes('페이') || method.includes('Easy')) {
     return {
-      title: 'NFC를 리더기에 스캔해주세요',
-      subTitle: '화면 아래 리더기에 NFC를 대주세요',
+      title: t('process.nfc_title'),
+      subTitle: t('process.nfc_subtitle'),
       image: '/payment/scan_nfc.png',
       bgClass: 'bg-qr'
     }
@@ -61,8 +64,8 @@ const guideInfo = computed(() => {
     }
   } */else {
     return {
-      title: '결제를 진행 중입니다',
-      subTitle: '잠시만 기다려주세요',
+      title: t('process.general_title'),
+      subTitle: t('process.general_subtitle'),
       image: '/payment/payment_processing.gif', // 공통 로딩 이미지
       bgClass: 'bg-common'
     }
@@ -99,7 +102,7 @@ const startTimer = () => {
   timerInterval = setInterval(() => {
     timeLeft.value--
     if (timeLeft.value <= 0) {
-      handleFail('시간이 초과되었습니다. 다시 시도해주세요.')
+      handleFail(t('process.timeout'))
     }
   }, 1000)
 }
@@ -135,6 +138,23 @@ const processPayment = async () => {
     // API 호출
     await api.createOrder(orderData)
 
+    // 4. 재고 차감 로직
+    await Promise.all(orderItems.value.map(async (item) => {
+      // item.id가 "1_..." 형태일 수 있으므로 원본 ID 추출
+      const originalId = item.id.toString().split('_')[0]
+      try {
+        const menuItems = await api.getMenuItems()
+        const menuData = menuItems.find(m => m.id === originalId)
+        
+        if (menuData && menuData.stock !== undefined) {
+          const newStock = menuData.stock - item.quantity
+          await api.updateMenuItemStock(originalId, Math.max(0, newStock))
+        }
+      } catch (err) {
+        console.error(`Failed to update stock for item ${originalId}:`, err)
+      }
+    }))
+
     // 회원 포인트 업데이트 로직
     const currentMember = orderStore.currentMember
     if (currentMember) {
@@ -159,7 +179,7 @@ const processPayment = async () => {
 
   } catch (error) {
     console.error('Payment Error:', error)
-    handleFail('결제 시스템 오류가 발생했습니다.')
+    handleFail(t('process.system_error'))
   }
 }
 
@@ -185,7 +205,7 @@ const handleComplete = () => {
 
     <div v-if="processStatus !== 'success'" class="content-container">
       <div class="guide-card">
-        <div class="timer-badge">{{ timeLeft }}초 남음</div>
+        <div class="timer-badge">{{ $t('process.time_left', { time: timeLeft }) }}</div>
 
         <div class="image-area">
           <img :src="guideInfo.image" class="guide-img" alt="가이드 이미지" />
@@ -194,11 +214,11 @@ const handleComplete = () => {
           </div>
         </div>
 
-        <h2 class="title">{{ processStatus === 'processing' ? '결제 승인 중...' : guideInfo.title }}</h2>
+        <h2 class="title">{{ processStatus === 'processing' ? $t('process.approving') : guideInfo.title }}</h2>
         <p class="subtitle">{{ guideInfo.subTitle }}</p>
 
-        <button class="cancel-btn" @click="handleFail('사용자가 결제를 취소했습니다.')">
-          결제 취소
+        <button class="cancel-btn" @click="handleFail(t('process.user_cancel'))">
+          {{ $t('process.cancel_btn') }}
         </button>
       </div>
     </div>
@@ -276,12 +296,20 @@ const handleComplete = () => {
   color: #333;
   margin-bottom: 10px;
   font-weight: 800;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .subtitle {
   font-size: 18px;
   color: #666;
   margin-bottom: 40px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cancel-btn {

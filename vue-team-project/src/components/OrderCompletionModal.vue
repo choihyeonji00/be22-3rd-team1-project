@@ -42,46 +42,46 @@ const handleComplete = () => {
     <div v-if="isOpen" class="modal-overlay">
       <div class="modal-content">
         <!-- Header -->
-        <h2 class="modal-title">Order completion Guide</h2>
+        <h2 class="modal-title">{{ $t('modal.order_completion_title') }}</h2>
 
         <!-- Body -->
         <div class="modal-body">
           <!-- Order Number Section -->
           <div class="order-number-section">
-            <span class="order-number-label">주문번호</span>
+            <span class="order-number-label">{{ $t('modal.order_number_label') }}</span>
             <span class="order-number-value">{{ orderNumber }}</span>
           </div>
 
           <!-- Order Info Section -->
           <div class="order-info-section">
-            <span class="order-info-label">주문 정보</span>
+            <span class="order-info-label">{{ $t('modal.order_info_label') }}</span>
             <div class="order-items-list">
               <div
                 v-for="item in orderItems"
                 :key="item.id"
                 class="order-item"
               >
-                <span class="item-name">{{ item.name }}</span>
+                <span class="item-name">{{ item.name[$i18n.locale] || item.name }}</span>
                 <span class="item-qty">x{{ item.quantity }}</span>
-                <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span>
+                <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}{{ $t('common.won') }}</span>
               </div>
             </div>
           </div>
 
           <!-- Total Price -->
           <div class="order-total-section">
-            <span class="order-total-label">주문 금액 :</span>
-            <span class="order-total-value">{{ totalPrice.toLocaleString() }}원</span>
+            <span class="order-total-label">{{ $t('modal.order_total_label') }}</span>
+            <span class="order-total-value">{{ totalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
           </div>
 
           <!-- Points Info -->
           <div v-if="earnedPoints > 0" class="points-info-section">
             <div class="points-row">
-              <span class="points-label">이번 주문 적립 :</span>
+              <span class="points-label">{{ $t('modal.earned_points_label') }}</span>
               <span class="points-value">+ {{ earnedPoints.toLocaleString() }}P</span>
             </div>
             <div class="points-row total-points">
-              <span class="points-label">현재 총 포인트 :</span>
+              <span class="points-label">{{ $t('modal.total_points_label') }}</span>
               <span class="points-value">{{ currentPoints.toLocaleString() }}P</span>
             </div>
           </div>
@@ -90,10 +90,10 @@ const handleComplete = () => {
         <!-- Action Buttons -->
         <div class="modal-actions">
           <button class="action-btn home-btn" @click="handleGoHome">
-            처음으로
+            {{ $t('fail.home_btn') }}
           </button>
           <button class="action-btn complete-btn" @click="handleComplete">
-            완료
+            {{ $t('modal.complete') }}
           </button>
         </div>
       </div>
@@ -205,11 +205,13 @@ const handleComplete = () => {
 
 .order-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  padding: 8px 0;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  padding: 12px 0;
   font-size: 14px;
   color: var(--text-light);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  align-items: center;
+  min-height: 50px;
 }
 
 .order-item:last-child {

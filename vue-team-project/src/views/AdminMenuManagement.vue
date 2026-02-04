@@ -2,7 +2,10 @@
 import { ref, onMounted, computed } from 'vue'
 import { api } from '../services/api'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 
+const { t, locale } = useI18n()
 const router = useRouter()
 
 const menuItems = ref([])
@@ -14,9 +17,9 @@ const errorMessage = ref('')
 const isModalOpen = ref(false)
 const editingMenu = ref(null) // null for add, object for edit
 const newMenuItem = ref({
-  name: '',
+  name: { ko: '', en: '' },
   price: 0,
-  description: '',
+  description: { ko: '', en: '' }, // 설명 추가
   category: '', // category ID
   image: '',
   stock: 100, // 재고 수량 추가
@@ -40,7 +43,7 @@ const refreshData = async () => {
     categories.value = categoryData
   } catch (error) {
     console.error('Failed to fetch admin data:', error)
-    errorMessage.value = '데이터를 불러오는 데 실패했습니다.'
+    errorMessage.value = t('admin.fetch_fail')
   } finally {
     isLoading.value = false
   }
@@ -48,16 +51,16 @@ const refreshData = async () => {
 
 const getCategoryName = (categoryId) => {
   const category = categories.value.find(cat => cat.id === categoryId)
-  return category ? category.name : '알 수 없음'
+  return category ? (category.name[locale.value] || category.name) : t('admin.unknown')
 }
 
 const openAddModal = () => {
   editingMenu.value = null
-  newMenuItem.value = {
-    name: '',
-    price: 0,
-    description: '',
-    category: categories.value[0]?.id || '',
+  newMenuItem.value = { 
+    name: { ko: '', en: '' }, 
+    price: 0, 
+    description: { ko: '', en: '' },
+    category: categories.value[0]?.id || '', 
     image: '',
     stock: 100,
     options: []
@@ -66,14 +69,32 @@ const openAddModal = () => {
 }
 
 const openEditModal = (menu) => {
-  editingMenu.value = { ...menu }
+  // Ensure name and description are objects
+  const nameObj = typeof menu.name === 'string' ? { ko: menu.name, en: '' } : { ...menu.name }
+  const descObj = typeof menu.description === 'string' ? { ko: menu.description, en: '' } : { ...menu.description }
+  
+  editingMenu.value = { ...menu, name: nameObj, description: descObj }
+  
   // deep copy for nested options
-  const copiedMenu = JSON.parse(JSON.stringify(menu))
-  // Ensure options array exists
-  if (!copiedMenu.options) copiedMenu.options = []
-  // Ensure stock exists
+  const copiedMenu = JSON.parse(JSON.stringify(editingMenu.value))
+  
+  // Normalize stock
   if (copiedMenu.stock === undefined) copiedMenu.stock = 100
 
+  // Normalize options names and labels
+  if (copiedMenu.options && Array.isArray(copiedMenu.options)) {
+    copiedMenu.options = copiedMenu.options.map(opt => ({
+      ...opt,
+      name: typeof opt.name === 'string' ? { ko: opt.name, en: '' } : { ...opt.name },
+      choices: (opt.choices || []).map(choice => ({
+        ...choice,
+        label: typeof choice.label === 'string' ? { ko: choice.label, en: '' } : { ...choice.label }
+      }))
+    }))
+  } else {
+    copiedMenu.options = []
+  }
+  
   newMenuItem.value = copiedMenu
   isModalOpen.value = true
 }
@@ -81,15 +102,24 @@ const openEditModal = (menu) => {
 const closeModal = () => {
   isModalOpen.value = false
   editingMenu.value = null
-  newMenuItem.value = { name: '', price: 0, description: '', category: '', image: '', stock: 100, options: [] }
-  errorMessage.value = ''
+  newMenuItem.value = { 
+    id: '',
+    name: { ko: '', en: '' }, 
+    price: 0, 
+    description: { ko: '', en: '' }, 
+    category: '', 
+    image: '', 
+    stock: 100,
+    options: [] 
+  }
+  errorMessage.value = '' 
 }
 
 const saveMenuItem = async () => {
   errorMessage.value = ''
   try {
-    if (!newMenuItem.value.name || !newMenuItem.value.price || !newMenuItem.value.category) {
-      errorMessage.value = '모든 필수 필드를 입력해주세요.'
+    if (!newMenuItem.value.name.ko || !newMenuItem.value.name.en || !newMenuItem.value.price || !newMenuItem.value.category) {
+      errorMessage.value = t('admin.fill_all_fields')
       return
     }
 
@@ -111,17 +141,17 @@ const saveMenuItem = async () => {
     closeModal()
   } catch (error) {
     console.error('Failed to save menu item:', error)
-    errorMessage.value = '메뉴 항목 저장에 실패했습니다.'
+    errorMessage.value = t('admin.save_fail')
   }
 }
 
 // --- Option Management Functions ---
 const addOptionGroup = () => {
   newMenuItem.value.options.push({
-    name: '',
+    name: { ko: '', en: '' },
     required: false,
     multiple: false,
-    choices: [{ label: '', price: 0 }]
+    choices: [{ label: { ko: '', en: '' }, price: 0 }]
   })
 }
 
@@ -130,7 +160,7 @@ const removeOptionGroup = (index) => {
 }
 
 const addChoice = (optionIndex) => {
-  newMenuItem.value.options[optionIndex].choices.push({ label: '', price: 0 })
+  newMenuItem.value.options[optionIndex].choices.push({ label: { ko: '', en: '' }, price: 0 })
 }
 
 const removeChoice = (optionIndex, choiceIndex) => {
@@ -139,14 +169,14 @@ const removeChoice = (optionIndex, choiceIndex) => {
 // ------------------------------------
 
 const deleteMenuItem = async (id) => {
-  if (confirm('정말로 이 메뉴 항목을 삭제하시겠습니까?')) {
+  if (confirm(t('admin.delete_confirm'))) {
     try {
       await api.deleteMenuItem(id)
       console.log('Menu item deleted:', id)
       await refreshData()
     } catch (error) {
       console.error('Failed to delete menu item:', error)
-      errorMessage.value = '메뉴 항목 삭제에 실패했습니다.'
+      errorMessage.value = t('admin.delete_fail')
     }
   }
 }
@@ -159,55 +189,56 @@ const goToDashboard = () => {
 <template>
   <div class="admin-menu-management">
     <header class="admin-header">
-      <h1>메뉴 관리</h1>
+      <h1>{{ $t('admin.menu_management') }}</h1>
       <div class="header-actions">
-        <button @click="goToDashboard" class="back-btn">대시보드로</button>
-        <button @click="openAddModal" class="add-btn">새 메뉴 추가</button>
+        <LanguageSwitcher mode="inline" />
+        <button @click="goToDashboard" class="back-btn">{{ $t('admin.back_to_dashboard') }}</button>
+        <button @click="openAddModal" class="add-btn">{{ $t('admin.add_new_menu') }}</button>
       </div>
     </header>
 
     <div class="content-area">
       <p v-if="errorMessage" class="error-message-banner">{{ errorMessage }}</p>
 
-      <div v-if="isLoading" class="loading-spinner">메뉴 데이터를 불러오는 중...</div>
+      <div v-if="isLoading" class="loading-spinner">{{ $t('admin.loading_menu') }}</div>
       <div v-else class="menu-table-container">
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>이름</th>
-              <th>가격</th>
-              <th>카테고리</th>
-              <th>재고</th>
-              <th>옵션 설정</th>
-              <th>액션</th>
+              <th style="width: 60px;">{{ $t('admin.id') }}</th>
+              <th style="width: 150px;">{{ $t('admin.name') }}</th>
+              <th style="width: 120px;">{{ $t('admin.price') }}</th>
+              <th style="width: 100px;">{{ $t('admin.category') }}</th>
+              <th style="width: 100px;">{{ $t('admin.stock') }}</th>
+              <th style="width: 150px;">{{ $t('admin.option_settings') }}</th>
+              <th style="width: 190px;">{{ $t('admin.actions') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="menu in menuItems" :key="menu.id">
               <td>{{ menu.id }}</td>
-              <td>{{ menu.name }}</td>
-              <td>{{ menu.price.toLocaleString() }}원</td>
+              <td>{{ menu.name[locale] || menu.name }}</td>
+              <td>{{ menu.price.toLocaleString() }}{{ $t('common.won') }}</td>
               <td>{{ getCategoryName(menu.category) }}</td>
               <td>
                 <span :class="{'out-of-stock': menu.stock <= 0}">
-                  {{ menu.stock !== undefined ? menu.stock : '-' }}개
-                  <span v-if="menu.stock <= 0">(품절)</span>
+                  {{ menu.stock !== undefined ? menu.stock : '-' }}{{ $t('common.unit_qty') }}
+                  <span v-if="menu.stock <= 0">({{ $t('order.sold_out') }})</span>
                 </span>
               </td>
               <td>
                 <div v-if="menu.options && menu.options.length > 0" class="options-summary">
-                  옵션 {{ menu.options.length }}개 설정됨
+                  {{ $t('admin.options_count', { count: menu.options.length }) }}
                 </div>
                 <span v-else>-</span>
               </td>
-              <td>
-                <button @click="openEditModal(menu)" class="action-btn edit-btn">수정</button>
-                <button @click="deleteMenuItem(menu.id)" class="action-btn delete-btn">삭제</button>
+              <td class="action-cell">
+                <button @click="openEditModal(menu)" class="action-btn edit-btn">{{ $t('admin.edit') }}</button>
+                <button @click="deleteMenuItem(menu.id)" class="action-btn delete-btn">{{ $t('admin.delete') }}</button>
               </td>
             </tr>
             <tr v-if="menuItems.length === 0">
-              <td colspan="7" class="no-data">메뉴 항목이 없습니다.</td>
+              <td colspan="7" class="no-data">{{ $t('admin.no_menu_items') }}</td>
             </tr>
           </tbody>
         </table>
@@ -215,74 +246,96 @@ const goToDashboard = () => {
     </div>
 
     <!-- Add/Edit Menu Modal -->
-    <div v-if="isModalOpen" class="modal-overlay">
-      <div class="modal-content">
-        <h3>{{ editingMenu ? '메뉴 수정' : '새 메뉴 추가' }}</h3>
-        <form @submit.prevent="saveMenuItem">
-          <div class="form-group">
-            <label for="menuName">이름:</label>
-            <input type="text" id="menuName" v-model="newMenuItem.name" required />
-          </div>
-          <div class="form-group">
-            <label for="menuPrice">가격:</label>
-            <input type="number" id="menuPrice" v-model.number="newMenuItem.price" required min="0" />
-          </div>
-          <div class="form-group">
-            <label for="menuStock">재고 수량:</label>
-            <input type="number" id="menuStock" v-model.number="newMenuItem.stock" required min="0" />
-          </div>
-          <div class="form-group">
-            <label for="menuCategory">카테고리:</label>
-            <select id="menuCategory" v-model="newMenuItem.category" required>
-              <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                {{ cat.name }}
-              </option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="menuDescription">설명:</label>
-            <textarea id="menuDescription" v-model="newMenuItem.description" rows="2"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="menuImageUrl">이미지 URL:</label>
-            <input type="text" id="menuImageUrl" v-model="newMenuItem.image" placeholder="/src/assets/images/..." />
-          </div>
-
-          <!-- Options Section -->
-          <div class="options-management">
-            <div class="options-header">
-              <h4>옵션 설정</h4>
-              <button type="button" @click="addOptionGroup" class="small-add-btn">+ 그룹 추가</button>
-            </div>
-
-            <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
-              <div class="option-group-header">
-                <input type="text" v-model="opt.name" placeholder="그룹명 (예: 사이즈, 토핑)" class="opt-name-input" />
-                <div class="opt-configs">
-                  <label><input type="checkbox" v-model="opt.required" /> 필수</label>
-                  <label><input type="checkbox" v-model="opt.multiple" /> 다중선택</label>
-                </div>
-                <button type="button" @click="removeOptionGroup(optIdx)" class="small-delete-btn">✕</button>
+    <Teleport to="body">
+      <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+        <div class="modal-content">
+          <h3>{{ editingMenu ? $t('admin.edit_menu') : $t('admin.new_menu') }}</h3>
+          <form @submit.prevent="saveMenuItem">
+            <div class="form-group-row">
+              <div class="form-group flex-1">
+                <label for="menuNameKo">{{ $t('admin.name') }} (KO):</label>
+                <input type="text" id="menuNameKo" v-model="newMenuItem.name.ko" required />
               </div>
-
-              <div class="choices-list">
-                <div v-for="(choice, choiceIdx) in opt.choices" :key="choiceIdx" class="choice-row">
-                  <input type="text" v-model="choice.label" placeholder="라벨" />
-                  <input type="number" v-model.number="choice.price" placeholder="추가금" />
-                  <button type="button" @click="removeChoice(optIdx, choiceIdx)" class="choice-delete-btn">✕</button>
-                </div>
-                <button type="button" @click="addChoice(optIdx)" class="choice-add-btn">+ 선택지 추가</button>
+              <div class="form-group flex-1">
+                <label for="menuNameEn">{{ $t('admin.name') }} (EN):</label>
+                <input type="text" id="menuNameEn" v-model="newMenuItem.name.en" required />
               </div>
             </div>
-          </div>
-          <p v-if="errorMessage" class="error-message-modal">{{ errorMessage }}</p>
-          <div class="modal-actions">
-            <button type="submit" class="save-btn">저장</button>
-            <button type="button" @click="closeModal" class="cancel-btn">취소</button>
-          </div>
-        </form>
+            
+            <div class="form-group-row">
+              <div class="form-group flex-1">
+                <label for="menuPrice">{{ $t('admin.price') }}:</label>
+                <input type="number" id="menuPrice" v-model.number="newMenuItem.price" required min="0" />
+              </div>
+              <div class="form-group flex-1">
+                <label for="menuStock">{{ $t('admin.stock') }}:</label>
+                <input type="number" id="menuStock" v-model.number="newMenuItem.stock" required min="0" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="menuCategory">{{ $t('admin.category') }}:</label>
+              <select id="menuCategory" v-model="newMenuItem.category" required>
+                <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                  {{ cat.name[locale] || cat.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group-row">
+              <div class="form-group flex-1">
+                <label for="menuDescriptionKo">{{ $t('admin.description') }} (KO):</label>
+                <textarea id="menuDescriptionKo" v-model="newMenuItem.description.ko" rows="2"></textarea>
+              </div>
+              <div class="form-group flex-1">
+                <label for="menuDescriptionEn">{{ $t('admin.description') }} (EN):</label>
+                <textarea id="menuDescriptionEn" v-model="newMenuItem.description.en" rows="2"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="menuImageUrl">{{ $t('admin.image_url') }}:</label>
+              <input type="text" id="menuImageUrl" v-model="newMenuItem.image" placeholder="/src/assets/images/..." />
+            </div>
+  
+            <!-- Options Section -->
+            <div class="options-management">
+              <div class="options-header">
+                <h4>{{ $t('admin.option_settings') }}</h4>
+                <button type="button" @click="addOptionGroup" class="small-add-btn">{{ $t('admin.add_group') }}</button>
+              </div>
+  
+              <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
+                <div class="option-group-header">
+                  <div class="opt-name-inputs">
+                    <input type="text" v-model="opt.name.ko" placeholder="그룹명 (KO)" class="opt-name-input" />
+                    <input type="text" v-model="opt.name.en" placeholder="Group Name (EN)" class="opt-name-input" />
+                  </div>
+                  <div class="opt-configs">
+                    <label><input type="checkbox" v-model="opt.required" /> {{ $t('admin.required') }}</label>
+                    <label><input type="checkbox" v-model="opt.multiple" /> {{ $t('admin.multiple') }}</label>
+                  </div>
+                  <button type="button" @click="removeOptionGroup(optIdx)" class="small-delete-btn">✕</button>
+                </div>
+  
+                <div class="choices-list">
+                  <div v-for="(choice, choiceIdx) in opt.choices" :key="choiceIdx" class="choice-row">
+                    <input type="text" v-model="choice.label.ko" placeholder="라벨 (KO)" />
+                    <input type="text" v-model="choice.label.en" placeholder="Label (EN)" />
+                    <input type="number" v-model.number="choice.price" :placeholder="$t('admin.extra_price')" />
+                    <button type="button" @click="removeChoice(optIdx, choiceIdx)" class="choice-delete-btn">✕</button>
+                  </div>
+                  <button type="button" @click="addChoice(optIdx)" class="choice-add-btn">{{ $t('admin.add_choice') }}</button>
+                </div>
+              </div>
+            </div>
+            <p v-if="errorMessage" class="error-message-modal">{{ errorMessage }}</p>
+            <div class="modal-actions">
+              <button type="submit" class="save-btn">{{ $t('admin.save') }}</button>
+              <button type="button" @click="closeModal" class="cancel-btn">{{ $t('common.cancel') }}</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
@@ -312,7 +365,8 @@ const goToDashboard = () => {
 
 .header-actions {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 15px;
 }
 
 .back-btn, .add-btn {
@@ -322,6 +376,8 @@ const goToDashboard = () => {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  min-height: 60px;
+  min-width: 160px;
 }
 
 .back-btn {
@@ -367,17 +423,27 @@ const goToDashboard = () => {
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
+  width: 100%;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* 고정 레이아웃 사용 */
 }
 
 th, td {
-  padding: 15px;
+  padding: 12px 10px;
   text-align: left;
   border-bottom: 1px solid #eee;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.action-cell {
+  overflow: visible;
+  white-space: normal;
 }
 
 th {
@@ -404,6 +470,8 @@ tr:hover {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-right: 5px;
+  min-height: 40px;
+  min-width: 70px;
 }
 
 .edit-btn {
@@ -543,6 +611,11 @@ tr:hover {
   flex: 1;
 }
 
+.choice-row>input:nth-of-type(3) {
+  flex: 1;
+  min-width: 100px;
+}
+
 .choice-delete-btn {
   background: none;
   border: none;
@@ -587,12 +660,30 @@ tr:hover {
 .form-group input[type="number"],
 .form-group textarea,
 .form-group select {
-  width: calc(100% - 20px);
+  width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 16px;
   font-family: inherit;
+}
+
+.form-group-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.flex-1 {
+  flex: 1;
+  margin-bottom: 0 !important;
+}
+
+.opt-name-inputs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .error-message-modal {
