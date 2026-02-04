@@ -1,8 +1,12 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-
 const show = ref(false)
 const currentImageIndex = ref(1)
+
+// 화면보호기 기능추가를위해 가져옴
+import { useRouter } from 'vue-router'
+import { orderStore } from '../stores/orderStore'
+const router = useRouter()
 
 let activationTimer = null
 let slideshowInterval = null
@@ -17,8 +21,17 @@ const reset = () => {
   // 2. 화면보호기 끄기 (터치 시 즉시 사라짐)
   show.value = false
 
-  // 3. 다시 10초 카운트다운 시작
+ /* // 3. 다시 10초 카운트다운 시작
   activationTimer = setTimeout(() => {
+    show.value = true
+    currentImageIndex.value = 1*/
+
+  activationTimer = setTimeout(() => {
+
+    // ▼▼▼ [수정 3] 이제 위에서 import를 해왔으니, 이 코드가 정상 작동합니다! ▼▼▼
+    orderStore.clearOrder() // 장바구니 비우기
+    router.replace('/')     // 메인 화면으로 이동
+
     show.value = true
     currentImageIndex.value = 1
 
@@ -27,7 +40,7 @@ const reset = () => {
       currentImageIndex.value = (currentImageIndex.value % 5) + 1
     }, 5000)
 
-  }, 10000)
+  }, 3000)
 }
 
 onMounted(() => {

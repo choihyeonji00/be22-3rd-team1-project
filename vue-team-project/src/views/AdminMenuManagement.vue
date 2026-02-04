@@ -20,8 +20,9 @@ const newMenuItem = ref({
   price: 0,
   description: { ko: '', en: '' }, // 설명 추가
   category: '', // category ID
-  image: '', // image 필드로 수정 (기존 db.json과 일치)
-  options: [] // 옵션 배열 추가
+  image: '',
+  stock: 100, // 재고 수량 추가
+  options: []
 })
 
 // Fetch data on component mount
@@ -60,7 +61,8 @@ const openAddModal = () => {
     description: { ko: '', en: '' },
     category: categories.value[0]?.id || '', 
     image: '',
-    options: [] 
+    stock: 100,
+    options: []
   }
   isModalOpen.value = true
 }
@@ -87,6 +89,9 @@ const openEditModal = (menu) => {
     }))
   } else {
     copiedMenu.options = []
+  // Ensure stock exists
+  if (copiedMenu.stock === undefined) copiedMenu.stock = 100
+
   }
   
   newMenuItem.value = copiedMenu
@@ -204,6 +209,12 @@ const goToDashboard = () => {
               <td>{{ menu.price.toLocaleString() }}{{ $t('common.won') }}</td>
               <td>{{ getCategoryName(menu.category) }}</td>
               <td>
+                <span :class="{'out-of-stock': menu.stock <= 0}">
+                  {{ menu.stock !== undefined ? menu.stock : '-' }}개
+                  <span v-if="menu.stock <= 0">(품절)</span>
+                </span>
+              </td>
+              <td>
                 <div v-if="menu.options && menu.options.length > 0" class="options-summary">
                   {{ $t('admin.options_count', { count: menu.options.length }) }}
                 </div>
@@ -242,7 +253,7 @@ const goToDashboard = () => {
             <input type="number" id="menuPrice" v-model.number="newMenuItem.price" required min="0" />
           </div>
           <div class="form-group">
-            <label for="menuCategory">{{ $t('admin.category') }}:</label>
+            <label for="menuCategory">카테고리:</label>
             <select id="menuCategory" v-model="newMenuItem.category" required>
               <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                 {{ cat.name[locale] || cat.name }}
@@ -270,7 +281,7 @@ const goToDashboard = () => {
               <h4>{{ $t('admin.option_settings') }}</h4>
               <button type="button" @click="addOptionGroup" class="small-add-btn">{{ $t('admin.add_group') }}</button>
             </div>
-            
+
             <div v-for="(opt, optIdx) in newMenuItem.options" :key="optIdx" class="option-group-card">
               <div class="option-group-header">
                 <div class="opt-name-inputs">
@@ -440,6 +451,11 @@ tr:hover {
 }
 .delete-btn:hover {
   background-color: #c0392b;
+}
+
+.out-of-stock {
+  color: #e74c3c;
+  font-weight: bold;
 }
 
 /* Modal Styles */

@@ -77,6 +77,11 @@ const isModalOpen = ref(false)
 const selectedMenu = ref(null)
 
 const openMenuModal = (menu) => {
+  // 품절된 메뉴는 모달을 열지 않음
+  if (menu.isSoldOut) return
+  // 재고가 0 이하인 경우도 열지 않음 (이중 체크)
+  if (menu.stock !== undefined && menu.stock <= 0) return
+
   selectedMenu.value = menu
   isModalOpen.value = true
 }
@@ -86,68 +91,37 @@ const closeModal = () => {
   selectedMenu.value = null
 }
 
-// const addToOrder = (menuWithQuantity) => {
-//   orderStore.addItem(menuWithQuantity)
-// }
 const addToOrder = (orderData) => {
-  const optionLabelsKo = [];
-  const optionLabelsEn = [];
+  // 1. 옵션 문자열 생성 (예: "Large, Bacon")
+  const optionLabels = [];
   let optionsPriceSum = 0;
   
   if (orderData.selectedOptions && orderData.options) {
     Object.entries(orderData.selectedOptions).forEach(([groupName, value]) => {
-      // groupName is now an object in some cases, but search by key or localized name might be tricky
-      // Let's assume groupName is a string key for now if mapped correctly in MenuInfoModal
-      const optionGroup = orderData.options.find(opt => {
-        const optNameKo = typeof opt.name === 'object' ? opt.name.ko : opt.name;
-        return optNameKo === groupName || opt.name === groupName;
-      });
-      
+      const optionGroup = orderData.options.find(opt => opt.name === groupName);
       if (!optionGroup) return;
-      
       if (Array.isArray(value)) {
+        // 다중 선택
         value.forEach(label => {
-          // label is the localized label string passed from MenuInfoModal
-          // We need to find the choice to get the price and other language version
-          const choice = optionGroup.choices.find(c => {
-            const choiceLabelKo = typeof c.label === 'object' ? c.label.ko : c.label;
-            const choiceLabelEn = typeof c.label === 'object' ? c.label.en : '';
-            return choiceLabelKo === label || choiceLabelEn === label || c.label === label;
-          });
-          
-          if (choice) {
-            optionsPriceSum += choice.price;
-            optionLabelsKo.push(typeof choice.label === 'object' ? choice.label.ko : choice.label);
-            optionLabelsEn.push(typeof choice.label === 'object' ? choice.label.en : choice.label);
-          }
+          optionLabels.push(label);
+          const choice = optionGroup.choices.find(c => c.label === label);
+          if (choice) optionsPriceSum += choice.price;
         });
       } else {
-        const choice = optionGroup.choices.find(c => {
-          const choiceLabelKo = typeof c.label === 'object' ? c.label.ko : c.label;
-          const choiceLabelEn = typeof c.label === 'object' ? c.label.en : '';
-          return choiceLabelKo === value || choiceLabelEn === value || c.label === value;
-        });
-        
-        if (choice) {
-          optionsPriceSum += choice.price;
-          optionLabelsKo.push(typeof choice.label === 'object' ? choice.label.ko : choice.label);
-          optionLabelsEn.push(typeof choice.label === 'object' ? choice.label.en : choice.label);
-        }
+        // 단일 선택
+        optionLabels.push(value);
+        const choice = optionGroup.choices.find(c => c.label === value);
+        if (choice) optionsPriceSum += choice.price;
       }
     });
   }
-  
-  const optionStringKo = optionLabelsKo.length > 0 ? ` (${optionLabelsKo.join(', ')})` : '';
-  const optionStringEn = optionLabelsEn.length > 0 ? ` (${optionLabelsEn.join(', ')})` : '';
+  const optionString = optionLabels.length > 0 ? ` (${optionLabels.join(', ')})` : '';
   
   // 2. 가공된 주문 데이터 준비
   const processedItem = {
     ...orderData,
     id: `${orderData.id}_${JSON.stringify(orderData.selectedOptions)}`, // 옵션별 고유 ID
-    name: {
-      ko: `${typeof orderData.name === 'object' ? orderData.name.ko : orderData.name}${optionStringKo}`,
-      en: `${typeof orderData.name === 'object' ? orderData.name.en : orderData.name}${optionStringEn}`
-    },
+    name: `${orderData.name}${optionString}`,
     price: orderData.price + optionsPriceSum, // 단가 (옵션 포함)
     quantity: orderData.quantity
   };
@@ -156,8 +130,21 @@ const addToOrder = (orderData) => {
 
 // 수량 증가
 const increaseItemQuantity = (item) => {
+  // 원본 메뉴 정보 찾기 (재고 확인용)
+  // item.id는 옵션이 포함된 ID일 수 있으므로 원본 ID 추출
+  const originalId = item.id.toString().split('_')[0]
+  const originalMenu = menuItems.value.find(m => m.id === originalId)
+
+  if (originalMenu && originalMenu.stock !== undefined) {
+    if (item.quantity >= originalMenu.stock) {
+      alert(`재고가 부족합니다. (최대 ${originalMenu.stock}개)`)
+      return
+    }
+  }
+
   orderStore.updateQuantity(item.id, item.quantity + 1);
 };
+
 // 수량 감소 (1 이하로 내려가지 않게 처리)
 const decreaseItemQuantity = (item) => {
   if (item.quantity > 1) {
@@ -194,12 +181,6 @@ const getCategoryIcon = (categoryId) => {
   }
   return iconMap[categoryId] || '🍽️'
 }
-
-const changeLanguage = (lang) => {
-  import('../locales/i18n').then(m => {
-    m.default.global.locale = lang;
-  });
-};
 </script>
 
 <template>
@@ -207,7 +188,7 @@ const changeLanguage = (lang) => {
     <!-- Header with Logo -->
     <header class="order-header">
       <div class="logo">
-        <span class="logo-text">{{ $t('order.kiosk') }}</span>
+        <span class="logo-text">KIOSK</span>
       </div>
     </header>
 
@@ -219,7 +200,7 @@ const changeLanguage = (lang) => {
         :class="['category-btn', { active: activeCategory === category.id }]"
         @click="selectCategory(category.id)"
       >
-        {{ category.name[$i18n.locale] }}
+        {{ category.name }}
       </button>
     </nav>
 
@@ -230,15 +211,25 @@ const changeLanguage = (lang) => {
           v-for="menu in paginatedMenuItems"
           :key="menu.id"
           class="menu-card"
+          :class="{ 'sold-out': (menu.isSoldOut || (menu.stock !== undefined && menu.stock <= 0)) }"
+          :disabled="menu.isSoldOut || (menu.stock !== undefined && menu.stock <= 0)"
           @click="openMenuModal(menu)"
         >
           <div class="menu-card-image">
-            <img v-if="menu.image" :src="menu.image" :alt="menu.name" class="menu-img" />
+            <img v-if="menu.image || menu.imageUrl" :src="menu.image || menu.imageUrl" :alt="menu.name" class="menu-img" />
             <span v-else class="menu-placeholder-icon">{{ getCategoryIcon(menu.category) }}</span>
+
+            <!-- 품절 오버레이 -->
+            <div v-if="menu.isSoldOut || (menu.stock !== undefined && menu.stock <= 0)" class="sold-out-overlay">
+              <span>SOLD OUT</span>
+            </div>
           </div>
           <div class="menu-card-info">
-            <p class="menu-card-name">{{ menu.name[$i18n.locale] || menu.name }}</p>
-            <p class="menu-card-price">{{ menu.price.toLocaleString() }} {{ $t('common.won') }}</p>
+            <p class="menu-card-name">{{ menu.name }}</p>
+            <p class="menu-card-price">{{ menu.price.toLocaleString() }}원</p>
+            <p v-if="menu.stock !== undefined && menu.stock <= 5 && menu.stock > 0" class="stock-warning">
+              품절 임박 ({{ menu.stock }}개 남음)
+            </p>
           </div>
         </button>
 
@@ -257,7 +248,7 @@ const changeLanguage = (lang) => {
           :disabled="currentPage === 0"
           @click="prevPage"
         >
-          {{ $t('common.back') }}
+          이전
         </button>
 
         <div class="page-dots">
@@ -274,7 +265,7 @@ const changeLanguage = (lang) => {
           :disabled="currentPage >= totalPages - 1"
           @click="nextPage"
         >
-          {{ $t('common.next') }}
+          다음
         </button>
       </div>
     </section>
@@ -282,9 +273,9 @@ const changeLanguage = (lang) => {
     <!-- Order List -->
     <section class="order-list-section">
       <div class="order-list-header">
-        <span class="header-name">{{ $t('order.menu_name') }}</span>
-        <span class="header-qty">{{ $t('order.quantity') }}</span>
-        <span class="header-price">{{ $t('order.price') }}</span>
+        <span class="header-name">메뉴명</span>
+        <span class="header-qty">수량</span>
+        <span class="header-price">가격</span>
       </div>
 
       <div class="order-list-body">
@@ -293,11 +284,8 @@ const changeLanguage = (lang) => {
           :key="item.id"
           class="order-item"
         >
-          <!-- <span class="item-name">{{ item.name }}</span>
-          <span class="item-qty">{{ item.quantity }}</span>
-          <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span> -->
           <div class="item-info">
-            <span class="item-name">{{ item.name[$i18n.locale] || item.name }}</span>
+            <span class="item-name">{{ item.name }}</span>
             <button class="remove-btn" @click="removeItem(item.id)">✕</button>
           </div>
           
@@ -307,11 +295,11 @@ const changeLanguage = (lang) => {
             <button class="qty-btn" @click="decreaseItemQuantity(item)">-</button>
           </div>
   
-  <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}{{ $t('common.won') }}</span>
+  <span class="item-price">{{ (item.price * item.quantity).toLocaleString() }}원</span>
         </div>
 
         <div v-if="orderList.length === 0" class="empty-order">
-          {{ $t('order.empty_cart') }}
+          주문 내역이 없습니다
         </div>
       </div>
     </section>
@@ -319,20 +307,20 @@ const changeLanguage = (lang) => {
     <!-- Bottom Action Bar -->
     <footer class="action-bar">
       <div class="total-price">
-        <span class="total-label">{{ $t('order.total_items_price') }}</span>
-        <span class="total-value">{{ totalPrice.toLocaleString() }}{{ $t('common.won') }}</span>
+        <span class="total-label">주문 금액</span>
+        <span class="total-value">{{ totalPrice.toLocaleString() }}원</span>
       </div>
 
       <div class="action-buttons">
         <button class="action-btn cancel" @click="handleCancel">
-          {{ $t('common.cancel') }}
+          취소
         </button>
         <button
           class="action-btn pay"
           :disabled="orderList.length === 0"
           @click="handlePay"
         >
-          {{ $t('common.pay') }}
+          결제
         </button>
       </div>
     </footer>
@@ -372,14 +360,11 @@ const changeLanguage = (lang) => {
 .logo-text {
   font-size: 24px;
   font-weight: 700;
-  color: white;
+  color: var(--primary-blue);
   background-color: var(--primary-blue);
+  color: white;
   padding: 8px 16px;
   border-radius: 8px;
-  min-width: 140px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* Category Navigation */
@@ -390,15 +375,11 @@ const changeLanguage = (lang) => {
   background-color: var(--primary-orange);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  min-height: 64px;
-  align-items: center;
 }
 
 .category-btn {
   flex-shrink: 0;
   padding: 10px 20px;
-  min-width: 100px;
-  white-space: nowrap;
   border: none;
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.3);
@@ -439,9 +420,7 @@ const changeLanguage = (lang) => {
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  position: relative;
 }
 
 .menu-card:hover {
@@ -459,12 +438,18 @@ const changeLanguage = (lang) => {
   box-shadow: none;
 }
 
+.menu-card.sold-out {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .menu-card-image {
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.2);
+  position: relative;
 }
 
 .menu-placeholder-icon {
@@ -477,13 +462,25 @@ const changeLanguage = (lang) => {
   object-fit: cover;
 }
 
+.sold-out-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 18px;
+  z-index: 10;
+}
+
 .menu-card-info {
   padding: 10px;
   color: white;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
 .menu-card-name {
@@ -500,13 +497,23 @@ const changeLanguage = (lang) => {
   opacity: 0.9;
 }
 
+.stock-warning {
+  font-size: 12px;
+  color: #d32f2f;
+  font-weight: 800;
+  margin-top: 6px;
+  background-color: #ffebee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
 /* Pagination */
 .pagination {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
-  min-height: 60px;
 }
 
 .page-btn {
@@ -668,11 +675,6 @@ const changeLanguage = (lang) => {
   background-color: var(--primary-orange);
   border-radius: 8px;
   color: white;
-  min-width: 150px;
-  min-height: 70px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .total-label {
@@ -693,17 +695,12 @@ const changeLanguage = (lang) => {
 
 .action-btn {
   padding: 16px 24px;
-  min-width: 120px;
-  min-height: 70px;
   border: none;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .action-btn.cancel {
