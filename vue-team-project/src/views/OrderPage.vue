@@ -3,9 +3,10 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MenuInfoModal from '../components/MenuInfoModal.vue'
 import { api } from '../services/api'
-import { orderStore } from '../stores/orderStore'
+import { useOrderStore } from '../stores/orderStore'
 
 const router = useRouter()
+const orderStore = useOrderStore()
 
 // Data fetched from JSON Server
 const categories = ref([])
@@ -68,8 +69,8 @@ const nextPage = () => {
 }
 
 // Order list from store (shared state)
-const orderList = computed(() => orderStore.getOrderList())
-const totalPrice = orderStore.getTotalPrice
+const orderList = computed(() => orderStore.orderList)
+const totalPrice = computed(() => orderStore.calculatedTotalPrice)
 
 // Modal state
 const isModalOpen = ref(false)
